@@ -7,7 +7,7 @@ from collections import Counter
 from collections.abc import Iterator
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import cast, Dict, Any
 from transformers.pipelines.text_generation  import TextGenerationPipeline
 
 from flask import Blueprint, Response, jsonify, request, stream_with_context
@@ -59,15 +59,14 @@ def _document_info(document: dict[str, Any], chunk_counts: Counter[str]) -> dict
     }
 
 
-def _insert_document(title: str, s3_key: str) -> str:
-    response = get_supabase_client().table("documents").insert(
-        {"title": title, "s3_key": s3_key}
-    ).execute()
+def _insert_document(document_data: dict) -> str:
+
+    response = get_supabase_client().table("documents").insert(document_data).execute()
     rows = _data(response)
+
     if not rows or not rows[0].get("id"):
         raise RuntimeError("The documents insert did not return a document id")
     return str(rows[0]["id"])
-
 
 def _ingest_bytes(file_bytes: bytes, filename: str, s3_key: str, document_id: str) -> int:
     documents = Loader().load(file_bytes, filename)
@@ -94,7 +93,8 @@ def _ingest_bytes(file_bytes: bytes, filename: str, s3_key: str, document_id: st
     get_supabase_client().table("document_chunks").insert(rows).execute()
     return len(rows)
 
-def _get_file_meta_data_from_slm(data: str, generator: TextGenerationPipeline) -> DocumentMetaData:
+
+def _get_file_context_meta_data_from_slm(data: str, generator: TextGenerationPipeline) -> DocumentMetaData:
 
     prompt: str = f"""
     You are an expert metadata extractor. Extract details from the text below into a valid JSON object.
@@ -102,11 +102,10 @@ def _get_file_meta_data_from_slm(data: str, generator: TextGenerationPipeline) -
 
     JSON Schema:
     {{
-        "title": "string",
         "description": "string (50-100 words summary)",
-        "document_type": "notice" | "assignment" | "syllabus" | "notes" | "time_table",
+        "document_type": "notice" | "assignment" | "syllabus" | "notes" | "time_table" | "others",
         "deadline": "YYYY-MM-DD (optional, omit if not present)",
-        "needs_id_extraction": "yes" | "no"
+        "needs_subject_id_extraction": "yes" | "no"
     }}
 
     Context Data:
@@ -130,47 +129,67 @@ def _get_file_meta_data_from_slm(data: str, generator: TextGenerationPipeline) -
     return DocumentMetaData.model_validate(data)
 
 
-def _get_doc_uuids() -> DocumentIdMetaData:
+def _get_doc_requied_meta_uuids(subject_id: str, user_id: str) -> DocumentIdMetaData:
 
-    """
-    requirements:
+    if not subject_id:
+        raise ValueError ("Hey! i think you missed to choose subject")
 
-    """
+    client = get_supabase_client()
 
-    prompt: str = f"""
-    You are an expert metadata extractor. Extract details from the text below into a valid JSON object.
-    Do not output markdown, explanations, or extra text. ONLY valid JSON.
+    subject = (
+        client
+        .table("subjects")
+        .select("semester_id")
+        .eq("id", subject_id)
+        .single()
+        .execute()
+    )
 
-    JSON Schema:
-    {{
-        "title": "string",
-        "description": "string (50-100 words summary)",
-        "document_type": "notice" | "assignment" | "syllabus" | "notes" | "time_table",
-        "deadline": "YYYY-MM-DD (optional, omit if not present)",
-        "needs_id_extraction": "yes" | "no"
-    }}
+    if subject is None:
+        raise ValueError ("Subject not found")
 
-    Context Data:
-    {data}
+    subject_data = cast(dict[str, Any], subject.data)
+    semester_id = subject_data["semester_id"]
 
-    Do not include markdown.
-    Do not include explanations.
-    """
-    pipe = load_slm()
+    semester = (
+        client
+        .table("semesters")
+        .select("course_id")
+        .eq("id", semester_id)
+        .single()
+        .execute()
+    )
 
-    result = pipe(
-    prompt,
-    max_new_tokens=300,
-    return_full_text=False,
-)
+    if semester is None:
+        raise ValueError ("Semester not found")
 
-    generated_text = result[0]["generated_text"]
+    semester = cast(dict[str, Any], semester.data)
+    course_id = semester["course_id"]
 
-    data = json.loads(generated_text)
+    batch = (
+        client
+        .table("batches")
+        .select("id")
+        .eq("course_id", course_id)
+        .single()
+        .execute()
+    )
 
-    return DocumentMetaData.model_validate(data)
 
+    if batch is None:
+        raise ValueError ("Batch not found")
 
+    batch = cast(dict[str, Any], batch.data)
+
+    batch_id = batch["id"]
+
+    return DocumentIdMetaData(
+        uploaded_by=user_id,
+        subject_id=subject_id,
+        semester_id=semester_id,
+        course_id=course_id,
+        batch_id=batch_id,
+    )
 
 @ingest.route("/ingest", methods=["POST"])
 @require_auth
@@ -178,8 +197,6 @@ def ingest_files():
     files = request.files.getlist("files")
 
     payload = request.get_json()
-
-    document_id_meta_data: DocumentIdMetaData = _get_doc_uuids(payload, )
 
     if not files:
         return jsonify({"detail": "Attach at least one file in the 'files' field."}), 400
@@ -192,7 +209,7 @@ def ingest_files():
     try:
         bucket = _required_s3_bucket()
 
-        meta_data_generator: TextGenerationPipeline = load_slm(SLM_MODEL_NAME)
+        context_meta_data_generator: TextGenerationPipeline = load_slm(SLM_MODEL_NAME)
 
         for uploaded_file in files:
             filename = secure_filename(uploaded_file.filename or "")
@@ -214,13 +231,25 @@ def ingest_files():
             content_type = uploaded_file.mimetype or mimetypes.guess_type(filename)[0] or "application/octet-stream"
             aws_s3_client.put_object(Bucket=bucket, Key=s3_key, Body=file_bytes, ContentType=content_type)
 
-            file_meta_data = _get_file_meta_data_from_slm(file_bytes.decode("utf-8"), meta_data_generator)
+            file_context_meta_data = _get_file_context_meta_data_from_slm(file_bytes.decode("utf-8"), context_meta_data_generator)
 
-            if(file_meta_data.needs_id_extraction == "yes"):
-                pass
+            document_data_to_insert: dict = {
+                **file_context_meta_data.model_dump(),
+                "title" : filename,
+                "s3_key" : s3_key
+            }
 
+            if(file_context_meta_data.needs_subject_id_extraction == "yes"):
 
-            document_id = _insert_document(filename, s3_key)
+                from flask import g
+
+                document_id_meta_data: DocumentIdMetaData = _get_doc_requied_meta_uuids(payload.subject_id, g.current_user.id)
+
+                document_data_to_insert = {
+                    **document_id_meta_data.model_dump()
+                }
+
+            document_id = _insert_document(document_data_to_insert, s3_key)
 
             chunk_count = _ingest_bytes(file_bytes, filename, s3_key, document_id)
 
@@ -230,6 +259,7 @@ def ingest_files():
                 "filetype": Path(filename).suffix.lower().lstrip("."),
                 "num_chunks": chunk_count,
             })
+
     except (RuntimeError, ValueError) as error:
         return jsonify({"detail": str(error)}), 400
     except Exception:
