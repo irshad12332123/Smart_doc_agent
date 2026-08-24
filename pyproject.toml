@@ -1,0 +1,30 @@
+[project]
+name = "smart-doc-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "irshad321123321", email = "alidanish5138@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.43.69",
+    "flask>=3.1.3",
+    "langchain",
+    "langchain-community",
+    "langchain-core",
+    "langchain-google-genai>=4.3.3",
+    "langchain-text-splitters>=1.1.2",
+    "numpy",
+    "python-dotenv>=1.0.1",
+    "sentence-transformers",
+    "supabase>=2.31.0",
+    "transformers>=5.15.0",
+]
+
+[project.scripts]
+smart-doc-agent = "smart_doc_agent:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
