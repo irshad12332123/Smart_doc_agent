@@ -50,5 +50,4 @@ def login():
 @require_auth
 def me():
     from flask import g
-
     return jsonify({"user": {"id": g.current_user.id, "email": g.current_user.email}, "profile": g.current_profile})

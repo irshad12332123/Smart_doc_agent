@@ -4,8 +4,8 @@ from typing import Literal, Optional
 class DocumentMetaData(BaseModel):
     description: str = Field(...)
     deadline: Optional[str] = None
-    needs_id_extraction: Literal["no", "yes"] = Field(...)
-    document_type: Literal["notice", "assignment", "syllabus", "notes", "time_table", "other"]
+    needs_subject_id_extraction: Literal["no", "yes"] = Field(...)
+    document_type: Literal["notice", "assignment", "syllabus", "notes", "time_table", "others"]
 
 class DocumentIdMetaData(BaseModel):
     batch_id: str = Field(...)
