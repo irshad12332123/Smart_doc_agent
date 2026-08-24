@@ -249,7 +249,7 @@ def ingest_files():
                     **document_id_meta_data.model_dump()
                 }
 
-            document_id = _insert_document(document_data_to_insert, s3_key)
+            document_id = _insert_document(document_data_to_insert)
 
             chunk_count = _ingest_bytes(file_bytes, filename, s3_key, document_id)
 
