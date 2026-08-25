@@ -17,7 +17,7 @@ def handle_auth_error(error: AuthError):
 def _body() -> dict:
     payload = request.get_json(silent=True)
     if not isinstance(payload, dict):
-        raise AuthError("A JSON request body is required")
+        raise AuthError("A JSON request body is requir  ed")
     return payload
 
 
@@ -41,9 +41,14 @@ def register():
 
 @auth.post("/login")
 def login():
+
     payload = _body()
-    # Registration is the only place that needs password confirmation.
-    return jsonify(sign_in(required_string(payload, "email"), required_string(payload, "password")))
+
+    try:
+        result = sign_in(required_string(payload, "email"), required_string(payload, "password"))
+        return jsonify(result)
+    except:
+        raise ValueError("Failed to load user logged data")
 
 
 @auth.get("/me")

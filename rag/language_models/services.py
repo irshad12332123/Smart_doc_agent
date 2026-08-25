@@ -11,7 +11,7 @@ class CallLLM:
         if not api_key:
             raise RuntimeError("GEMINI_API_KEY must be configured before using chat")
         self.llm = GoogleGenerativeAI(model=model_name, google_api_key=api_key, temperature=0.2)
-
+    
     def stream_answer(
         self,
         question: str,
