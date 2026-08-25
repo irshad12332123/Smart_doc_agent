@@ -5,9 +5,8 @@ import mimetypes
 import uuid
 from collections import Counter
 from collections.abc import Iterator
-from datetime import datetime, timezone
 from pathlib import Path
-from typing import cast, Dict, Any
+from typing import cast, Any
 from transformers.pipelines.text_generation  import TextGenerationPipeline
 
 from flask import Blueprint, Response, jsonify, request, stream_with_context
@@ -29,7 +28,7 @@ from lib.aws_s3 import aws_s3_client
 from lib.supabase import get_supabase_client
 from loader.loader import Loader
 from utils.get_file_type import get_file_type
-from types.types import DocumentMetaData,DocumentIdMetaData
+from ingestion.constants import DocumentMetaData, DocumentIdMetaData
 from language_models.sml import load_slm
 
 

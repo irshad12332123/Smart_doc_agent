@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from functools import wraps
-from typing import Any
+from typing import Any, Iterable
 
 from flask import g, request
 
@@ -25,7 +25,13 @@ def require_auth(view: Callable[..., Any]) -> Callable[..., Any]:
             profile_response = (
                 get_supabase_client().table("profiles").select("id, full_name, role").eq("id", user.id).single().execute()
             )
+
+            """
+            attach the batches, courses, id, email,
+            """
+
             profile = getattr(profile_response, "data", None)
+            # print(profile)
             if not profile:
                 raise ValueError("No profile")
         except Exception as error:
