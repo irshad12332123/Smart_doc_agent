@@ -1,10 +1,12 @@
 export type Role = "student" | "faculty" | "admin";
+
 export interface Profile {
   id: string;
   full_name: string;
   role: Role;
   [key: string]: unknown;
 }
+
 export interface Session {
   access_token: string;
   refresh_token?: string;
@@ -12,6 +14,7 @@ export interface Session {
   user: { id: string; email: string };
   profile: Profile;
 }
+
 export interface DocumentInfo {
   doc_id: string;
   filename: string;
@@ -23,6 +26,7 @@ export interface DocumentInfo {
   subject_id?: string | null;
   mime_type?: string;
 }
+
 export interface SourceChunk {
   chunk_id: string;
   doc_id: string;
@@ -30,6 +34,7 @@ export interface SourceChunk {
   text: string;
   score: number;
 }
+
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
