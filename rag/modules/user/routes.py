@@ -1,11 +1,10 @@
 from flask import request, jsonify, Blueprint
 from auth.middleware import require_auth
-from services import Student
+from services import Student, Faculty, Admin
 from lib.supabase import get_supabase_client
 from constants import StudentDataModel, FacultyDataModel, AdminDataModel
 
 user = Blueprint("user", __name__, url_prefix="/u")
-
 
 def _body() -> dict:
 
@@ -33,8 +32,9 @@ def profile():
             profile_data  = student.get_user_details()
 
         elif user_role is "faculty":
-            pass
-        
+            faculty = Faculty(g.current_user.id, client=get_supabase_client())
+            profile_data = faculty.get_user_details()
+
         if not profile_data:
                 raise ValueError("Couldn't get profile, from route")
 

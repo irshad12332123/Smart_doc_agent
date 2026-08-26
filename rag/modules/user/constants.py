@@ -1,9 +1,9 @@
 from pydantic import BaseModel
-from typing import Iterable
+from uuid import UUID
 
 class StudentDataModel(BaseModel):
-    id: str
-    student_id: str
+    id: UUID
+    student_id: UUID
     registered_email: str
     name: str
     batch_code: str
@@ -11,16 +11,27 @@ class StudentDataModel(BaseModel):
     course_name: str
     student_role: str
 
+class FacultySubject(BaseModel):
+    id: UUID
+    name: str
+    subject_code: str
+
+
+class FacultyBatch(BaseModel):
+    id: UUID
+    batch_code: str
+    subjects: list[FacultySubject]
+
+
+class FacultyCourse(BaseModel):
+    id: UUID
+    name: str
+    code: str
+    batches: list[FacultyBatch]
+
 
 class FacultyDataModel(BaseModel):
-    id: str
-    faculty_id: str
-    registered_email: str
-    name: str
-    current_semester: int
-    courses: Iterable
-    faculty_role: str
-    subjects: Iterable
+    courses: list[FacultyCourse]
 
 class AdminDataModel(BaseModel):
     pass
