@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from auth.middleware import require_auth
 from supabase import Client
 from typing import cast, Any, List
-from constants import StudentDataModel
+from constants import StudentDataModel, FacultyDataModel, AdminDataModel
 
 @abstractmethod
 class User(ABC):
@@ -12,10 +12,10 @@ class User(ABC):
         super().__init__()
 
     #should be implemented by the child classes
-    def get_user_details(self) -> StudentDataModel:
+    def get_user_details(self) -> StudentDataModel | FacultyDataModel | AdminDataModel:
         raise NotImplementedError("Subclasses must implement get_user_details")
 
-def _get_data_from_supabase_where(select, where, table, client:Client ):
+def _get_single_row_from_supabase_where(select, where, table, client:Client ):
     try:
 
         if len(where) != 1:
@@ -36,7 +36,6 @@ def _get_data_from_supabase_where(select, where, table, client:Client ):
     except Exception as e:
         raise ValueError(f"Failed to fetch record from Supabase: {str(e)}") from e
 
-
 class Student(User):
     def __init__(self, user_id: str, client) -> None:
         super().__init__(user_id, client)
@@ -45,18 +44,17 @@ class Student(User):
         self.profile_data = {}
         try:
 
-            student_record_data = _get_data_from_supabase_where(["id", "student_id", "registered_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
+            student_record_data = _get_single_row_from_supabase_where(["id", "student_id", "registered_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
 
+            batch_membership_record_data = _get_single_row_from_supabase_where(["id", "batch_id"], ["student_id", str(student_record_data["id"])], "batch_memberships", self._client)
 
-            batch_membership_record_data = _get_data_from_supabase_where(["id", "batch_id"], ["student_id", str(student_record_data["id"])], "batch_memberships", self._client)
+            student_role_record_data =  _get_single_row_from_supabase_where(["role"], ["student_id", str(batch_membership_record_data["id"])], "student_batch_roles", self._client)
 
-            student_role_record_data =  _get_data_from_supabase_where(["role"], ["student_id", str(batch_membership_record_data["id"])], "student_batch_roles", self._client)
+            batch_record_data = _get_single_row_from_supabase_where(["course_id", "batch_code", "current_semeter_id"], ["id", str(batch_membership_record_data["batch_id"])], "batches", self._client)
 
-            batch_record_data = _get_data_from_supabase_where(["course_id", "batch_code", "current_semeter_id"], ["id", str(batch_membership_record_data["batch_id"])], "batches", self._client)
+            semester_record_data = _get_single_row_from_supabase_where(["semester_number"], ["id", str(batch_membership_record_data["current_semester_id"])], "semesters", self._client)
 
-            semester_record_data = _get_data_from_supabase_where(["semester_number"], ["id", str(batch_membership_record_data["current_semester_id"])], "semesters", self._client)
-
-            courses_record_data =  _get_data_from_supabase_where(["name"], ["id", str(batch_membership_record_data["course_id"])], "semesters", self._client)
+            courses_record_data =  _get_single_row_from_supabase_where(["name"], ["id", str(batch_membership_record_data["course_id"])], "semesters", self._client)
 
             #Building the data dict
 
@@ -77,12 +75,99 @@ class Student(User):
             raise ValueError(f"Couldn't get user details: {e}")
 
 
+def get_faculty_courses(supabase, faculty_id) -> FacultyDataModel:
+    response = (
+        supabase
+        .table("faculty_assignments")
+        .select("""
+            batch_id,
+            subject_id,
+            batches (
+                id,
+                batch_code,
+                course_id,
+                courses (
+                    id,
+                    name,
+                    code
+                )
+            ),
+            subjects (
+                id,
+                name,
+                subject_code,
+                semester_id
+            )
+        """)
+        .eq("faculty_id", faculty_id)
+        .execute()
+    )
+
+    assignments = response.data
+
+    courses = {}
+
+    for assignment in assignments:
+        batch = assignment["batches"]
+        subject = assignment["subjects"]
+        course = batch["courses"]
+
+        course_id = course["id"]
+        batch_id = batch["id"]
+
+        # Create course
+        if course_id not in courses:
+            courses[course_id] = {
+                "id": course_id,
+                "name": course["name"],
+                "code": course["code"],
+                "batches": {}
+            }
+
+        # Create batch inside course
+        if batch_id not in courses[course_id]["batches"]:
+            courses[course_id]["batches"][batch_id] = {
+                "id": batch_id,
+                "batch_code": batch["batch_code"],
+                "subjects": []
+            }
+
+        # Add subject taught by this faculty
+        courses[course_id]["batches"][batch_id]["subjects"].append({
+            "id": subject["id"],
+            "name": subject["name"],
+            "subject_code": subject["subject_code"]
+        })
+
+    # Convert dictionaries → lists
+    result = []
+
+    for course in courses.values():
+        course["batches"] = list(course["batches"].values())
+        result.append(course)
+
+    return FacultyDataModel(courses=result)
+
+
 class Faculty(User):
     def __init__(self, user_id: str, client) -> None:
         super().__init__(user_id, client)
+
+    def get_user_details(self) -> FacultyDataModel:
+        self.profile_data: FacultyDataModel|None = None
+        try:
+            faculty_id = _get_single_row_from_supabase_where(["id"], ["profile_id", self._user_id], "faculty", self._client)
+
+            self.profile_data = get_faculty_courses(self._client, faculty_id=faculty_id)
+
+            if not self.profile_data:
+                raise ValueError("profile data is possible None")
+            return self.profile_data
+
+        except Exception as e:
+            raise ValueError(f"User data couldn't be fetched! {e}")
 
 
 class Admin(User):
     def __init__(self, user_id: str, client) -> None:
         super().__init__(user_id, client)
-
