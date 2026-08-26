@@ -3,6 +3,7 @@ export interface Profile {
   id: string;
   full_name: string;
   role: Role;
+  [key: string]: unknown;
 }
 export interface Session {
   access_token: string;

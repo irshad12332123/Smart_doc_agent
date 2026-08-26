@@ -4,13 +4,15 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const jsonHeaders = { "Content-Type": "application/json" };
 
-const authHeaders = () => {
+const authHeaders = (): Record<string, string> => {
   try {
     const token = JSON.parse(
       localStorage.getItem("scholarhub-session") || "{}",
     ).access_token;
     return { Authorization: `Bearer ${token}` };
-  } catch {}
+  } catch {
+    return {} as Record<string, string>;
+  }
 };
 
 async function bodyOrError(res: Response) {
@@ -19,6 +21,86 @@ async function bodyOrError(res: Response) {
     throw new Error(body.error || body.detail || "Something went wrong");
   return body;
 }
+
+const normalizeProfile = (payload: Record<string, unknown> | null | undefined) => {
+  const base = payload ?? {};
+  const isStudentLike =
+    typeof base.student_role === "string" ||
+    typeof base.batch_code === "string" ||
+    typeof base.current_semester === "number" ||
+    typeof base.course_name === "string";
+
+  const role =
+    typeof base.role === "string"
+      ? (base.role as Profile["role"])
+      : isStudentLike
+        ? "student"
+        : "student";
+
+  return {
+    id: typeof base.id === "string" ? base.id : "",
+    full_name:
+      typeof base.full_name === "string"
+        ? base.full_name
+        : typeof base.name === "string"
+          ? base.name
+          : "Student",
+    role,
+    ...(base as Record<string, unknown>),
+  } as Profile & Record<string, unknown>;
+};
+
+export const userApi = {
+  profile: async (token: string) => {
+    const endpoints = [`${BASE_URL}/profile`, `${BASE_URL}/u/profile`, `${BASE_URL}/auth/me`];
+    let lastError: unknown;
+
+    for (const endpoint of endpoints) {
+      try {
+        const res = await fetch(endpoint, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const body = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          lastError = new Error(
+            body.error || body.detail || body.message || "Could not load profile.",
+          );
+          continue;
+        }
+
+        const rawProfile = body.data ?? body.profile ?? body;
+        const normalized = normalizeProfile(
+          rawProfile && typeof rawProfile === "object" ? rawProfile : null,
+        );
+        const user =
+          body.user ??
+          ({
+            id: typeof rawProfile?.id === "string" ? rawProfile.id : "",
+            email:
+              typeof rawProfile?.registered_email === "string"
+                ? rawProfile.registered_email
+                : "",
+          } as { id: string; email: string });
+
+        return {
+          user: {
+            id: user.id || normalized.id,
+            email: user.email || "",
+          },
+          profile: normalized,
+        } as {
+          user: { id: string; email: string };
+          profile: Profile & Record<string, unknown>;
+        };
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    throw lastError ?? new Error("Could not load profile.");
+  },
+};
 
 export const authApi = {
   check: (kind: "student" | "faculty", id: string) =>
@@ -57,14 +139,9 @@ export const authApi = {
       user: { id: string; email: string };
     }>,
 
-  me: (token: string) =>
-    fetch(`${BASE_URL}/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-    }).then(bodyOrError) as Promise<{
-      user: { id: string; email: string };
-      profile: Profile;
-    }>,
+  me: (token: string) => userApi.profile(token),
 };
+
 export const documentApi = {
   list: () =>
     fetch(`${BASE_URL}/api/documents`, { headers: authHeaders() }).then(
