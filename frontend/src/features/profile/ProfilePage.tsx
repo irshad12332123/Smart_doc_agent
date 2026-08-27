@@ -20,7 +20,7 @@ export function ProfilePage({ session }: { session: Session }) {
       course_name?: string;
       current_semester?: number;
     }) || {};
-
+   
   return (
     <div className="page profile">
       <section className="profile-hero">

@@ -3,7 +3,7 @@ from uuid import UUID
 
 class StudentDataModel(BaseModel):
     id: UUID
-    student_id: UUID
+    student_id: str
     registered_email: str
     name: str
     batch_code: str

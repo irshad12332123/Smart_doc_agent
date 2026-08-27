@@ -197,6 +197,8 @@ def ingest_files():
 
     payload = request.get_json()
 
+    print(payload)
+
     if not files:
         return jsonify({"detail": "Attach at least one file in the 'files' field."}), 400
 
