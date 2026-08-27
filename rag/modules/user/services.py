@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from auth.middleware import require_auth
 from supabase import Client
 from typing import cast, Any, List
-from constants import StudentDataModel, FacultyDataModel, AdminDataModel
+
+from .constants import StudentDataModel, FacultyDataModel, AdminDataModel
 
 @abstractmethod
 class User(ABC):
@@ -15,28 +15,44 @@ class User(ABC):
     def get_user_details(self) -> StudentDataModel | FacultyDataModel | AdminDataModel:
         raise NotImplementedError("Subclasses must implement get_user_details")
 
-def _get_single_row_from_supabase_where(select, where, table, client:Client ):
+def _get_single_row_from_supabase_where(
+    select: list[str],
+    where: list[Any],
+    table: str,
+    client: Client
+):
     try:
+        if not isinstance(select, list) or not isinstance(where, list):
+            raise ValueError(
+                "This helper expects lists for select and where."
+            )
 
-        if len(where) != 1:
-            raise ValueError("This helper only supports a single 'eq' condition.")
+        if len(where) != 2:
+            raise ValueError(
+                "where must contain exactly [column, value]."
+            )
 
-        if type(select) != List or type(select) != List:
-            raise ValueError("This helper expects lists for select and where.")
-
-        record = (client.table(table).select(*select).eq(*where).single().execute())
+        record = (
+            client
+            .table(table)
+            .select(*select)
+            .eq(*where)
+            .single()
+            .execute()
+        )
 
         if record.data is None:
-            raise ValueError("Could not get record from supabase")
+            raise ValueError("Could not get record from Supabase")
 
-        record_data  = cast(dict[str, Any], record.data)
-
-        return record_data
+        return cast(dict[str, Any], record.data)
 
     except Exception as e:
-        raise ValueError(f"Failed to fetch record from Supabase: {str(e)}") from e
+        raise ValueError(
+            f"Failed to fetch record from Supabase: {str(e)}"
+        ) from e
 
 class Student(User):
+
     def __init__(self, user_id: str, client) -> None:
         super().__init__(user_id, client)
 
@@ -46,15 +62,19 @@ class Student(User):
 
             student_record_data = _get_single_row_from_supabase_where(["id", "student_id", "registered_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
 
-            batch_membership_record_data = _get_single_row_from_supabase_where(["id", "batch_id"], ["student_id", str(student_record_data["id"])], "batch_memberships", self._client)
+            print(student_record_data["id"])
+            print(student_record_data["registered_email"])
+            print(student_record_data["name"])
 
-            student_role_record_data =  _get_single_row_from_supabase_where(["role"], ["student_id", str(batch_membership_record_data["id"])], "student_batch_roles", self._client)
+            batch_membership_record_data = _get_single_row_from_supabase_where(["id", "batch_id",], ["student_id", student_record_data["id"]], "batch_memberships", self._client)
 
-            batch_record_data = _get_single_row_from_supabase_where(["course_id", "batch_code", "current_semeter_id"], ["id", str(batch_membership_record_data["batch_id"])], "batches", self._client)
+            student_role_record_data =  _get_single_row_from_supabase_where(["role"], ["batch_membership_id", str(batch_membership_record_data["id"])], "student_batch_roles", self._client)
 
-            semester_record_data = _get_single_row_from_supabase_where(["semester_number"], ["id", str(batch_membership_record_data["current_semester_id"])], "semesters", self._client)
+            batch_record_data = _get_single_row_from_supabase_where(["course_id", "batch_code", "current_semester_id"], ["id", str(batch_membership_record_data["batch_id"])], "batches", self._client)
 
-            courses_record_data =  _get_single_row_from_supabase_where(["name"], ["id", str(batch_membership_record_data["course_id"])], "semesters", self._client)
+            semester_record_data = _get_single_row_from_supabase_where(["semester_number"], ["id", str(batch_record_data["current_semester_id"])], "semesters", self._client)
+
+            courses_record_data =  _get_single_row_from_supabase_where(["name"], ["id", str(batch_record_data["course_id"])], "courses", self._client)
 
             #Building the data dict
 

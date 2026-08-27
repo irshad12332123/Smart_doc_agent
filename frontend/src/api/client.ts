@@ -50,6 +50,7 @@ const normalizeProfile = (payload: Record<string, unknown> | null | undefined) =
   } as Profile & Record<string, unknown>;
 };
 
+
 export const userApi = {
   profile: async (token: string) => {
     const endpoints = [`${BASE_URL}/profile`, `${BASE_URL}/u/profile`, `${BASE_URL}/auth/me`];
@@ -60,6 +61,7 @@ export const userApi = {
         const res = await fetch(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         const body = await res.json().catch(() => ({}));
 
         if (!res.ok) {
@@ -70,9 +72,11 @@ export const userApi = {
         }
 
         const rawProfile = body.data ?? body.profile ?? body;
+
         const normalized = normalizeProfile(
           rawProfile && typeof rawProfile === "object" ? rawProfile : null,
         );
+
         const user =
           body.user ??
           ({

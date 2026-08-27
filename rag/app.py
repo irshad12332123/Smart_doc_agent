@@ -14,14 +14,14 @@ from config.settings import (
 
 from ingestion.ingestion import ingest
 from modules.auth.routes import auth
-
+from modules.user.routes import user
 
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES
     app.register_blueprint(ingest)
     app.register_blueprint(auth)
-
+    app.register_blueprint(user)
     @app.after_request
     def add_cors_headers(response):
         allowed_origins = {
