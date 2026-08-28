@@ -34,10 +34,23 @@ def profile():
             faculty = Faculty(g.current_user.id, client=get_supabase_client())
             profile_data = faculty.get_user_details()
 
+        if user_role == "admin":
+            return jsonify({
+                "user": {"id": g.current_user.id, "email": g.current_user.email},
+                "data": {**g.current_profile, "role": "admin"},
+            }), 200
+
         if not profile_data:
                 raise ValueError("Couldn't get profile, from route")
 
-        return jsonify({"data": profile_data.model_dump()}), 200
+        return jsonify({
+            "user": {"id": g.current_user.id, "email": g.current_user.email},
+            "data": {
+                **g.current_profile,
+                "role": user_role,
+                f"{user_role}_data": profile_data.model_dump(mode="json"),
+            }
+        }), 200
 
     except:
         raise ValueError("Error")
