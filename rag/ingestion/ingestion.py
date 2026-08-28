@@ -92,6 +92,21 @@ def _ingest_bytes(file_bytes: bytes, filename: str, s3_key: str, document_id: st
     get_supabase_client().table("document_chunks").insert(rows).execute()
     return len(rows)
 
+def _upload_doc_id_per_batches(client, document_id: str, payload):
+
+    document_batch_rows = [
+            {
+                "document_id": document_id,
+                "batch_id": batch_id,
+            }
+            for batch_id in payload.batch_ids
+        ]
+    (
+        client
+        .table("document_batches")
+        .insert(document_batch_rows)
+        .execute()
+    )
 
 def _get_file_context_meta_data_from_slm(data: str, generator: TextGenerationPipeline) -> DocumentMetaData:
 
@@ -104,7 +119,6 @@ def _get_file_context_meta_data_from_slm(data: str, generator: TextGenerationPip
         "description": "string (50-100 words summary)",
         "document_type": "notice" | "assignment" | "syllabus" | "notes" | "time_table" | "others",
         "deadline": "YYYY-MM-DD (optional, omit if not present)",
-        "needs_subject_id_extraction": "yes" | "no"
     }}
 
     Context Data:
@@ -113,9 +127,9 @@ def _get_file_context_meta_data_from_slm(data: str, generator: TextGenerationPip
     Do not include markdown.
     Do not include explanations.
     """
-    pipe = load_slm()
+    generator = load_slm()
 
-    result = pipe(
+    result = generator(
     prompt,
     max_new_tokens=300,
     return_full_text=False,
@@ -125,21 +139,21 @@ def _get_file_context_meta_data_from_slm(data: str, generator: TextGenerationPip
 
     data = json.loads(generated_text)
 
+
     return DocumentMetaData.model_validate(data)
 
+# def _get_doc_required_meta_uuids(batch_id: list[str], user_id: str) -> DocumentIdMetaData:
 
-def _get_doc_requied_meta_uuids(subject_id: str, user_id: str) -> DocumentIdMetaData:
-
-    if not subject_id:
-        raise ValueError ("Hey! i think you missed to choose subject")
+    if len(batch_id) < 1:
+        raise ValueError ("Batch details missing")
 
     client = get_supabase_client()
 
     subject = (
         client
-        .table("subjects")
-        .select("semester_id")
-        .eq("id", subject_id)
+        .table("batches")
+        .select("current_semester_id", "course_id")
+        .eq("id", batch_id)
         .single()
         .execute()
     )
@@ -147,55 +161,22 @@ def _get_doc_requied_meta_uuids(subject_id: str, user_id: str) -> DocumentIdMeta
     if subject is None:
         raise ValueError ("Subject not found")
 
-    subject_data = cast(dict[str, Any], subject.data)
-    semester_id = subject_data["semester_id"]
-
-    semester = (
-        client
-        .table("semesters")
-        .select("course_id")
-        .eq("id", semester_id)
-        .single()
-        .execute()
-    )
-
-    if semester is None:
-        raise ValueError ("Semester not found")
-
-    semester = cast(dict[str, Any], semester.data)
-    course_id = semester["course_id"]
-
-    batch = (
-        client
-        .table("batches")
-        .select("id")
-        .eq("course_id", course_id)
-        .single()
-        .execute()
-    )
-
-
-    if batch is None:
-        raise ValueError ("Batch not found")
-
-    batch = cast(dict[str, Any], batch.data)
-
-    batch_id = batch["id"]
-
     return DocumentIdMetaData(
-        uploaded_by=user_id,
         subject_id=subject_id,
-        semester_id=semester_id,
-        course_id=course_id,
-        batch_id=batch_id,
     )
 
 @ingest.route("/ingest", methods=["POST"])
 @require_auth
 def ingest_files():
     files = request.files.getlist("files")
-
     payload = request.get_json()
+    """
+    {
+        "batch:id(s)",
+        "user.id",
+
+    }
+    """
 
     print(payload)
 
@@ -210,6 +191,7 @@ def ingest_files():
     try:
         bucket = _required_s3_bucket()
 
+        #initializing the generator--
         context_meta_data_generator: TextGenerationPipeline = load_slm(SLM_MODEL_NAME)
 
         for uploaded_file in files:
@@ -217,6 +199,7 @@ def ingest_files():
 
             if not filename:
                 raise ValueError("Every upload must have a filename")
+
             category = get_file_type(filename)
 
             file_bytes: bytes = uploaded_file.read()
@@ -232,25 +215,20 @@ def ingest_files():
             content_type = uploaded_file.mimetype or mimetypes.guess_type(filename)[0] or "application/octet-stream"
             aws_s3_client.put_object(Bucket=bucket, Key=s3_key, Body=file_bytes, ContentType=content_type)
 
-            file_context_meta_data = _get_file_context_meta_data_from_slm(file_bytes.decode("utf-8"), context_meta_data_generator)
+            file_context_meta_data: DocumentMetaData = _get_file_context_meta_data_from_slm(file_bytes.decode("utf-8"), context_meta_data_generator)
 
             document_data_to_insert: dict = {
                 **file_context_meta_data.model_dump(),
                 "title" : filename,
                 "s3_key" : s3_key
-            }
+               }
 
-            if(file_context_meta_data.needs_subject_id_extraction == "yes"):
-
-                from flask import g
-
-                document_id_meta_data: DocumentIdMetaData = _get_doc_requied_meta_uuids(payload.subject_id, g.current_user.id)
-
-                document_data_to_insert = {
-                    **document_id_meta_data.model_dump()
-                }
+            if payload.get("subject_id") != None:
+                document_data_to_insert["subject_id"] = payload.get("subject_id")
 
             document_id = _insert_document(document_data_to_insert)
+
+            _upload_doc_id_per_batches(get_supabase_client(), document_id, payload.batch_id)
 
             chunk_count = _ingest_bytes(file_bytes, filename, s3_key, document_id)
 
@@ -268,7 +246,6 @@ def ingest_files():
 
     return jsonify({"documents": completed, "total_chunks_added": sum(d["num_chunks"] for d in completed)}), 201
 
-
 @ingest.route("/documents", methods=["GET"])
 def list_documents():
     try:
@@ -279,7 +256,6 @@ def list_documents():
         return jsonify([_document_info(document, counts) for document in documents])
     except Exception:
         return jsonify({"detail": "Could not load documents."}), 500
-
 
 @ingest.route("/documents/<document_id>", methods=["DELETE"])
 def delete_document(document_id: str):
@@ -312,7 +288,6 @@ def _retrieve(query: str) -> list[dict[str, Any]]:
 
 def _sse(payload: dict[str, Any]) -> str:
     return f"data: {json.dumps(payload)}\n\n"
-
 
 @ingest.route("/chat", methods=["POST"])
 def chat():

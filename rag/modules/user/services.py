@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from supabase import Client
-from typing import cast, Any, List
+from typing import cast, Any
 
 from .constants import StudentDataModel, FacultyDataModel, AdminDataModel
 
