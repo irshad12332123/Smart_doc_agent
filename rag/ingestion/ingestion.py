@@ -92,14 +92,14 @@ def _ingest_bytes(file_bytes: bytes, filename: str, s3_key: str, document_id: st
     get_supabase_client().table("document_chunks").insert(rows).execute()
     return len(rows)
 
-def _upload_doc_id_per_batches(client, document_id: str, payload):
+def _upload_doc_id_per_batches(client, document_id: str, batch_ids: list[str]):
 
     document_batch_rows = [
             {
                 "document_id": document_id,
                 "batch_id": batch_id,
             }
-            for batch_id in payload.batch_ids
+            for batch_id in batch_ids
         ]
     (
         client
@@ -169,19 +169,14 @@ def _get_file_context_meta_data_from_slm(data: str, generator: TextGenerationPip
 @require_auth
 def ingest_files():
     files = request.files.getlist("files")
-    payload = request.get_json()
-    """
-    {
-        "batch:id(s)",
-        "user.id",
-
-    }
-    """
-
-    print(payload)
+    batch_ids = request.form.getlist("batch_ids")
+    subject_id = request.form.get("subject_id") or None
 
     if not files:
         return jsonify({"detail": "Attach at least one file in the 'files' field."}), 400
+
+    if not batch_ids:
+        return jsonify({"detail": "At least one batch is required."}), 400
 
     supabase = get_supabase_client()  # Fail before uploading a file if configuration is absent.
     del supabase
@@ -223,12 +218,12 @@ def ingest_files():
                 "s3_key" : s3_key
                }
 
-            if payload.get("subject_id") != None:
-                document_data_to_insert["subject_id"] = payload.get("subject_id")
+            if subject_id is not None:
+                document_data_to_insert["subject_id"] = subject_id
 
             document_id = _insert_document(document_data_to_insert)
 
-            _upload_doc_id_per_batches(get_supabase_client(), document_id, payload.batch_id)
+            _upload_doc_id_per_batches(get_supabase_client(), document_id, batch_ids)
 
             chunk_count = _ingest_bytes(file_bytes, filename, s3_key, document_id)
 

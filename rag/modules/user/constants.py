@@ -1,8 +1,12 @@
 from pydantic import BaseModel
 from uuid import UUID
 
-class StudentDataModel(BaseModel):
+class StudentSubjects(BaseModel):
     id: UUID
+    name: str
+    subject_code: str
+
+class StudentDataModel(BaseModel):
     student_id: str
     registered_email: str
     name: str
@@ -10,7 +14,8 @@ class StudentDataModel(BaseModel):
     current_semester: int
     course_name: str
     student_role: str
-
+    subjects: list[StudentSubjects]
+    
 class FacultySubject(BaseModel):
     id: UUID
     name: str

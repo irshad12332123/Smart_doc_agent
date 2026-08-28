@@ -62,9 +62,9 @@ class Student(User):
 
             student_record_data = _get_single_row_from_supabase_where(["id", "student_id", "registered_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
 
-            print(student_record_data["id"])
-            print(student_record_data["registered_email"])
-            print(student_record_data["name"])
+            # print(student_record_data["id"])
+            # print(student_record_data["registered_email"])
+            # print(student_record_data["name"])
 
             batch_membership_record_data = _get_single_row_from_supabase_where(["id", "batch_id",], ["student_id", student_record_data["id"]], "batch_memberships", self._client)
 
@@ -77,13 +77,23 @@ class Student(User):
             courses_record_data =  _get_single_row_from_supabase_where(["name"], ["id", str(batch_record_data["course_id"])], "courses", self._client)
 
             #Building the data dict
+            subjects_record = (self._client.table("subjects").select("id", "subject_code", "name").eq("semester_id",str(batch_record_data["current_semester_id"])).execute())
+
+            subjects_record_data = subjects_record.data
+
+            if not subjects_record_data:
+                raise ValueError("Couldn't get subjects")
+
+            subjects_record_data=cast(dict[str, Any], subjects_record_data)
 
             self.profile_data = {
                 **student_record_data,
+                "batch_id": batch_membership_record_data["batch_id"],
                 "batch_code": batch_record_data["batch_code"],
                 "current_semester": semester_record_data["semester_number"],
                 "course_name":  courses_record_data["name"],
-                "student_role":student_role_record_data["role"]
+                "student_role":student_role_record_data["role"],
+                "subjects": subjects_record_data
             }
 
             if len(self.profile_data) <= 0:
