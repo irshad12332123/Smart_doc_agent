@@ -6,7 +6,7 @@ import uuid
 from collections import Counter
 from collections.abc import Iterator
 from pathlib import Path
-from typing import cast, Any
+from typing import  Any
 from transformers.pipelines.text_generation  import TextGenerationPipeline
 
 from flask import Blueprint, Response, jsonify, request, stream_with_context
@@ -14,7 +14,6 @@ from werkzeug.utils import secure_filename
 
 from modules.auth.middleware import require_auth
 from language_models.services import CallLLM
-from language_models.sml import load_slm
 from chunker.splitter import Chunker
 from config.settings import (
     MAX_UPLOAD_BYTES,
@@ -23,6 +22,7 @@ from config.settings import (
     S3_BUCKET_NAME,
     SLM_MODEL_NAME
 )
+
 from embedder.embedding import Embedder
 from lib.aws_s3 import aws_s3_client
 from lib.supabase import get_supabase_client
@@ -31,9 +31,7 @@ from utils.get_file_type import get_file_type
 from ingestion.constants import DocumentMetaData, DocumentIdMetaData
 from language_models.sml import load_slm
 
-
 ingest = Blueprint("ingest", __name__, url_prefix="/api")
-
 
 def _data(response: Any) -> list[dict[str, Any]]:
     result = getattr(response, "data", response)
@@ -129,6 +127,7 @@ def _get_file_context_meta_data_from_slm(data: str, generator: TextGenerationPip
     """
     generator = load_slm()
 
+
     result = generator(
     prompt,
     max_new_tokens=300,
@@ -168,7 +167,9 @@ def _get_file_context_meta_data_from_slm(data: str, generator: TextGenerationPip
 @ingest.route("/ingest", methods=["POST"])
 @require_auth
 def ingest_files():
+    print("request rceived")
     files = request.files.getlist("files")
+    print(files)
     batch_ids = request.form.getlist("batch_ids")
     subject_id = request.form.get("subject_id") or None
 
@@ -187,7 +188,7 @@ def ingest_files():
         bucket = _required_s3_bucket()
 
         #initializing the generator--
-        context_meta_data_generator: TextGenerationPipeline = load_slm(SLM_MODEL_NAME)
+        context_meta_data_generator: TextGenerationPipeline = load_slm()
 
         for uploaded_file in files:
             filename = secure_filename(uploaded_file.filename or "")
@@ -236,8 +237,8 @@ def ingest_files():
 
     except (RuntimeError, ValueError) as error:
         return jsonify({"detail": str(error)}), 400
-    except Exception:
-        return jsonify({"detail": "Document ingestion failed. Check the server logs."}), 500
+    except Exception as e:
+        return jsonify({"detail": "Document ingestion failed. Check the server logs.", "error": e}), 500
 
     return jsonify({"documents": completed, "total_chunks_added": sum(d["num_chunks"] for d in completed)}), 201
 
