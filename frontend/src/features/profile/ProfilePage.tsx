@@ -13,14 +13,7 @@ const initials = (name: string) =>
 export function ProfilePage({ session }: { session: Session }) {
   const p = session.profile;
   const isStudent = p.role === "student";
-  const studentMeta =
-    ((session.profile as unknown) as Record<string, unknown> & {
-      student_role?: string;
-      batch_code?: string;
-      course_name?: string;
-      current_semester?: number;
-    }) || {};
-   
+  const studentMeta = isStudent ? p.student_data : undefined;
   return (
     <div className="page profile">
       <section className="profile-hero">
@@ -34,15 +27,16 @@ export function ProfilePage({ session }: { session: Session }) {
           <h1>{p.full_name}</h1>
           <p>
             {p.role[0].toUpperCase() + p.role.slice(1)}
-            {isStudent && " | " + (String(studentMeta.course_name ?? "BCA") || "BCA")}
+            {studentMeta && " | " + studentMeta.course_name}
           </p>
           <div className="chips">
             <span>
-              <I.GraduationCap /> Verified {p.role[0].toUpperCase() + p.role.slice(1)}
+              <I.GraduationCap /> Verified{" "}
+              {p.role[0].toUpperCase() + p.role.slice(1)}
             </span>
-            {isStudent && (
+            {studentMeta && (
               <span>
-                <I.CalendarDays /> Batch: {String(studentMeta.batch_code ?? "2024–27")}
+                <I.CalendarDays /> Batch: {studentMeta.batch_code}
               </span>
             )}
           </div>
@@ -58,15 +52,19 @@ export function ProfilePage({ session }: { session: Session }) {
           <div className="detail-grid">
             <div>
               <small>COURSE</small>
-              <b>{String(studentMeta.course_name ?? "Bachelor of Computer Applications (BCA)")}</b>
+              <b>{studentMeta?.course_name ?? "N/A"}</b>
             </div>
             <div>
               <small>CURRENT SEMESTER</small>
-              <b>{isStudent ? `Semester ${studentMeta.current_semester ?? 5}` : "N/A"}</b>
+              <b>
+                {studentMeta
+                  ? `Semester ${studentMeta.current_semester}`
+                  : "N/A"}
+              </b>
             </div>
             <div>
               <small>BATCH</small>
-              <b>{String(studentMeta.batch_code ?? "24XBCA-1")}</b>
+              <b>{studentMeta?.batch_code ?? "N/A"}</b>
             </div>
             <div>
               <small>STUDENT ID</small>
@@ -90,10 +88,10 @@ export function ProfilePage({ session }: { session: Session }) {
               <small>ROLE</small>
               <b>{p.role}</b>
             </div>
-            {isStudent && studentMeta.student_role && (
+            {studentMeta?.student_role && (
               <div>
                 <small>STUDENT ROLE</small>
-                <b>{String(studentMeta.student_role)}</b>
+                <b>{studentMeta.student_role}</b>
               </div>
             )}
           </div>

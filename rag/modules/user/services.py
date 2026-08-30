@@ -96,6 +96,8 @@ class Student(User):
                 "subjects": subjects_record_data
             }
 
+            print(self.profile_data)
+
             if len(self.profile_data) <= 0:
                 raise ValueError("Received Empty profile data after processing")
 
