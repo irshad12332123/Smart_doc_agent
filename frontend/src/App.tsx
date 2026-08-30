@@ -114,12 +114,15 @@ function PageView(props: {
     case "notices":
       return <NoticesPage />;
     case "subjects":
-      return <SubjectsPage setPage={props.setPage} />;
+      return (
+        <SubjectsPage profile={props.session.profile} setPage={props.setPage} />
+      );
     case "profile":
       return <ProfilePage session={props.session} />;
     case "upload":
       return (
         <UploadPage
+          profile={props.session.profile}
           documents={props.documents}
           setDocuments={props.setDocuments}
         />

@@ -22,38 +22,9 @@ async function bodyOrError(res: Response) {
   return body;
 }
 
-const normalizeProfile = (payload: Record<string, unknown> | null | undefined) => {
-  const base = payload ?? {};
-  const isStudentLike =
-    typeof base.student_role === "string" ||
-    typeof base.batch_code === "string" ||
-    typeof base.current_semester === "number" ||
-    typeof base.course_name === "string";
-
-  const role =
-    typeof base.role === "string"
-      ? (base.role as Profile["role"])
-      : isStudentLike
-        ? "student"
-        : "student";
-
-  return {
-    id: typeof base.id === "string" ? base.id : "",
-    full_name:
-      typeof base.full_name === "string"
-        ? base.full_name
-        : typeof base.name === "string"
-          ? base.name
-          : "Student",
-    role,
-    ...(base as Record<string, unknown>),
-  } as Profile & Record<string, unknown>;
-};
-
-
 export const userApi = {
   profile: async (token: string) => {
-    const endpoints = [`${BASE_URL}/profile`, `${BASE_URL}/u/profile`, `${BASE_URL}/auth/me`];
+    const endpoints = [`${BASE_URL}/u/profile`];
     let lastError: unknown;
 
     for (const endpoint of endpoints) {
@@ -66,36 +37,35 @@ export const userApi = {
 
         if (!res.ok) {
           lastError = new Error(
-            body.error || body.detail || body.message || "Could not load profile.",
+            body.error ||
+              body.detail ||
+              body.message ||
+              "Could not load profile.",
           );
           continue;
         }
 
-        const rawProfile = body.data ?? body.profile ?? body;
-
-        const normalized = normalizeProfile(
-          rawProfile && typeof rawProfile === "object" ? rawProfile : null,
-        );
+        const profile = body.data as Profile;
 
         const user =
           body.user ??
           ({
-            id: typeof rawProfile?.id === "string" ? rawProfile.id : "",
+            id: profile.id,
             email:
-              typeof rawProfile?.registered_email === "string"
-                ? rawProfile.registered_email
+              profile.role === "student"
+                ? profile.student_data.registered_email
                 : "",
           } as { id: string; email: string });
 
         return {
           user: {
-            id: user.id || normalized.id,
+            id: user.id || profile.id,
             email: user.email || "",
           },
-          profile: normalized,
+          profile,
         } as {
           user: { id: string; email: string };
-          profile: Profile & Record<string, unknown>;
+          profile: Profile;
         };
       } catch (error) {
         lastError = error;
@@ -154,12 +124,16 @@ export const documentApi = {
 
   upload: (
     files: File[],
-    metadata: Record<string, string | undefined> = {},
+    metadata: Record<string, string | string[] | null | undefined> = {},
   ) => {
     const data = new FormData();
     files.forEach((file) => data.append("files", file));
     Object.entries(metadata).forEach(([key, value]) => {
-      if (value) data.append(key, value);
+      if (Array.isArray(value)) {
+        value.forEach((item) => data.append(key, item));
+      } else if (value !== undefined && value !== null) {
+        data.append(key, value);
+      }
     });
     return fetch(`${BASE_URL}/api/ingest`, {
       method: "POST",

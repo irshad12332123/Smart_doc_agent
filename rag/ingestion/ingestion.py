@@ -6,11 +6,13 @@ import uuid
 from collections import Counter
 from collections.abc import Iterator
 from pathlib import Path
-from typing import  Any
+from typing import  Any, Optional
 from transformers.pipelines.text_generation  import TextGenerationPipeline
-
+from pypdf import PdfReader
+from io import BytesIO
 from flask import Blueprint, Response, jsonify, request, stream_with_context
 from werkzeug.utils import secure_filename
+from groq import Groq
 
 from modules.auth.middleware import require_auth
 from language_models.services import CallLLM
@@ -20,7 +22,7 @@ from config.settings import (
     RETRIEVAL_MATCH_COUNT,
     RETRIEVAL_MATCH_THRESHOLD,
     S3_BUCKET_NAME,
-    SLM_MODEL_NAME
+    GROQ_MODEL
 )
 
 from embedder.embedding import Embedder
@@ -61,6 +63,7 @@ def _insert_document(document_data: dict) -> str:
     response = get_supabase_client().table("documents").insert(document_data).execute()
     rows = _data(response)
 
+
     if not rows or not rows[0].get("id"):
         raise RuntimeError("The documents insert did not return a document id")
     return str(rows[0]["id"])
@@ -83,7 +86,6 @@ def _ingest_bytes(file_bytes: bytes, filename: str, s3_key: str, document_id: st
             "page_number": chunk["metadata"]["page"],
             "chunk_index": chunk["metadata"]["chunk_index"],
             "embedding": embedding,
-            "s3_key": s3_key,
         }
         for chunk, embedding in zip(chunks, embeddings, strict=True)
     ]
@@ -106,63 +108,43 @@ def _upload_doc_id_per_batches(client, document_id: str, batch_ids: list[str]):
         .execute()
     )
 
-def _get_file_context_meta_data_from_slm(data: str, generator: TextGenerationPipeline) -> DocumentMetaData:
+def _get_file_context_meta_data_from_slm(
+    data: str,
+    client: Optional[Groq] = None,
+    model: str = GROQ_MODEL
+) -> DocumentMetaData:
+    print("Started metadata extraction via Groq")
 
-    prompt: str = f"""
-    You are an expert metadata extractor. Extract details from the text below into a valid JSON object.
-    Do not output markdown, explanations, or extra text. ONLY valid JSON.
+    if client is None:
+        raise ValueError("No client passed in the meta dta extractor")
 
-    JSON Schema:
-    {{
-        "description": "string (50-100 words summary)",
-        "document_type": "notice" | "assignment" | "syllabus" | "notes" | "time_table" | "others",
-        "deadline": "YYYY-MM-DD (optional, omit if not present)",
-    }}
+    system_prompt = """You are an expert metadata extractor. Extract details from the provided text into a valid JSON object matching this schema:
+{
+    "description": "string (50-100 words summary)",
+    "document_type": "notice" | "assignment" | "syllabus" | "notes" | "time_table" | "others",
+    "deadline": "YYYY-MM-DD (optional, null if not present)"
+}
+Return ONLY a valid JSON object with no markdown wrappers or additional text."""
 
-    Context Data:
-    {data}
-
-    Do not include markdown.
-    Do not include explanations.
-    """
-    generator = load_slm()
-
-
-    result = generator(
-    prompt,
-    max_new_tokens=300,
-    return_full_text=False,
-)
-
-    generated_text = result[0]["generated_text"]
-
-    data = json.loads(generated_text)
-
-
-    return DocumentMetaData.model_validate(data)
-
-# def _get_doc_required_meta_uuids(batch_id: list[str], user_id: str) -> DocumentIdMetaData:
-
-    if len(batch_id) < 1:
-        raise ValueError ("Batch details missing")
-
-    client = get_supabase_client()
-
-    subject = (
-        client
-        .table("batches")
-        .select("current_semester_id", "course_id")
-        .eq("id", batch_id)
-        .single()
-        .execute()
+    # Using Groq's JSON object mode guarantees valid JSON output
+    chat_completion = client.chat.completions.create(
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Context Data:\n{data}"}
+        ],
+        model=model,
+        temperature=0.1,  # Low temperature for deterministic metadata
+        response_format={"type": "json_object"}
     )
 
-    if subject is None:
-        raise ValueError ("Subject not found")
+    raw_response = chat_completion.choices[0].message.content
+    if raw_response == None:
+        raise ValueError("raw_response was None")
+    parsed_json = json.loads(raw_response)
 
-    return DocumentIdMetaData(
-        subject_id=subject_id,
-    )
+    print("Extracted metadata:", parsed_json)
+    return DocumentMetaData.model_validate(parsed_json)
+
 
 @ingest.route("/ingest", methods=["POST"])
 @require_auth
@@ -188,7 +170,7 @@ def ingest_files():
         bucket = _required_s3_bucket()
 
         #initializing the generator--
-        context_meta_data_generator: TextGenerationPipeline = load_slm()
+        context_meta_data_generator: Groq = load_slm()
 
         for uploaded_file in files:
             filename = secure_filename(uploaded_file.filename or "")
@@ -196,27 +178,45 @@ def ingest_files():
             if not filename:
                 raise ValueError("Every upload must have a filename")
 
+            extension = Path(filename).suffix.lower().lstrip(".")
             category = get_file_type(filename)
+            print(extension)
 
             file_bytes: bytes = uploaded_file.read()
 
+            if extension == "pdf":
+                reader = PdfReader(BytesIO(file_bytes))
+                extracted_text = "\n".join(
+                    page.extract_text() or ""
+                    for page in reader.pages
+                )
+            else:
+                extracted_text = file_bytes.decode("utf-8")
+
+
             if not file_bytes:
-                raise ValueError(f"{filename} is empty")
+                        raise ValueError(f"{filename} is empty")
 
             if len(file_bytes) > MAX_UPLOAD_BYTES:
                 raise ValueError(f"{filename} exceeds the {MAX_UPLOAD_BYTES // (1024 * 1024)} MB limit")
 
+            # print(extracted_text)
+
+            print(context_meta_data_generator, ": context")
+
+            file_context_meta_data: DocumentMetaData = _get_file_context_meta_data_from_slm(extracted_text, context_meta_data_generator)
+
+            print("returnd from sml")
+            print(context_meta_data_generator, ": context")
             s3_key = f"{category}/{uuid.uuid4().hex}_{filename}"
 
-            content_type = uploaded_file.mimetype or mimetypes.guess_type(filename)[0] or "application/octet-stream"
-            aws_s3_client.put_object(Bucket=bucket, Key=s3_key, Body=file_bytes, ContentType=content_type)
-
-            file_context_meta_data: DocumentMetaData = _get_file_context_meta_data_from_slm(file_bytes.decode("utf-8"), context_meta_data_generator)
+            from flask import g
 
             document_data_to_insert: dict = {
                 **file_context_meta_data.model_dump(),
                 "title" : filename,
-                "s3_key" : s3_key
+                "s3_key" : s3_key,
+                "uploaded_by": g.current_user.id
                }
 
             if subject_id is not None:
@@ -226,6 +226,8 @@ def ingest_files():
 
             _upload_doc_id_per_batches(get_supabase_client(), document_id, batch_ids)
 
+            content_type = uploaded_file.mimetype or mimetypes.guess_type(filename)[0] or "application/octet-stream"
+
             chunk_count = _ingest_bytes(file_bytes, filename, s3_key, document_id)
 
             completed.append({
@@ -234,6 +236,8 @@ def ingest_files():
                 "filetype": Path(filename).suffix.lower().lstrip("."),
                 "num_chunks": chunk_count,
             })
+
+            aws_s3_client.put_object(Bucket=bucket, Key=s3_key, Body=file_bytes, ContentType=content_type)
 
     except (RuntimeError, ValueError) as error:
         return jsonify({"detail": str(error)}), 400

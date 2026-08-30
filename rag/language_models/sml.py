@@ -1,11 +1,10 @@
-from transformers import pipeline, AutoTokenizer
-from transformers.pipelines.text_generation import TextGenerationPipeline
-def load_slm(model_name: str="Qwen/Qwen2.5-1.5B-Instruct") -> TextGenerationPipeline:
+from config.settings import GROQ_API_KEY
+from groq import Groq
+def load_slm() -> Groq:
     """
-    Returns:
-        TextGenerationPipeline:
+    Initializes and returns the Groq client.
     """
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    pipe = pipeline("text-generation", model_name, tokenizer=tokenizer)
-
-    return pipe
+    print(GROQ_API_KEY)
+    if not GROQ_API_KEY:
+        raise ValueError("GROQ_API_KEY is not set in environment variables.")
+    return Groq(api_key=GROQ_API_KEY)

@@ -11,11 +11,12 @@ class StudentDataModel(BaseModel):
     registered_email: str
     name: str
     batch_code: str
+    batch_id: str
     current_semester: int
     course_name: str
     student_role: str
     subjects: list[StudentSubjects]
-    
+
 class FacultySubject(BaseModel):
     id: UUID
     name: str

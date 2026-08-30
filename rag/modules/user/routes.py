@@ -30,6 +30,7 @@ def profile():
             student = Student(g.current_user.id, client=get_supabase_client())
             profile_data  = student.get_user_details()
 
+
         elif user_role ==  "faculty":
             faculty = Faculty(g.current_user.id, client=get_supabase_client())
             profile_data = faculty.get_user_details()
