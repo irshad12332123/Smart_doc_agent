@@ -1,5 +1,10 @@
 # Smart Doc Agent (CampusHub / BatchOS)
 
+
+#INGESTION PIPELINE
+![Uploading smart_doc_ingesetion.png…]()
+
+
 An intelligent document ingestion, metadata extraction, and contextual RAG (Retrieval-Augmented Generation) assistant designed for college campuses and academic cohorts.
 
 Smart Doc Agent automates multi-format academic document ingestion, uses Small Language Models (SLMs) hosted on Groq for ultra-fast structured metadata extraction, indexes vectors in Supabase (pgvector), and delivers scoped access control across batches, courses, and subjects.
