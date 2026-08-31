@@ -30,7 +30,7 @@ from lib.aws_s3 import aws_s3_client
 from lib.supabase import get_supabase_client
 from loader.loader import Loader
 from utils.get_file_type import get_file_type
-from ingestion.constants import DocumentMetaData, DocumentIdMetaData
+from ingestion.constants import DocumentMetaData
 from language_models.sml import load_slm
 
 ingest = Blueprint("ingest", __name__, url_prefix="/api")
@@ -39,12 +39,10 @@ def _data(response: Any) -> list[dict[str, Any]]:
     result = getattr(response, "data", response)
     return result if isinstance(result, list) else ([] if result is None else [result])
 
-
 def _required_s3_bucket() -> str:
     if not S3_BUCKET_NAME:
         raise RuntimeError("S3_BUCKET_NAME must be configured")
     return S3_BUCKET_NAME
-
 
 def _document_info(document: dict[str, Any], chunk_counts: Counter[str]) -> dict[str, Any]:
     document_id = str(document.get("id") or document.get("document_id"))
@@ -57,12 +55,10 @@ def _document_info(document: dict[str, Any], chunk_counts: Counter[str]) -> dict
         "uploaded_at": document.get("created_at") or "",
     }
 
-
 def _insert_document(document_data: dict) -> str:
 
     response = get_supabase_client().table("documents").insert(document_data).execute()
     rows = _data(response)
-
 
     if not rows or not rows[0].get("id"):
         raise RuntimeError("The documents insert did not return a document id")
@@ -113,6 +109,7 @@ def _get_file_context_meta_data_from_slm(
     client: Optional[Groq] = None,
     model: str = GROQ_MODEL
 ) -> DocumentMetaData:
+    print("data reveived: ", data)
     print("Started metadata extraction via Groq")
 
     if client is None:
@@ -151,7 +148,6 @@ Return ONLY a valid JSON object with no markdown wrappers or additional text."""
 def ingest_files():
     print("request rceived")
     files = request.files.getlist("files")
-    print(files)
     batch_ids = request.form.getlist("batch_ids")
     subject_id = request.form.get("subject_id") or None
 
@@ -180,11 +176,11 @@ def ingest_files():
 
             extension = Path(filename).suffix.lower().lstrip(".")
             category = get_file_type(filename)
-            print(extension)
 
             file_bytes: bytes = uploaded_file.read()
 
             if extension == "pdf":
+                print("pdf extractor loaded")
                 reader = PdfReader(BytesIO(file_bytes))
                 extracted_text = "\n".join(
                     page.extract_text() or ""
@@ -193,14 +189,13 @@ def ingest_files():
             else:
                 extracted_text = file_bytes.decode("utf-8")
 
-
             if not file_bytes:
                         raise ValueError(f"{filename} is empty")
 
             if len(file_bytes) > MAX_UPLOAD_BYTES:
                 raise ValueError(f"{filename} exceeds the {MAX_UPLOAD_BYTES // (1024 * 1024)} MB limit")
 
-            # print(extracted_text)
+            print(extracted_text[: 80])
 
             print(context_meta_data_generator, ": context")
 
@@ -270,29 +265,34 @@ def delete_document(document_id: str):
     except Exception:
         return jsonify({"detail": "Could not delete document."}), 500
 
-
 def _retrieve(query: str) -> list[dict[str, Any]]:
     embedding = Embedder().generate_embeddings([query])[0]
     client = get_supabase_client()
     # ``match_document_chunks`` is the conventional Supabase pgvector RPC name.
     result = client.rpc(
-        "match_document_chunks",
+        "match_documents",
         {
             "query_embedding": embedding,
             "match_threshold": RETRIEVAL_MATCH_THRESHOLD,
             "match_count": RETRIEVAL_MATCH_COUNT,
         },
     ).execute()
-    return _data(result)
 
+    print("data_result ",_data(result))
+
+    return _data(result)
 
 def _sse(payload: dict[str, Any]) -> str:
     return f"data: {json.dumps(payload)}\n\n"
 
 @ingest.route("/chat", methods=["POST"])
 def chat():
+
     payload = request.get_json(silent=True) or {}
+    print("payload", payload)
     message = payload.get("message")
+    print("message", message)
+
     history = payload.get("history", [])
 
     if not isinstance(message, str) or not message.strip():
@@ -302,7 +302,9 @@ def chat():
 
     def generate() -> Iterator[str]:
         try:
+            print("Genrator started")
             rows = _retrieve(message)
+            print("rows: ", rows)
             sources = [
                 {
                     "chunk_id": str(row.get("id") or row.get("chunk_id") or index),
@@ -321,7 +323,7 @@ def chat():
                 for token in CallLLM().stream_answer(message, context, history):
                     yield _sse({"type": "token", "content": token})
             yield _sse({"type": "done"})
-        except Exception:
-            yield _sse({"type": "error", "content": "Unable to answer that question right now."})
+        except Exception as e:
+            yield _sse({"type": "error", "content": f"Unable to answer that question right now. {e}"})
 
     return Response(stream_with_context(generate()), mimetype="text/event-stream", headers={"Cache-Control": "no-cache"})
