@@ -1,4 +1,3 @@
-"""HTTP endpoints for document ingestion, retrieval, and chat."""
 
 import json
 import mimetypes
@@ -7,7 +6,6 @@ from collections import Counter
 from collections.abc import Iterator
 from pathlib import Path
 from typing import  Any, Optional
-from transformers.pipelines.text_generation  import TextGenerationPipeline
 from pypdf import PdfReader
 from io import BytesIO
 from flask import Blueprint, Response, jsonify, request, stream_with_context
@@ -142,7 +140,6 @@ Return ONLY a valid JSON object with no markdown wrappers or additional text."""
     print("Extracted metadata:", parsed_json)
     return DocumentMetaData.model_validate(parsed_json)
 
-
 @ingest.route("/ingest", methods=["POST"])
 @require_auth
 def ingest_files():
@@ -268,7 +265,6 @@ def delete_document(document_id: str):
 def _retrieve(query: str) -> list[dict[str, Any]]:
     embedding = Embedder().generate_embeddings([query])[0]
     client = get_supabase_client()
-    # ``match_document_chunks`` is the conventional Supabase pgvector RPC name.
     result = client.rpc(
         "match_documents",
         {
@@ -277,8 +273,6 @@ def _retrieve(query: str) -> list[dict[str, Any]]:
             "match_count": RETRIEVAL_MATCH_COUNT,
         },
     ).execute()
-
-    print("data_result ",_data(result))
 
     return _data(result)
 
