@@ -12,6 +12,7 @@ from flask import Blueprint, Response, jsonify, request, stream_with_context
 from werkzeug.utils import secure_filename
 from groq import Groq
 
+from rag.services.retreiver.dense_retreiver import DenseRetriever
 from modules.auth.middleware import require_auth
 from language_models.services import CallLLM
 from chunker.splitter import Chunker
@@ -262,20 +263,6 @@ def delete_document(document_id: str):
     except Exception:
         return jsonify({"detail": "Could not delete document."}), 500
 
-def _retrieve(query: str) -> list[dict[str, Any]]:
-    embedding = Embedder().generate_embeddings([query])[0]
-    client = get_supabase_client()
-    result = client.rpc(
-        "match_documents",
-        {
-            "query_embedding": embedding,
-            "match_threshold": RETRIEVAL_MATCH_THRESHOLD,
-            "match_count": RETRIEVAL_MATCH_COUNT,
-        },
-    ).execute()
-
-    return _data(result)
-
 def _sse(payload: dict[str, Any]) -> str:
     return f"data: {json.dumps(payload)}\n\n"
 
@@ -296,9 +283,13 @@ def chat():
 
     def generate() -> Iterator[str]:
         try:
+
             print("Genrator started")
-            rows = _retrieve(message)
-            print("rows: ", rows)
+            dense_retriever = DenseRetriever()
+
+            dense_retreived_rows = dense_retriever.retrieve(message)
+
+            print("rows: ", dense_retreived_rows)
             sources = [
                 {
                     "chunk_id": str(row.get("id") or row.get("chunk_id") or index),
@@ -307,7 +298,7 @@ def chat():
                     "text": row.get("content") or row.get("text") or "",
                     "score": float(row.get("similarity") or row.get("score") or 0),
                 }
-                for index, row in enumerate(rows)
+                for index, row in enumerate(dense_retreived_rows)
             ]
             yield _sse({"type": "sources", "sources": sources})
             if not sources:
