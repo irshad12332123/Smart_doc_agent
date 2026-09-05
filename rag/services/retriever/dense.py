@@ -1,15 +1,13 @@
-from rag.services.retreiver.base_retreiver import BaseRetreiver
+from rag.services.retriever.base import BaseRetriever
+
 from typing import Any
 from rag.lib.supabase import get_supabase_client
 from rag.embedder.embedding import Embedder
 from rag.config.settings import RETRIEVAL_MATCH_THRESHOLD, RETRIEVAL_MATCH_COUNT
 
-def _data(response: Any) -> list[dict[str, Any]]:
-    result = getattr(response, "data", response)
-    return result if isinstance(result, list) else ([] if result is None else [result])
+class DenseRetriever(BaseRetriever):
 
-class DenseRetreiver(BaseRetreiver):
-    def retrieve(self, query: str) -> list[dict[str, Any]]:
+    def retrieve(self, query: str):
 
         embedding = Embedder().generate_embeddings([query])[0]
         client = get_supabase_client()
@@ -23,4 +21,4 @@ class DenseRetreiver(BaseRetreiver):
             },
         ).execute()
 
-        return _data(result)
+        return self._data(result)
