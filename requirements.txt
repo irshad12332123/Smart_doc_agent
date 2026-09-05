@@ -13,3 +13,6 @@ transformers
 pypdf
 groq
 pymupdf
+bm25s
+PyStemmer
+

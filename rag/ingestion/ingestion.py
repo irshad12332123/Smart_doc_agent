@@ -1,36 +1,24 @@
 
 import json
-import mimetypes
-import uuid
 from collections import Counter
 from collections.abc import Iterator
 from pathlib import Path
-from typing import  Any, Optional
-from pypdf import PdfReader
-from io import BytesIO
+from typing import  Any
 from flask import Blueprint, Response, jsonify, request, stream_with_context
-from werkzeug.utils import secure_filename
 from groq import Groq
 
-from rag.services.retreiver.dense_retreiver import DenseRetriever
+from rag.language_models.sml import load_slm
+from rag.services.retriever.dense import DenseRetriever
 from modules.auth.middleware import require_auth
 from language_models.services import CallLLM
-from chunker.splitter import Chunker
 from config.settings import (
-    MAX_UPLOAD_BYTES,
-    RETRIEVAL_MATCH_COUNT,
-    RETRIEVAL_MATCH_THRESHOLD,
     S3_BUCKET_NAME,
-    GROQ_MODEL
 )
 
-from embedder.embedding import Embedder
 from lib.aws_s3 import aws_s3_client
 from lib.supabase import get_supabase_client
 from loader.loader import Loader
-from utils.get_file_type import get_file_type
-from ingestion.constants import DocumentMetaData
-from language_models.sml import load_slm
+from rag.services.ingestion.dense import DenseIngestion
 
 ingest = Blueprint("ingest", __name__, url_prefix="/api")
 
@@ -54,93 +42,6 @@ def _document_info(document: dict[str, Any], chunk_counts: Counter[str]) -> dict
         "uploaded_at": document.get("created_at") or "",
     }
 
-def _insert_document(document_data: dict) -> str:
-
-    response = get_supabase_client().table("documents").insert(document_data).execute()
-    rows = _data(response)
-
-    if not rows or not rows[0].get("id"):
-        raise RuntimeError("The documents insert did not return a document id")
-    return str(rows[0]["id"])
-
-def _ingest_bytes(file_bytes: bytes, filename: str, s3_key: str, document_id: str) -> int:
-    documents = Loader().load(file_bytes, filename)
-    if not documents:
-        raise ValueError("No readable text was found in this document")
-
-    chunks = Chunker().chunk_docs(documents, s3_key=s3_key)
-    chunks = [chunk for chunk in chunks if chunk["text"].strip()]
-    if not chunks:
-        raise ValueError("No readable text was found in this document")
-
-    embeddings = Embedder().generate_embeddings([chunk["text"] for chunk in chunks])
-    rows = [
-        {
-            "document_id": document_id,
-            "content": chunk["text"],
-            "page_number": chunk["metadata"]["page"],
-            "chunk_index": chunk["metadata"]["chunk_index"],
-            "embedding": embedding,
-        }
-        for chunk, embedding in zip(chunks, embeddings, strict=True)
-    ]
-    get_supabase_client().table("document_chunks").insert(rows).execute()
-    return len(rows)
-
-def _upload_doc_id_per_batches(client, document_id: str, batch_ids: list[str]):
-
-    document_batch_rows = [
-            {
-                "document_id": document_id,
-                "batch_id": batch_id,
-            }
-            for batch_id in batch_ids
-        ]
-    (
-        client
-        .table("document_batches")
-        .insert(document_batch_rows)
-        .execute()
-    )
-
-def _get_file_context_meta_data_from_slm(
-    data: str,
-    client: Optional[Groq] = None,
-    model: str = GROQ_MODEL
-) -> DocumentMetaData:
-    print("data reveived: ", data)
-    print("Started metadata extraction via Groq")
-
-    if client is None:
-        raise ValueError("No client passed in the meta dta extractor")
-
-    system_prompt = """You are an expert metadata extractor. Extract details from the provided text into a valid JSON object matching this schema:
-{
-    "description": "string (50-100 words summary)",
-    "document_type": "notice" | "assignment" | "syllabus" | "notes" | "time_table" | "others",
-    "deadline": "YYYY-MM-DD (optional, null if not present)"
-}
-Return ONLY a valid JSON object with no markdown wrappers or additional text."""
-
-    # Using Groq's JSON object mode guarantees valid JSON output
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"Context Data:\n{data}"}
-        ],
-        model=model,
-        temperature=0.1,  # Low temperature for deterministic metadata
-        response_format={"type": "json_object"}
-    )
-
-    raw_response = chat_completion.choices[0].message.content
-    if raw_response == None:
-        raise ValueError("raw_response was None")
-    parsed_json = json.loads(raw_response)
-
-    print("Extracted metadata:", parsed_json)
-    return DocumentMetaData.model_validate(parsed_json)
-
 @ingest.route("/ingest", methods=["POST"])
 @require_auth
 def ingest_files():
@@ -149,13 +50,14 @@ def ingest_files():
     batch_ids = request.form.getlist("batch_ids")
     subject_id = request.form.get("subject_id") or None
 
+
     if not files:
         return jsonify({"detail": "Attach at least one file in the 'files' field."}), 400
 
     if not batch_ids:
         return jsonify({"detail": "At least one batch is required."}), 400
 
-    supabase = get_supabase_client()  # Fail before uploading a file if configuration is absent.
+    supabase = get_supabase_client()
     del supabase
 
     completed: list[dict[str, Any]] = []
@@ -166,71 +68,10 @@ def ingest_files():
         #initializing the generator--
         context_meta_data_generator: Groq = load_slm()
 
+        dense_ingester = DenseIngestion()
+
         for uploaded_file in files:
-            filename = secure_filename(uploaded_file.filename or "")
-
-            if not filename:
-                raise ValueError("Every upload must have a filename")
-
-            extension = Path(filename).suffix.lower().lstrip(".")
-            category = get_file_type(filename)
-
-            file_bytes: bytes = uploaded_file.read()
-
-            if extension == "pdf":
-                print("pdf extractor loaded")
-                reader = PdfReader(BytesIO(file_bytes))
-                extracted_text = "\n".join(
-                    page.extract_text() or ""
-                    for page in reader.pages
-                )
-            else:
-                extracted_text = file_bytes.decode("utf-8")
-
-            if not file_bytes:
-                        raise ValueError(f"{filename} is empty")
-
-            if len(file_bytes) > MAX_UPLOAD_BYTES:
-                raise ValueError(f"{filename} exceeds the {MAX_UPLOAD_BYTES // (1024 * 1024)} MB limit")
-
-            print(extracted_text[: 80])
-
-            print(context_meta_data_generator, ": context")
-
-            file_context_meta_data: DocumentMetaData = _get_file_context_meta_data_from_slm(extracted_text, context_meta_data_generator)
-
-            print("returnd from sml")
-            print(context_meta_data_generator, ": context")
-            s3_key = f"{category}/{uuid.uuid4().hex}_{filename}"
-
-            from flask import g
-
-            document_data_to_insert: dict = {
-                **file_context_meta_data.model_dump(),
-                "title" : filename,
-                "s3_key" : s3_key,
-                "uploaded_by": g.current_user.id
-               }
-
-            if subject_id is not None:
-                document_data_to_insert["subject_id"] = subject_id
-
-            document_id = _insert_document(document_data_to_insert)
-
-            _upload_doc_id_per_batches(get_supabase_client(), document_id, batch_ids)
-
-            content_type = uploaded_file.mimetype or mimetypes.guess_type(filename)[0] or "application/octet-stream"
-
-            chunk_count = _ingest_bytes(file_bytes, filename, s3_key, document_id)
-
-            completed.append({
-                "doc_id": document_id,
-                "filename": filename,
-                "filetype": Path(filename).suffix.lower().lstrip("."),
-                "num_chunks": chunk_count,
-            })
-
-            aws_s3_client.put_object(Bucket=bucket, Key=s3_key, Body=file_bytes, ContentType=content_type)
+            completed.append(dense_ingester.ingest(uploaded_file, context_meta_data_generator, subject_id, batch_ids, aws_s3_client, bucket))
 
     except (RuntimeError, ValueError) as error:
         return jsonify({"detail": str(error)}), 400
@@ -290,6 +131,7 @@ def chat():
             dense_retreived_rows = dense_retriever.retrieve(message)
 
             print("rows: ", dense_retreived_rows)
+
             sources = [
                 {
                     "chunk_id": str(row.get("id") or row.get("chunk_id") or index),
