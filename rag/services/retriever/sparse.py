@@ -1,8 +1,7 @@
-from rag.services.retriever.base import BaseRetriever
-from typing import Any
+from services.retriever.base import BaseRetriever
 import bm25s
 import Stemmer
-from rag.lib.supabase import get_supabase_client
+from lib.supabase import get_supabase_client
 
 class SparseDocumentSystem(BaseRetriever):
 
