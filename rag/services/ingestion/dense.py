@@ -1,22 +1,28 @@
 import json
 from werkzeug.utils import secure_filename
 from pathlib import Path
-from rag.config.settings import MAX_UPLOAD_BYTES
-from rag.ingestion.ingestion import _data
-from rag.lib.supabase import get_supabase_client
-from rag.services.ingestion.base import BaseIngestion
-from rag.utils.get_file_type import get_file_type
+from config.settings import MAX_UPLOAD_BYTES
+from lib.supabase import get_supabase_client
+from services.ingestion.base import BaseIngestion
+from utils.get_file_type import get_file_type
 import mimetypes
 import uuid
 from pypdf import PdfReader
 from io import BytesIO
-from rag.services.ingestion.constants import DocumentMetaData
+from services.ingestion.constants import DocumentMetaData
 from embedder.embedding import Embedder
 from typing import Optional
-from rag.loader.loader import Loader
+from loader.loader import Loader
 from chunker.splitter import Chunker
-from rag.config.settings import GROQ_MODEL
+from config.settings import GROQ_MODEL
 from groq import Groq
+from typing import Any
+
+
+def _data(response: Any) -> list[dict[str, Any]]:
+    result = getattr(response, "data", response)
+    return result if isinstance(result, list) else ([] if result is None else [result])
+
 
 class DenseIngestion(BaseIngestion):
 

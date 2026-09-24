@@ -7,18 +7,17 @@ from typing import  Any
 from flask import Blueprint, Response, jsonify, request, stream_with_context
 from groq import Groq
 
-from rag.language_models.sml import load_slm
-from rag.services.retriever.dense import DenseRetriever
+from services.retriever.dense import DenseRetriever
 from modules.auth.middleware import require_auth
 from language_models.services import CallLLM
+from language_models.sml import load_slm
 from config.settings import (
     S3_BUCKET_NAME,
 )
 
 from lib.aws_s3 import aws_s3_client
 from lib.supabase import get_supabase_client
-from loader.loader import Loader
-from rag.services.ingestion.dense import DenseIngestion
+from services.ingestion.dense import DenseIngestion
 
 ingest = Blueprint("ingest", __name__, url_prefix="/api")
 
