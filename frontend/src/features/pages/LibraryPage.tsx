@@ -3,6 +3,13 @@ import * as I from "lucide-react";
 import type { DocumentInfo } from "../../types";
 import { DocumentCard, Empty } from "../../components/ui/common";
 
+const filterOptions = [
+  { id: "All", label: "All Materials" },
+  { id: "PDF", label: "PDFs" },
+  { id: "DOCX", label: "Word Docs" },
+  { id: "PPTX", label: "Presentations" },
+];
+
 export function LibraryPage({
   documents,
   docError,
@@ -15,50 +22,91 @@ export function LibraryPage({
 
   const rows = useMemo(
     () =>
-      documents.filter(
-        (d) =>
-          (filter === "All" || d.filetype.toUpperCase() === filter) &&
-          d.filename.toLowerCase().includes(search.toLowerCase()),
-      ),
+      documents.filter((d) => {
+        const matchesFilter =
+          filter === "All" ||
+          d.filetype.toUpperCase() === filter ||
+          (filter === "DOCX" && (d.filetype.toUpperCase() === "DOC" || d.filetype.toUpperCase() === "DOCX")) ||
+          (filter === "PPTX" && (d.filetype.toUpperCase() === "PPT" || d.filetype.toUpperCase() === "PPTX"));
+
+        const matchesSearch =
+          d.filename.toLowerCase().includes(search.toLowerCase()) ||
+          (d.description && d.description.toLowerCase().includes(search.toLowerCase()));
+
+        return matchesFilter && matchesSearch;
+      }),
     [documents, search, filter],
   );
 
   return (
-    <div className="page">
-      <h1>Document Library</h1>
-      <p className="lede">
-        Browse, filter, and manage your academic resources and notes.
-      </p>
+    <div className="page library-page">
+      <div className="page-header">
+        <div className="page-title-group">
+          <h1>Document Library</h1>
+          <p className="lede">
+            Browse, filter, and inspect verified academic resources and notes.
+          </p>
+        </div>
+        <div className="page-stat-badge">
+          <I.FileText />
+          <span>{documents.length} Total Resources</span>
+        </div>
+      </div>
+
       <div className="library-tools">
-        <label className="mini-search">
-          <I.Search />
+        <div className="mini-search">
+          <I.Search className="search-icon" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search documents"
+            placeholder="Search by title or topic…"
+            aria-label="Search documents"
           />
-        </label>
-        {['All', 'PDF', 'DOCX', 'PPTX'].map((f) => (
-          <button
-            className={filter === f ? 'selected' : ''}
-            onClick={() => setFilter(f)}
-            key={f}
-          >
-            {f === 'All' ? 'All Subjects' : f}
-          </button>
-        ))}
+          {search && (
+            <button
+              className="clear-search-btn"
+              onClick={() => setSearch("")}
+              title="Clear search"
+            >
+              <I.X />
+            </button>
+          )}
+        </div>
+
+        <div className="filter-chips">
+          {filterOptions.map((f) => (
+            <button
+              className={`filter-btn ${filter === f.id ? "selected" : ""}`}
+              onClick={() => setFilter(f.id)}
+              key={f.id}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
+
       {docError ? (
         <Empty message={docError} />
-      ) : (
+      ) : rows.length > 0 ? (
         <div className="library-grid">
           {rows.map((d) => (
             <DocumentCard document={d} key={d.doc_id} />
           ))}
         </div>
-      )}
-      {!docError && rows.length === 0 && (
-        <Empty message="No documents match this filter." />
+      ) : (
+        <Empty
+          message={
+            search || filter !== "All"
+              ? "No documents matched your search criteria."
+              : "No documents have been uploaded to your library yet."
+          }
+          actionLabel={search || filter !== "All" ? "Reset Filters" : undefined}
+          onAction={() => {
+            setSearch("");
+            setFilter("All");
+          }}
+        />
       )}
     </div>
   );
