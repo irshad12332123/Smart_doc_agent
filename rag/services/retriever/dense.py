@@ -1,6 +1,5 @@
 from services.retriever.base import BaseRetriever
 
-from typing import Any
 from lib.supabase import get_supabase_client
 from embedder.embedding import Embedder
 from config.settings import RETRIEVAL_MATCH_THRESHOLD, RETRIEVAL_MATCH_COUNT

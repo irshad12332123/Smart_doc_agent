@@ -3,7 +3,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 class Chunker:
     def __init__(self):
-        self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=400, chunk_overlap=100,separators=["\n\n", "\n", " ", ""])
+        self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100,separators=["\n\n", "\n", " ", ""])
 
     def chunk_docs(self, docs, s3_key: str) -> List[dict]:
 
@@ -24,8 +24,8 @@ class Chunker:
         return chunks
 
 
-    def chunk_texts(self,texts, s3_key:str, chunk_size: int = 800) -> List[dict]:
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=150,separators=["\n\n", "\n", " ", ""])
+    def chunk_texts(self,texts, s3_key:str, chunk_size: int = 500) -> List[dict]:
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=100,separators=["\n\n", "\n", " ", ""])
         chunks: List[dict] = []
 
         text_chunks = text_splitter.split_text(texts)
