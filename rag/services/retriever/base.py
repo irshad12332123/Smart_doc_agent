@@ -9,4 +9,4 @@ class BaseRetriever(ABC):
 
     @abstractmethod
     def retrieve(self, query: str):
-        raise NotImplementedError("Subxlasses must implement retrieve method")
+        raise NotImplementedError("Subclasses must implement retrieve method")
