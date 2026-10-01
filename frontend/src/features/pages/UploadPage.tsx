@@ -94,7 +94,7 @@ export function UploadPage({
       setFiles([]);
       setMessage("Document successfully processed and indexed for AI search ✓");
     } catch (e: unknown) {
-      console.error("[Upload Error]:", e);
+      console.error("[Upload Error]:", e);  
       setMessage(errorMessage(e, "Upload failed. Please check file format."));
     } finally {
       setBusy(false);
