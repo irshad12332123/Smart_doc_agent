@@ -1,16 +1,15 @@
+from typing import Sequence
+from langchain_core.embeddings import Embeddings
 from sentence_transformers import SentenceTransformer
 from config.settings import EMBEDDING_MODEL_NAME
-from typing import Sequence
 
-class Embedder:
+class Embedder(Embeddings):
     def __init__(self):
         self.model = None
         self._load_model()
-
     def _load_model(self, model_name: str = EMBEDDING_MODEL_NAME) -> SentenceTransformer:
         if self.model is None:
             self.model = SentenceTransformer(model_name)
-            # print("----- MODEL LOADED SUCCESSFULLY -----")
         return self.model
 
     def generate_embeddings(self, texts: Sequence[str]) -> list[list[float]]:
@@ -23,3 +22,11 @@ class Embedder:
         )
 
         return embeddings.tolist()
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        return self.generate_embeddings(texts)
+
+    def embed_query(self, text: str) -> list[float]:
+        res = self.generate_embeddings([text])
+        return res[0] if res else []
+

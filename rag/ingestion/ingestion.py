@@ -46,11 +46,10 @@ def _document_info(document: dict[str, Any], chunk_counts: Counter[str]) -> dict
 @ingest.route("/ingest", methods=["POST"])
 @require_auth
 def ingest_files():
-    print("request rceived")
+    print("request received")
     files = request.files.getlist("files")
     batch_ids = request.form.getlist("batch_ids")
     subject_id = request.form.get("subject_id") or None
-
 
     if not files:
         return jsonify({"detail": "Attach at least one file in the 'files' field."}), 400
