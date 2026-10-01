@@ -1,4 +1,3 @@
-
 import json
 from collections import Counter
 from collections.abc import Iterator
@@ -18,6 +17,9 @@ from config.settings import (
 from lib.aws_s3 import aws_s3_client
 from lib.supabase import get_supabase_client
 from services.ingestion.dense import DenseIngestion
+from services.ingestion.sparse import SparseIngestion
+from services.retriever.sparse import SparseRetriever
+from services.retriever.hybrid import HybridRetriever
 
 ingest = Blueprint("ingest", __name__, url_prefix="/api")
 
@@ -72,12 +74,101 @@ def ingest_files():
         for uploaded_file in files:
             completed.append(dense_ingester.ingest(uploaded_file, context_meta_data_generator, subject_id, batch_ids, aws_s3_client, bucket))
 
+        # Regenerate the BM25 sparse index to keep local index in sync with Supabase
+        try:
+            SparseIngestion().regenerate_index()
+        except Exception as sparse_err:
+            print("Warning: Sparse index regeneration failed after upload:", sparse_err)
+
     except (RuntimeError, ValueError) as error:
         return jsonify({"detail": str(error)}), 400
     except Exception as e:
-        return jsonify({"detail": "Document ingestion failed. Check the server logs.", "error": e}), 500
+        return jsonify({"detail": "Document ingestion failed. Check the server logs.", "error": str(e)}), 500
 
     return jsonify({"documents": completed, "total_chunks_added": sum(d["num_chunks"] for d in completed)}), 201
+
+@ingest.route("/index/sync", methods=["POST"])
+def sync_index():
+    """Manually trigger BM25 sparse index regeneration from Supabase."""
+    try:
+        metadata = SparseIngestion().regenerate_index()
+        return jsonify({"status": "success", "message": "Sparse BM25 index regenerated successfully", "metadata": metadata}), 200
+    except Exception as e:
+        return jsonify({"detail": f"Failed to sync sparse index: {e}"}), 500
+
+@ingest.route("/retrieve/sparse", methods=["POST"])
+def retrieve_sparse():
+    """Retrieve document chunks using BM25 sparse retriever."""
+    payload = request.get_json(silent=True) or {}
+    query = payload.get("query")
+    match_count = payload.get("match_count")
+    match_threshold = payload.get("match_threshold", 0.0)
+    document_ids = payload.get("document_ids")
+
+    if not query or not isinstance(query, str) or not query.strip():
+        return jsonify({"detail": "Query string is required"}), 400
+
+    try:
+        retriever = SparseRetriever()
+        results = retriever.retrieve(
+            query=query,
+            match_count=match_count,
+            match_threshold=match_threshold,
+            document_ids=document_ids,
+        )
+        return jsonify({"query": query, "results": results, "count": len(results)}), 200
+    except Exception as e:
+        return jsonify({"detail": f"Sparse retrieval failed: {e}"}), 500
+
+@ingest.route("/retrieve/hybrid", methods=["POST"])
+def retrieve_hybrid():
+    """Retrieve document chunks using Hybrid retriever (Dense + BM25S + RRF + optional CrossEncoder)."""
+    payload = request.get_json(silent=True) or {}
+    query = payload.get("query")
+    match_count = payload.get("match_count")
+    rerank = payload.get("rerank", False)
+    dense_weight = payload.get("dense_weight", 1.0)
+    sparse_weight = payload.get("sparse_weight", 1.0)
+    document_ids = payload.get("document_ids")
+
+    if not query or not isinstance(query, str) or not query.strip():
+        return jsonify({"detail": "Query string is required"}), 400
+
+    try:
+        retriever = HybridRetriever()
+        results = retriever.retrieve(
+            query=query,
+            match_count=match_count,
+            dense_weight=dense_weight,
+            sparse_weight=sparse_weight,
+            rerank=rerank,
+            document_ids=document_ids,
+        )
+        return jsonify({
+            "query": query,
+            "reranked": rerank,
+            "results": results,
+            "count": len(results),
+        }), 200
+    except Exception as e:
+        return jsonify({"detail": f"Hybrid retrieval failed: {e}"}), 500
+
+@ingest.route("/evaluation/run", methods=["POST", "GET"])
+def run_evaluation():
+    """Run retrieval benchmark evaluation on the college dataset."""
+    try:
+        from evaluation.evaluator import RetrievalEvaluator
+        evaluator = RetrievalEvaluator()
+        results = evaluator.run_all_evaluations(top_k=5)
+        # Format summary metrics for JSON output
+        summary = {name: data["metrics"] for name, data in results.items()}
+        return jsonify({
+            "status": "success",
+            "summary": summary,
+            "total_queries_tested": len(evaluator.queries),
+        }), 200
+    except Exception as e:
+        return jsonify({"detail": f"Evaluation benchmark failed: {e}"}), 500
 
 @ingest.route("/documents", methods=["GET"])
 def list_documents():
@@ -99,6 +190,11 @@ def delete_document(document_id: str):
         client.table("documents").delete().eq("id", document_id).execute()
         if document_rows and document_rows[0].get("s3_key") and S3_BUCKET_NAME:
             aws_s3_client.delete_object(Bucket=S3_BUCKET_NAME, Key=document_rows[0]["s3_key"])
+        # Regenerate sparse index after deletion to keep sync
+        try:
+            SparseIngestion().regenerate_index()
+        except Exception as sparse_err:
+            print("Warning: Sparse index regeneration failed after delete:", sparse_err)
         return "", 204
     except Exception:
         return jsonify({"detail": "Could not delete document."}), 500
@@ -108,13 +204,19 @@ def _sse(payload: dict[str, Any]) -> str:
 
 @ingest.route("/chat", methods=["POST"])
 def chat():
-
     payload = request.get_json(silent=True) or {}
     print("payload", payload)
     message = payload.get("message")
     print("message", message)
 
     history = payload.get("history", [])
+
+    # Optional retrieval configuration from request body (with defaults)
+    match_count = payload.get("match_count")
+    rerank = payload.get("rerank", False)
+    dense_weight = payload.get("dense_weight", 1.5)
+    sparse_weight = payload.get("sparse_weight", 0.5)
+    document_ids = payload.get("document_ids")
 
     if not isinstance(message, str) or not message.strip():
         return jsonify({"detail": "A non-empty message is required."}), 400
@@ -123,13 +225,19 @@ def chat():
 
     def generate() -> Iterator[str]:
         try:
+            print("Generator started - Hybrid Retrieval")
 
-            print("Genrator started")
-            dense_retriever = DenseRetriever()
+            hybrid_retriever = HybridRetriever()
+            retrieved_rows = hybrid_retriever.retrieve(
+                query=message,
+                match_count=match_count,
+                dense_weight=dense_weight,
+                sparse_weight=sparse_weight,
+                rerank=rerank,
+                document_ids=document_ids,
+            )
 
-            dense_retreived_rows = dense_retriever.retrieve(message)
-
-            print("rows: ", dense_retreived_rows)
+            print("Hybrid retrieved rows count:", len(retrieved_rows))
 
             sources = [
                 {
@@ -137,19 +245,37 @@ def chat():
                     "doc_id": str(row.get("document_id") or row.get("doc_id") or ""),
                     "filename": row.get("title") or row.get("filename") or "Untitled document",
                     "text": row.get("content") or row.get("text") or "",
-                    "score": float(row.get("similarity") or row.get("score") or 0),
+                    "score": float(
+                        row.get("cross_encoder_score")
+                        or row.get("rrf_score")
+                        or row.get("score")
+                        or row.get("similarity")
+                        or 0
+                    ),
+                    "page_number": row.get("page_number", 1),
                 }
-                for index, row in enumerate(dense_retreived_rows)
+                for index, row in enumerate(retrieved_rows)
             ]
+
             yield _sse({"type": "sources", "sources": sources})
+
             if not sources:
                 yield _sse({"type": "token", "content": "I couldn't find relevant passages in the uploaded documents."})
             else:
-                context = "\n\n".join(f"[{index}] {source['text']}" for index, source in enumerate(sources, start=1))
+                context = "\n\n".join(
+                    f"[{index}] {source['text']}"
+                    for index, source in enumerate(sources, start=1)
+                )
                 for token in CallLLM().stream_answer(message, context, history):
                     yield _sse({"type": "token", "content": token})
+
             yield _sse({"type": "done"})
+
         except Exception as e:
             yield _sse({"type": "error", "content": f"Unable to answer that question right now. {e}"})
 
-    return Response(stream_with_context(generate()), mimetype="text/event-stream", headers={"Cache-Control": "no-cache"})
+    return Response(
+        stream_with_context(generate()),
+        mimetype="text/event-stream",
+        headers={"Cache-Control": "no-cache"}
+    )

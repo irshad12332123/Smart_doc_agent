@@ -61,10 +61,13 @@ function App() {
   if (checking) {
     return (
       <div className="splash">
-        <div className="brand-mark">
+        <div className="brand-mark splash-icon">
           <I.GraduationCap />
         </div>
-        <span>Loading ScholarHub…</span>
+        <div className="splash-loader">
+          <div className="spinner" />
+          <span>Loading ScholarHub…</span>
+        </div>
       </div>
     );
   }
@@ -80,15 +83,17 @@ function App() {
         onLogout={logout}
       />
       <main className="main">
-        <Topbar session={session} onPage={setPage} />
-        <PageView
-          page={page}
-          setPage={setPage}
-          session={session}
-          documents={documents}
-          setDocuments={setDocuments}
-          docError={docError}
-        />
+        <Topbar session={session} page={page} onPage={setPage} />
+        <div className="content-area">
+          <PageView
+            page={page}
+            setPage={setPage}
+            session={session}
+            documents={documents}
+            setDocuments={setDocuments}
+            docError={docError}
+          />
+        </div>
       </main>
     </div>
   );

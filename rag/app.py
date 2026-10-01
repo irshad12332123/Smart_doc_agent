@@ -1,8 +1,17 @@
+import sys
+from pathlib import Path
+
+# Ensure the rag root directory is on sys.path
+_RAG_DIR = str(Path(__file__).resolve().parent)
+if _RAG_DIR not in sys.path:
+    sys.path.insert(0, _RAG_DIR)
+
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 
 # Settings are read while importing the modules below, so load .env first.
 load_dotenv()
+
 
 from config.settings import (
     AUTH_ALLOWED_ORIGINS,
@@ -46,11 +55,24 @@ def create_app() -> Flask:
 
     @app.get("/api/health")
     def health():
+        from pathlib import Path
+        import json
+        from config.settings import BM25_INDEX_DIR
+
+        meta_file = Path(BM25_INDEX_DIR) / "metadata.json"
+        indexed_chunks = 0
+        if meta_file.exists():
+            try:
+                with open(meta_file, "r", encoding="utf-8") as f:
+                    indexed_chunks = json.load(f).get("total_chunks", 0)
+            except Exception:
+                indexed_chunks = 0
+
         return jsonify({
             # Field names are retained so the existing frontend contract stays stable.
             "ollama_ready": bool(__import__("os").getenv("GEMINI_API_KEY")),
             "ollama_message": "Gemini API key configured" if __import__("os").getenv("GEMINI_API_KEY") else "GEMINI_API_KEY is not configured",
-            "indexed_chunks": 0,
+            "indexed_chunks": indexed_chunks,
             "embed_model": EMBEDDING_MODEL_NAME,
             "chat_model": GEMINI_MODEL_NAME,
         })

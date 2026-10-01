@@ -11,7 +11,7 @@ class CallLLM:
         if not api_key:
             raise RuntimeError("GEMINI_API_KEY must be configured before using chat")
         self.llm = GoogleGenerativeAI(model=model_name, google_api_key=api_key, temperature=0.2)
-    
+
     def stream_answer(
         self,
         question: str,
@@ -23,14 +23,14 @@ class CallLLM:
             for entry in history[-10:]
             if entry.get("role") in {"user", "assistant"} and entry.get("content")
         )
-        prompt = f"""You are a precise document assistant. Answer only from the retrieved passages.
-If the passages do not support an answer, say that clearly. Cite every factual claim using
-the supplied bracket markers such as [1]. Do not invent citations.
+        prompt = f"""You are a precise document assistant, if user requires answer in certain length answer them but dont cross more than 100 words. Answer only from the retrieved data.
+                    If the data do not support an answer, say that clearly. Cite every factual claim using
+                    the supplied bracket markers such as [1]. Do not invent citations.
 
 Conversation history:
 {conversation or '(none)'}
 
-Retrieved passages:
+Retrieved data:
 {context}
 
 Question: {question}
