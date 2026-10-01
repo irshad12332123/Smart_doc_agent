@@ -1,10 +1,12 @@
 import { useState } from "react";
 import * as I from "lucide-react";
 import { authApi, userApi } from "../../api/client";
+import { useTheme } from "../../context/ThemeContext";
 import type { Session } from "../../types";
 import { Error } from "../../components/ui/common";
 
 export function Auth({ onSession }: { onSession: (value: Session) => void }) {
+  const { theme, toggleTheme } = useTheme();
   const [view, setView] = useState<"choose" | "verify" | "register" | "login">(
     "choose",
   );
@@ -29,7 +31,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
       if (result.status === "registered") {
         setEmail("");
         setView("login");
-        setError("This ID already has an account. Please sign in.");
+        setError("This ID is already registered. Please sign in with your password.");
       } else if (
         result.name &&
         result.registered_email &&
@@ -46,7 +48,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
       setError(
         typeof err === "object" && err && "message" in err
           ? String((err as { message?: unknown }).message ?? "Could not verify your record.")
-          : "Could not verify your record.",
+          : "Could not verify your university record. Please double-check your ID.",
       );
     } finally {
       setBusy(false);
@@ -63,12 +65,12 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
       setEmail(eligible.email);
       setPassword("");
       setView("login");
-      setError("Account created. Sign in to continue.");
+      setError("Account created successfully! Sign in to enter your workspace.");
     } catch (err: unknown) {
       setError(
         typeof err === "object" && err && "message" in err
           ? String((err as { message?: unknown }).message ?? "Could not create your account.")
-          : "Could not create your account.",
+          : "Could not create your account. Please try again.",
       );
     } finally {
       setBusy(false);
@@ -86,8 +88,8 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
     } catch (err: unknown) {
       setError(
         typeof err === "object" && err && "message" in err
-          ? String((err as { message?: unknown }).message ?? "Unable to sign in.")
-          : "Unable to sign in.",
+          ? String((err as { message?: unknown }).message ?? "Invalid email or password.")
+          : "Invalid email or password. Please try again.",
       );
     } finally {
       setBusy(false);
@@ -96,91 +98,155 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
 
   return (
     <div className="auth-page">
+      {/* Top right theme toggle for Auth page */}
+      <div className="auth-top-actions">
+        <button
+          className="theme-toggle-btn auth-theme-toggle"
+          onClick={toggleTheme}
+          title={theme === "dark" ? "Switch to Light Theme" : "Switch to Dark Theme"}
+          aria-label="Toggle theme"
+        >
+          {theme === "dark" ? <I.Sun className="theme-icon" /> : <I.Moon className="theme-icon" />}
+        </button>
+      </div>
+
       <div className="auth-aside">
-        <div className="logo">
+        <div className="logo auth-logo">
           <span className="brand-mark">
             <I.GraduationCap />
           </span>
-          <span>
-            ScholarHub<small>Academic Knowledge Hub</small>
-          </span>
+          <div className="logo-text">
+            <span className="brand-title">ScholarHub</span>
+            <span className="brand-subtitle">Academic Knowledge Hub</span>
+          </div>
         </div>
+
         <div className="auth-copy">
-          <span className="eyebrow">YOUR ACADEMIC SPACE</span>
-          <h1>
+          <div className="eyebrow-pill">
+            <I.Sparkles />
+            <span>AI-POWERED ACADEMIC PORTAL</span>
+          </div>
+          <h1 className="auth-title">
             Everything your batch needs.
             <br />
-            In one place.
+            <span className="hero-gradient-text">In one place.</span>
           </h1>
-          <p>
-            Find notes, assignments, notices, and answers—then open the original
-            source.
+          <p className="auth-desc">
+            Instantly search notes, syllabus modules, faculty notices, and assignments with AI-backed citations and source document previews.
           </p>
+
+          <div className="auth-features-list">
+            <div className="auth-feature-item">
+              <div className="feature-icon-wrap">
+                <I.CheckCircle2 />
+              </div>
+              <div>
+                <strong>Batch-Verified Context</strong>
+                <p>Curated specifically for your semester and registered subjects.</p>
+              </div>
+            </div>
+            <div className="auth-feature-item">
+              <div className="feature-icon-wrap">
+                <I.BookOpenCheck />
+              </div>
+              <div>
+                <strong>Cited AI Search</strong>
+                <p>Direct answers linked to exact pages and lecture slides.</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="auth-foot">BCA · 2024–27 · Semester 5</div>
+
+        <div className="auth-foot">
+          <span>Official University Academic Network · End-to-End Encrypted</span>
+        </div>
       </div>
+
       <section className="auth-card">
         <div className="auth-inner">
           {view === "choose" && (
             <>
-              <span className="eyebrow">WELCOME TO SCHOLARHUB</span>
-              <h2>How would you like to continue?</h2>
+              <span className="eyebrow">GET STARTED</span>
+              <h2>Welcome to ScholarHub</h2>
               <p className="muted">
-                Your access is verified against the university registry.
+                Select your role to access your personalized academic environment.
               </p>
               <div className="role-options">
                 <button
+                  className="role-card-btn"
                   onClick={() => {
                     setKind("student");
                     setView("verify");
                   }}
                 >
-                  <I.GraduationCap />
-                  <b>Continue as Student</b>
-                  <small>Access your batch materials and AI assistant</small>
-                  <I.ChevronRight />
+                  <div className="role-icon-box role-student">
+                    <I.GraduationCap />
+                  </div>
+                  <div className="role-meta">
+                    <b>Student Portal</b>
+                    <small>Access batch study resources, notes & AI query</small>
+                  </div>
+                  <I.ChevronRight className="role-arrow" />
                 </button>
+
                 <button
+                  className="role-card-btn"
                   onClick={() => {
                     setKind("faculty");
                     setView("verify");
                   }}
                 >
-                  <I.BookOpen />
-                  <b>Continue as Faculty</b>
-                  <small>Share learning material with your batches</small>
-                  <I.ChevronRight />
+                  <div className="role-icon-box role-faculty">
+                    <I.BookOpen />
+                  </div>
+                  <div className="role-meta">
+                    <b>Faculty Portal</b>
+                    <small>Upload learning materials & broadcast notices</small>
+                  </div>
+                  <I.ChevronRight className="role-arrow" />
                 </button>
+
                 <button
+                  className="role-card-btn"
                   onClick={() => {
                     setView("login");
                   }}
                 >
-                  <I.ShieldCheck />
-                  <b>Administrator</b>
-                  <small>Existing admin accounts only</small>
-                  <I.ChevronRight />
+                  <div className="role-icon-box role-admin">
+                    <I.ShieldCheck />
+                  </div>
+                  <div className="role-meta">
+                    <b>Administrator</b>
+                    <small>University management & access control</small>
+                  </div>
+                  <I.ChevronRight className="role-arrow" />
                 </button>
               </div>
-              <p className="auth-link">
-                Already registered?{" "}
-                <button onClick={() => setView("login")}>Sign in</button>
-              </p>
+
+              <div className="auth-footer-link">
+                <span>Already have an account?</span>{" "}
+                <button onClick={() => setView("login")} className="link-btn">
+                  Sign in
+                </button>
+              </div>
             </>
           )}
+
           {view === "verify" && (
             <>
               <button className="back" onClick={() => setView("choose")}>
-                <I.ArrowLeft /> Back
+                <I.ArrowLeft /> Back to Role Selection
               </button>
               <span className="eyebrow">{kind.toUpperCase()} VERIFICATION</span>
-              <h2>Verify your university record</h2>
+              <h2>Verify University Record</h2>
               <p className="muted">
-                Enter your {kind} ID to securely find your official record.
+                Enter your official {kind} enrollment number or registry ID.
               </p>
-              <form onSubmit={submitVerify}>
-                <label>
-                  {kind === "student" ? "Student ID" : "Faculty ID"}
+              <form onSubmit={submitVerify} className="auth-form">
+                <label className="form-field">
+                  <span className="field-label">
+                    {kind === "student" ? "Student Roll / ID Number" : "Faculty Employee ID"}
+                  </span>
                   <input
                     autoFocus
                     value={id}
@@ -188,103 +254,132 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                     placeholder={
                       kind === "student"
                         ? "e.g. 24031009031"
-                        : "Enter your faculty ID"
+                        : "Enter faculty employee ID"
                     }
                     required
                   />
                 </label>
                 <Error text={error} />
                 <button className="primary full" disabled={busy}>
-                  {busy ? "Verifying…" : "Verify my record"}
-                  <I.ArrowRight />
+                  {busy ? (
+                    <>
+                      <I.Loader2 className="spinning-loader" />
+                      <span>Verifying Record…</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Continue</span>
+                      <I.ArrowRight />
+                    </>
+                  )}
                 </button>
               </form>
             </>
           )}
+
           {view === "register" && eligible && (
             <>
               <button className="back" onClick={() => setView("verify")}>
                 <I.ArrowLeft /> Back
               </button>
               <span className="eyebrow">RECORD VERIFIED</span>
-              <h2>Welcome, {eligible.name.split(" ")[0]}.</h2>
+              <h2>Welcome, {eligible.name.split(" ")[0]}</h2>
               <p className="muted">
-                Your {kind} record was found. Set a password to create your
-                ScholarHub account.
+                Your university profile was confirmed. Create a secure password to activate your account.
               </p>
               <div className="verified">
                 <I.BadgeCheck />
                 <span>
-                  <small>OFFICIAL EMAIL</small>
+                  <small>OFFICIAL REGISTERED EMAIL</small>
                   <b>{eligible.email}</b>
                 </span>
               </div>
-              <form onSubmit={submitRegister}>
-                <label>
-                  Create password
+              <form onSubmit={submitRegister} className="auth-form">
+                <label className="form-field">
+                  <span className="field-label">Set Account Password</span>
                   <input
                     type="password"
                     minLength={8}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="At least 8 characters"
+                    placeholder="Minimum 8 characters"
                     required
                   />
                 </label>
                 <Error text={error} />
                 <button className="primary full" disabled={busy}>
-                  {busy ? "Creating account…" : "Create my account"}
-                  <I.ArrowRight />
+                  {busy ? (
+                    <>
+                      <I.Loader2 className="spinning-loader" />
+                      <span>Creating Account…</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Activate & Enter Workspace</span>
+                      <I.ArrowRight />
+                    </>
+                  )}
                 </button>
               </form>
             </>
           )}
+
           {view === "login" && (
             <>
               <button className="back" onClick={() => setView("choose")}>
                 <I.ArrowLeft /> Back
               </button>
-              <span className="eyebrow">WELCOME BACK</span>
-              <h2>Sign in to ScholarHub</h2>
+              <span className="eyebrow">SIGN IN</span>
+              <h2>Welcome Back</h2>
               <p className="muted">
-                Use the email address registered with the university.
+                Sign in using your verified university email and password.
               </p>
-              <form onSubmit={submitLogin}>
-                <label>
-                  Email address
+              <form onSubmit={submitLogin} className="auth-form">
+                <label className="form-field">
+                  <span className="field-label">Email Address</span>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@university.edu"
+                    placeholder="student@university.edu"
                     required
                   />
                 </label>
-                <label>
-                  Password
+                <label className="form-field">
+                  <span className="field-label">Password</span>
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Your password"
+                    placeholder="Enter your password"
                     required
                   />
                 </label>
                 <Error text={error} />
                 <button className="primary full" disabled={busy}>
-                  {busy ? "Signing in…" : "Sign in"}
-                  <I.ArrowRight />
+                  {busy ? (
+                    <>
+                      <I.Loader2 className="spinning-loader" />
+                      <span>Signing in…</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Sign In</span>
+                      <I.ArrowRight />
+                    </>
+                  )}
                 </button>
               </form>
-              <p className="auth-link">
-                Forgot password?{" "}
+              <div className="auth-footer-link">
+                <span>Need help with your account?</span>{" "}
                 <button
                   disabled
-                  title="No password reset endpoint is configured yet."
+                  className="link-btn"
+                  title="Contact IT Helpdesk for password resets"
                 >
-                  Contact your administrator
+                  Contact Administrator
                 </button>
-              </p>
+              </div>
             </>
           )}
         </div>

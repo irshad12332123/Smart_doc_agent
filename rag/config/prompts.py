@@ -1,5 +1,0 @@
-DOC_META_EXTARCTION_PROMPT="""
-"""
-
-
-

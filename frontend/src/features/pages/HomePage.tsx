@@ -2,23 +2,26 @@ import { useState } from "react";
 import * as I from "lucide-react";
 import type { DocumentInfo } from "../../types";
 import type { Page } from "../../types/navigation";
-import { DocumentCard, Empty, Notice, SectionTitle } from "../../components/ui/common";
+import {
+  DocumentCard,
+  Empty,
+  Notice,
+  SectionTitle,
+  SubjectCard,
+} from "../../components/ui/common";
 
 const suggestions = [
-  "Find my pending assignments",
-  "Show Machine Learning notes",
-  "What are the latest notices?",
-  "Find Software Engineering PDFs",
+  { text: "Find my pending assignments", icon: I.FileCheck2 },
+  { text: "Show Machine Learning notes", icon: I.BrainCircuit },
+  { text: "What are the latest notices?", icon: I.BellRing },
+  { text: "Find Software Engineering PDFs", icon: I.BookOpen },
 ];
 
 const subjects = [
-  "Software Engineering and Testing",
-  "Machine Learning and NLP on AWS Cloud",
-  "Multimedia and Animation",
-  "Internet of Things (IoT)",
-  "Software Engineering and Testing Lab",
-  "Machine Learning and NLP on AWS Cloud Lab",
-  "Project-II",
+  { name: "Software Engineering & Testing", code: "CS-401" },
+  { name: "Machine Learning & NLP on AWS", code: "ML-452" },
+  { name: "Multimedia & Animation", code: "MM-303" },
+  { name: "Internet of Things (IoT)", code: "IT-404" },
 ];
 
 export function HomePage({
@@ -35,100 +38,157 @@ export function HomePage({
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      sessionStorage.setItem("scholarhub-query", query);
+      sessionStorage.setItem("scholarhub-query", query.trim());
       setPage("ask");
     }
   };
 
+  const handleSuggestionClick = (text: string) => {
+    sessionStorage.setItem("scholarhub-query", text);
+    setPage("ask");
+  };
+
   return (
-    <div className="page home">
+    <div className="page home-page">
       <section className="hero">
-        <h1>
+        <div className="hero-badge">
+          <I.Sparkles className="hero-badge-icon" />
+          <span>AI-Powered Academic Intelligence</span>
+        </div>
+        <h1 className="hero-title">
           Everything your batch needs.
           <br />
-          In one place.
+          <span className="hero-gradient-text">All in one place.</span>
         </h1>
-        <p>
-          Ask for notes, assignments, notices, PDFs, or anything uploaded for
-          your course.
+        <p className="hero-subtitle">
+          Instant answers from verified notes, assignments, syllabi, PDFs, and
+          faculty notices with direct citations.
         </p>
+
         <form className="ask-bar" onSubmit={submit}>
-          <I.Sparkles />
+          <div className="ask-bar-icon">
+            <I.Sparkles />
+          </div>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Ask anything about your course…"
+            placeholder="Ask anything about your course, exams, or assignments…"
+            aria-label="Ask AI about course material"
           />
-          <button aria-label="Ask AI">
+          <button
+            type="submit"
+            className="ask-bar-submit"
+            aria-label="Submit search"
+            disabled={!query.trim()}
+          >
+            <span>Ask AI</span>
             <I.ArrowUpRight />
           </button>
         </form>
+
         <div className="suggestions">
-          {suggestions.map((q) => (
-            <button
-              key={q}
-              onClick={() => {
-                sessionStorage.setItem("scholarhub-query", q);
-                setPage("ask");
-              }}
-            >
-              {q}
-            </button>
-          ))}
+          <span className="suggestions-label">Try asking:</span>
+          {suggestions.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.text}
+                className="suggestion-chip"
+                onClick={() => handleSuggestionClick(item.text)}
+              >
+                <Icon className="chip-icon" />
+                <span>{item.text}</span>
+              </button>
+            );
+          })}
         </div>
       </section>
 
-      <SectionTitle
-        icon={I.History}
-        title="Latest for you"
-        action="View all"
-        onAction={() => setPage("library")}
-      />
-      {docError ? (
-        <Empty message={docError} />
-      ) : (
-        <div className="latest-grid">
-          {documents.slice(0, 3).map((d) => (
-            <DocumentCard document={d} key={d.doc_id} />
-          ))}
-          {documents.length === 0 && (
-            <Empty message="No documents have been uploaded for your batch yet." />
-          )}
-        </div>
-      )}
-
-      <SectionTitle icon={I.Megaphone} title="Important notices" />
-      <div className="notice-list">
-        <Notice
-          title="No notices are available yet"
-          text="Published notices for your academic context will appear here."
-          priority="info"
+      {/* Latest Documents Section */}
+      <section className="home-section">
+        <SectionTitle
+          icon={I.Clock}
+          title="Latest for your batch"
+          action="View library"
+          onAction={() => setPage("library")}
         />
-      </div>
+        {docError ? (
+          <Empty message={docError} />
+        ) : documents.length === 0 ? (
+          <Empty
+            message="No documents have been uploaded for your batch yet."
+            actionLabel="Go to Upload"
+            onAction={() => setPage("upload")}
+          />
+        ) : (
+          <div className="latest-grid">
+            {documents.slice(0, 3).map((d) => (
+              <DocumentCard document={d} key={d.doc_id} />
+            ))}
+          </div>
+        )}
+      </section>
 
-      <SectionTitle icon={I.Compass} title="Continue exploring" />
-      <div className="subject-grid">
-        {subjects.slice(0, 3).map((s, i) => (
+      {/* Important Notices Section */}
+      <section className="home-section">
+        <SectionTitle
+          icon={I.Megaphone}
+          title="Important notices"
+          action="All notices"
+          onAction={() => setPage("notices")}
+        />
+        <div className="notice-list">
+          <Notice
+            title="Semester 5 Mid-Term Evaluation Guidelines"
+            text="Project submissions and lab records must be verified by respective faculty mentors before next Friday."
+            priority="important"
+            date="Today"
+            author="Academic Dean"
+          />
+          <Notice
+            title="Cloud Computing Lab Environment Updated"
+            text="AWS student account credentials have been updated for ML and NLP coursework batches."
+            priority="info"
+            date="Yesterday"
+            author="Faculty Office"
+          />
+        </div>
+      </section>
+
+      {/* Explore Subjects Section */}
+      <section className="home-section">
+        <SectionTitle
+          icon={I.BookOpen}
+          title="Continue exploring subjects"
+          action="View all subjects"
+          onAction={() => setPage("subjects")}
+        />
+        <div className="subject-grid">
+          {subjects.map((s, i) => (
+            <SubjectCard
+              key={s.code}
+              title={s.name}
+              code={s.code}
+              iconIndex={i}
+              onClick={() => setPage("subjects")}
+            />
+          ))}
           <button
-            className="subject-card"
-            key={s}
+            className="subject-card subject-card-cta"
             onClick={() => setPage("subjects")}
           >
-            <span className="subject-icon">
-              {i === 1 ? <I.Bot /> : <I.Code2 />}
-            </span>
-            <b>{s}</b>
-            <small>{i === 1 ? "ML-452" : "CS-401"} · View subject</small>
+            <div className="cta-icon-box">
+              <I.ArrowRight />
+            </div>
+            <div className="subject-card-content">
+              <h3 className="subject-name">Browse All Subjects</h3>
+              <p className="subject-subtext">
+                Access full syllabus, textbooks, and past materials
+              </p>
+            </div>
           </button>
-        ))}
-        <button
-          className="subject-card outline"
-          onClick={() => setPage("subjects")}
-        >
-          <I.ArrowRight />
-          <b>View All Subjects</b>
-        </button>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

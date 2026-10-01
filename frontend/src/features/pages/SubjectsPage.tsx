@@ -17,33 +17,75 @@ export function SubjectsPage({
             course.batches.flatMap((batch) => batch.subjects),
           )
         : [];
+
   const uniqueSubjects = [
     ...new Map(subjects.map((subject) => [subject.id, subject])).values(),
   ];
+
+  const icons = [I.Code2, I.Bot, I.Cpu, I.Layers, I.Database, I.Server];
+
+  const handleAskAboutSubject = (subjectName: string) => {
+    sessionStorage.setItem("scholarhub-query", `Show notes and summary for ${subjectName}`);
+    setPage("ask");
+  };
+
   return (
-    <div className="page">
-      <h1>My Subjects</h1>
-      <p className="lede">Subjects available in your academic profile.</p>
-      <div className="subject-list">
-        {uniqueSubjects.map((s, i) => (
-          <article key={s.id}>
-            <span className="subject-icon">
-              {i % 2 ? <I.Bot /> : <I.Code2 />}
-            </span>
-            <div>
-              <h3>{s.name}</h3>
-              <p>{s.subject_code} · Course resources and academic updates</p>
-            </div>
-            <button className="outline-btn" onClick={() => setPage("ask")}>
-              Ask AI <I.ArrowRight />
-            </button>
-          </article>
-        ))}
+    <div className="page subjects-page">
+      <div className="page-header">
+        <div className="page-title-group">
+          <h1>My Subjects & Courses</h1>
+          <p className="lede">
+            Curated coursework, syllabus modules, and verified academic references.
+          </p>
+        </div>
+        <div className="page-stat-badge">
+          <I.BookOpen />
+          <span>{uniqueSubjects.length} Registered Subjects</span>
+        </div>
       </div>
-      {!uniqueSubjects.length && (
-        <p className="api-note">
-          <I.Info /> No subjects are assigned to this profile.
-        </p>
+
+      {uniqueSubjects.length > 0 ? (
+        <div className="subjects-grid">
+          {uniqueSubjects.map((s, i) => {
+            const Icon = icons[i % icons.length];
+            return (
+              <article className="subject-item-card" key={s.id}>
+                <div className="subject-item-header">
+                  <div className={`subject-icon-box idx-${i % 4}`}>
+                    <Icon />
+                  </div>
+                  <span className="subject-code-pill">{s.subject_code}</span>
+                </div>
+
+                <div className="subject-item-body">
+                  <h3>{s.name}</h3>
+                  <p>Course notes, assignments, lab manuals, and exam guides.</p>
+                </div>
+
+                <div className="subject-item-footer">
+                  <button
+                    className="outline-btn subject-ask-btn"
+                    onClick={() => handleAskAboutSubject(s.name)}
+                  >
+                    <I.Sparkles /> Ask AI
+                  </button>
+                  <button
+                    className="icon-button subject-more-btn"
+                    onClick={() => setPage("library")}
+                    title="View related documents"
+                  >
+                    <I.ArrowRight />
+                  </button>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="api-note">
+          <I.Info /> No subjects are currently mapped to this profile. Contact your
+          academic coordinator.
+        </div>
       )}
     </div>
   );
