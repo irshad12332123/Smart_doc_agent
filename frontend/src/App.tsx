@@ -111,7 +111,12 @@ function PageView(props: {
     case "home":
       return <HomePage {...props} />;
     case "ask":
-      return <AskPage documents={props.documents} />;
+      return (
+        <AskPage
+          documents={props.documents}
+          profile={props.session.profile}
+        />
+      );
     case "library":
       return (
         <LibraryPage documents={props.documents} docError={props.docError} />
