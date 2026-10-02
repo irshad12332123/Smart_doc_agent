@@ -204,18 +204,30 @@ def _sse(payload: dict[str, Any]) -> str:
 @ingest.route("/chat", methods=["POST"])
 def chat():
     payload = request.get_json(silent=True) or {}
-    print("payload", payload)
+    # print("payload", payload)
     message = payload.get("message")
-    print("message", message)
+    # print("message", message)
 
     history = payload.get("history", [])
 
     # Optional retrieval configuration from request body (with defaults)
     match_count = payload.get("match_count")
-    rerank = payload.get("rerank", False)
+    rerank = payload.get("rerank", True)
     dense_weight = payload.get("dense_weight", 1.5)
     sparse_weight = payload.get("sparse_weight", 0.5)
     document_ids = payload.get("document_ids")
+
+    # get the student subject list
+    raw_subject_list = payload.get("subject_list") or payload.get("subjects") or []
+    if isinstance(raw_subject_list, list):
+        subject_list = [
+            str(s).strip() if isinstance(s, (str, int)) else str(s.get("name", "")).strip()
+            for s in raw_subject_list
+            if s
+        ]
+        subject_list = [s for s in subject_list if s]
+    else:
+        subject_list = []
 
     if not isinstance(message, str) or not message.strip():
         return jsonify({"detail": "A non-empty message is required."}), 400
@@ -265,7 +277,7 @@ def chat():
                     f"[{index}] {source['text']}"
                     for index, source in enumerate(sources, start=1)
                 )
-                for token in CallLLM().stream_answer(message, context, history):
+                for token in CallLLM().stream_answer(message, context, history, subject_list=subject_list):
                     yield _sse({"type": "token", "content": token})
 
             yield _sse({"type": "done"})

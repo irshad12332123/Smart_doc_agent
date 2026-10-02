@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as I from "lucide-react";
 import { streamChat } from "../../api/client";
-import type { ChatMessage, DocumentInfo } from "../../types";
+import type { ChatMessage, DocumentInfo, Profile } from "../../types";
 import { getFileTypeTheme } from "../../components/ui/common";
 
 const suggestions = [
@@ -14,12 +14,33 @@ const suggestions = [
 const uid = () =>
   crypto.randomUUID?.() || Math.random().toString(36).slice(2);
 
-export function AskPage({ documents }: { documents: DocumentInfo[] }) {
+export function AskPage({
+  documents,
+  profile,
+}: {
+  documents: DocumentInfo[];
+  profile?: Profile;
+}) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const subjectNames = useMemo(() => {
+    if (!profile) return [];
+    const subjects =
+      profile.role === "student"
+        ? profile.student_data?.subjects || []
+        : profile.role === "faculty"
+          ? (profile.faculty_data?.courses || []).flatMap((course) =>
+              course.batches.flatMap((batch) => batch.subjects),
+            )
+          : [];
+    return Array.from(
+      new Set(subjects.map((s) => s.name.trim()).filter(Boolean)),
+    );
+  }, [profile]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -94,6 +115,7 @@ export function AskPage({ documents }: { documents: DocumentInfo[] }) {
           setSending(false);
         },
       },
+      subjectNames,
     );
   };
 

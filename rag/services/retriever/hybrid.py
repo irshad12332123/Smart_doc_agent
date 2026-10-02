@@ -98,6 +98,7 @@ class HybridRetriever(BaseRetriever):
                     if str(d.get("document_id") or d.get("doc_id") or "") in doc_set
                 ]
             dense_results = raw_dense[:candidate_dense_k]
+
         except Exception as e:
             logger.error(f"Error during Dense candidate retrieval: {e}")
             dense_results = []

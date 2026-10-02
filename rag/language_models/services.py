@@ -1,4 +1,3 @@
-"""Small adapter around Gemini used by the chat endpoint."""
 
 from collections.abc import Iterator, Sequence
 
@@ -17,21 +16,35 @@ class CallLLM:
         question: str,
         context: str,
         history: Sequence[dict[str, str]] = (),
+        subject_list: Sequence[str] = (),
     ) -> Iterator[str]:
+
         conversation = "\n".join(
             f"{entry['role'].capitalize()}: {entry['content']}"
             for entry in history[-10:]
             if entry.get("role") in {"user", "assistant"} and entry.get("content")
         )
+
         prompt = f"""You are a precise document assistant, if user requires answer in certain length answer them but dont cross more than 100 words. Answer only from the retrieved data.
                     If the data do not support an answer, say that clearly. Cite every factual claim using
                     the supplied bracket markers such as [1]. Do not invent citations.
+                    If the user asks for a list, provide it in a numbered format. If the user asks for a table, provide it in a markdown table format.
+                    If the user asks for a summary, provide a concise summary of the retrieved data.
+
+                    When a user requests assignments for a specific subject, check if the subject matches any item in the provided subject_list.
+
+If a match is found: Fetch and display the assignment data for that subject accordingly.
+
+If no match is found: Clearly inform the user that the specified subject is not in their enrolled subject list."
 
 Conversation history:
 {conversation or '(none)'}
 
 Retrieved data:
 {context}
+
+Subject list:
+{subject_list}
 
 Question: {question}
 Answer:"""

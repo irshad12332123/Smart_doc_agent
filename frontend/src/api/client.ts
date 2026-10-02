@@ -170,11 +170,12 @@ export async function streamChat(
     done(): void;
     error(m: string): void;
   },
+  subjectList?: string[],
 ) {
   const res = await fetch(`${BASE_URL}/api/chat`, {
     method: "POST",
     headers: { ...jsonHeaders, ...authHeaders() },
-    body: JSON.stringify({ message, history }),
+    body: JSON.stringify({ message, history, subject_list: subjectList }),
   });
   if (!res.ok || !res.body) {
     handlers.error(`AI service error (${res.status})`);
