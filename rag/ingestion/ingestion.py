@@ -11,10 +11,12 @@ from language_models.services import CallLLM
 from language_models.sml import load_slm
 from config.settings import (
     S3_BUCKET_NAME,
+    GROQ_MODEL,
 )
 
 from lib.aws_s3 import aws_s3_client
 from lib.supabase import get_supabase_client
+from rag.query_engine.rewrite_query import rewrite_query
 from services.ingestion.dense import DenseIngestion
 from services.ingestion.sparse import SparseIngestion
 from services.retriever.sparse import SparseRetriever
@@ -208,6 +210,10 @@ def chat():
     # print("message", message)
 
     history = payload.get("history", [])
+
+    #rewriting the user query to make it more effective for retrieval
+    rewritten_query = rewrite_query(message, GROQ_MODEL)
+    message = rewritten_query if rewritten_query else message
 
     # Optional retrieval configuration from request body (with defaults)
     match_count = payload.get("match_count")
