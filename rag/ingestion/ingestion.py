@@ -6,7 +6,6 @@ from typing import  Any
 from flask import Blueprint, Response, jsonify, request, stream_with_context
 from groq import Groq
 
-from services.retriever.dense import DenseRetriever
 from modules.auth.middleware import require_auth
 from language_models.services import CallLLM
 from language_models.sml import load_slm
