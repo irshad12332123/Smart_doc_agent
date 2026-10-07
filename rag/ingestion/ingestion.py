@@ -12,11 +12,14 @@ from language_models.sml import load_slm
 from config.settings import (
     S3_BUCKET_NAME,
     GROQ_MODEL,
+    S3_SIGNED_URL_TTL_SECONDS,
 )
 
 from lib.aws_s3 import aws_s3_client
 from lib.supabase import get_supabase_client
-from rag.query_engine.rewrite_query import rewrite_query
+from query_engine.rewrite_query import rewrite_query
+from query_engine.router import DocumentRouter
+from s3.service import S3Service
 from services.ingestion.dense import DenseIngestion
 from services.ingestion.sparse import SparseIngestion
 from services.retriever.sparse import SparseRetriever
@@ -199,21 +202,45 @@ def delete_document(document_id: str):
     except Exception:
         return jsonify({"detail": "Could not delete document."}), 500
 
+@ingest.route("/documents/<document_id>/file", methods=["GET"])
+def get_document_file(document_id: str):
+    """Generate a presigned download URL for a document's S3 object."""
+    try:
+        client = get_supabase_client()
+        res = client.table("documents").select("id, title, s3_key").eq("id", document_id).execute()
+        rows = _data(res)
+        if not rows or not rows[0].get("s3_key"):
+            return jsonify({"detail": "Document not found or has no file attached"}), 404
+
+        doc = rows[0]
+        s3_service = S3Service()
+        presigned_url = s3_service.generate_presigned_url(doc["s3_key"])
+        if not presigned_url:
+            return jsonify({"detail": "Unable to generate file download URL"}), 500
+
+        return jsonify({
+            "url": presigned_url,
+            "expires_in": S3_SIGNED_URL_TTL_SECONDS,
+            "filename": doc.get("title") or "document",
+        }), 200
+    except Exception as e:
+        return jsonify({"detail": f"Failed to retrieve file URL: {e}"}), 500
+
 def _sse(payload: dict[str, Any]) -> str:
     return f"data: {json.dumps(payload)}\n\n"
 
 @ingest.route("/chat", methods=["POST"])
 def chat():
     payload = request.get_json(silent=True) or {}
-    # print("payload", payload)
     message = payload.get("message")
-    # print("message", message)
-
     history = payload.get("history", [])
 
-    #rewriting the user query to make it more effective for retrieval
-    rewritten_query = rewrite_query(message, GROQ_MODEL)
-    message = rewritten_query if rewritten_query else message
+    if not isinstance(message, str) or not message.strip():
+        return jsonify({"detail": "A non-empty message is required."}), 400
+    if not isinstance(history, list):
+        return jsonify({"detail": "History must be a list."}), 400
+
+    raw_subject_list = payload.get("subject_list") or payload.get("subjects") or []
 
     # Optional retrieval configuration from request body (with defaults)
     match_count = payload.get("match_count")
@@ -222,30 +249,47 @@ def chat():
     sparse_weight = payload.get("sparse_weight", 0.5)
     document_ids = payload.get("document_ids")
 
-    # get the student subject list
-    raw_subject_list = payload.get("subject_list") or payload.get("subjects") or []
     if isinstance(raw_subject_list, list):
-        subject_list = [
+        subject_list_names = [
             str(s).strip() if isinstance(s, (str, int)) else str(s.get("name", "")).strip()
             for s in raw_subject_list
             if s
         ]
-        subject_list = [s for s in subject_list if s]
+        subject_list_names = [s for s in subject_list_names if s]
     else:
-        subject_list = []
+        subject_list_names = []
 
-    if not isinstance(message, str) or not message.strip():
-        return jsonify({"detail": "A non-empty message is required."}), 400
-    if not isinstance(history, list):
-        return jsonify({"detail": "History must be a list."}), 400
+    # Route query through deterministic metadata / document lookup layer
+    router = DocumentRouter()
+    router_result = router.route(
+        query=message,
+        subject_list=raw_subject_list,
+        history=history,
+    )
 
     def generate() -> Iterator[str]:
         try:
-            print("Generator started - Hybrid Retrieval")
+            # Case 1: Handled deterministically by metadata/document lookup
+            if not router_result.should_invoke_rag:
+                print(f"Deterministic lookup returned {len(router_result.documents)} documents")
+                if router_result.documents:
+                    yield _sse({"type": "documents", "documents": router_result.documents})
+
+                content = router_result.formatted_text or "No matching documents found."
+                yield _sse({"type": "token", "content": content})
+                yield _sse({"type": "done"})
+                return
+
+            # Case 2: Normal RAG or hybrid fallback
+            print("Router dispatching to Hybrid Retrieval")
+
+            # Rewriting user query only for knowledge/RAG queries to improve embedding/BM25 retrieval
+            rewritten_query = rewrite_query(message, GROQ_MODEL, history=history)
+            rag_query = rewritten_query if rewritten_query else message
 
             hybrid_retriever = HybridRetriever()
             retrieved_rows = hybrid_retriever.retrieve(
-                query=message,
+                query=rag_query,
                 match_count=match_count,
                 dense_weight=dense_weight,
                 sparse_weight=sparse_weight,
@@ -282,7 +326,7 @@ def chat():
                     f"[{index}] {source['text']}"
                     for index, source in enumerate(sources, start=1)
                 )
-                for token in CallLLM().stream_answer(message, context, history, subject_list=subject_list):
+                for token in CallLLM().stream_answer(message, context, history, subject_list=subject_list_names):
                     yield _sse({"type": "token", "content": token})
 
             yield _sse({"type": "done"})

@@ -90,6 +90,8 @@ export interface DocumentInfo {
   document_type?: string;
   subject_id?: string | null;
   mime_type?: string;
+  file_url?: string | null;
+  s3_key?: string | null;
 }
 
 export interface SourceChunk {

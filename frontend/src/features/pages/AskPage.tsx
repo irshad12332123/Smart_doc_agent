@@ -27,7 +27,7 @@ export function AskPage({
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const subjectNames = useMemo(() => {
+  const userSubjects = useMemo(() => {
     if (!profile) return [];
     const subjects =
       profile.role === "student"
@@ -37,9 +37,13 @@ export function AskPage({
               course.batches.flatMap((batch) => batch.subjects),
             )
           : [];
-    return Array.from(
-      new Set(subjects.map((s) => s.name.trim()).filter(Boolean)),
-    );
+    return subjects
+      .map((s) => ({
+        id: s.id,
+        name: s.name.trim(),
+        code: s.subject_code,
+      }))
+      .filter((s) => s.name);
   }, [profile]);
 
   const scrollToBottom = () => {
@@ -90,6 +94,10 @@ export function AskPage({
           setMessages((p) =>
             p.map((m) => (m.id === assistantId ? { ...m, sources: s } : m)),
           ),
+        documents: (docs) =>
+          setMessages((p) =>
+            p.map((m) => (m.id === assistantId ? { ...m, documents: docs } : m)),
+          ),
         token: (t) => {
           full += t;
           setMessages((p) =>
@@ -115,7 +123,7 @@ export function AskPage({
           setSending(false);
         },
       },
-      subjectNames,
+      userSubjects,
     );
   };
 
@@ -241,6 +249,46 @@ export function AskPage({
                                   <strong title={s.filename}>{s.filename}</strong>
                                 </div>
                                 <p className="source-snippet">{s.text}</p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {m.documents && m.documents.length > 0 && (
+                    <div className="sources-container">
+                      <div className="sources-header">
+                        <I.FileText />
+                        <span>Matched Documents ({m.documents.length})</span>
+                      </div>
+                      <div className="sources-cards-list">
+                        {m.documents.map((doc, idx) => {
+                          const fileType = getFileTypeTheme(
+                            doc.filename?.split(".").pop() || "pdf",
+                          );
+                          const Icon = fileType.icon;
+                          return (
+                            <div className="source-citation-card" key={doc.doc_id || idx}>
+                              <div className="source-index-badge">{idx + 1}</div>
+                              <div className="source-meta">
+                                <div className="source-filename-row">
+                                  <Icon className="source-file-icon" />
+                                  <strong title={doc.filename}>{doc.filename}</strong>
+                                </div>
+                                {doc.description && <p className="source-snippet">{doc.description}</p>}
+                                {doc.file_url && (
+                                  <a
+                                    href={doc.file_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="outline-btn"
+                                    style={{ marginTop: "6px", display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "0.8rem", padding: "3px 8px" }}
+                                  >
+                                    <I.Download style={{ width: "12px", height: "12px" }} /> Download
+                                  </a>
+                                )}
                               </div>
                             </div>
                           );
