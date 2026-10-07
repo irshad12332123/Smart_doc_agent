@@ -1,10 +1,13 @@
 import sys
 from pathlib import Path
 
-# Ensure the rag root directory is on sys.path
+# Ensure the rag root directory and project root are on sys.path
 _RAG_DIR = str(Path(__file__).resolve().parent)
+_REPO_DIR = str(Path(__file__).resolve().parent.parent)
 if _RAG_DIR not in sys.path:
     sys.path.insert(0, _RAG_DIR)
+if _REPO_DIR not in sys.path:
+    sys.path.insert(0, _REPO_DIR)
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
