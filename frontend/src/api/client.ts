@@ -170,7 +170,7 @@ export async function streamChat(
     done(): void;
     error(m: string): void;
   },
-  subjectList?: string[],
+  subjectList?: Array<string | { id: string; name: string; code?: string; subject_code?: string }>,
 ) {
   const res = await fetch(`${BASE_URL}/api/chat`, {
     method: "POST",
