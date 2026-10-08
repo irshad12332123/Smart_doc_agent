@@ -25,10 +25,14 @@ AUTH_REGISTRATION_TOKEN_MAX_AGE_SECONDS = int(
 AUTH_ALLOWED_ORIGINS = os.getenv("AUTH_ALLOWED_ORIGINS", "http://localhost:5173")
 
 # BM25 Sparse Retriever settings
-BM25_INDEX_DIR = os.getenv(
-    "BM25_INDEX_DIR",
-    str(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "bm25_index"))
-)
+_BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_DEFAULT_BM25_INDEX_DIR = os.path.join(_BACKEND_DIR, "data", "bm25_index")
+if not os.path.exists(_DEFAULT_BM25_INDEX_DIR):
+    _LEGACY_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "bm25_index")
+    if os.path.exists(_LEGACY_DIR):
+        _DEFAULT_BM25_INDEX_DIR = _LEGACY_DIR
+
+BM25_INDEX_DIR = os.getenv("BM25_INDEX_DIR", _DEFAULT_BM25_INDEX_DIR)
 
 BM25_DEFAULT_K = int(os.getenv("BM25_DEFAULT_K", "10"))
 

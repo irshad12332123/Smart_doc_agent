@@ -8,7 +8,6 @@ try:
 except ImportError:
     from rag.embedder.embedding import Embedder
 
-
 class Chunker:
 
     def __init__(
@@ -51,6 +50,7 @@ class Chunker:
                 separators=["\n\n", "\n", " ", ""],
             )
         )
+
         splits = splitter.split_documents([doc])
         return [s for s in splits if s.page_content and s.page_content.strip()]
 
@@ -71,6 +71,7 @@ class Chunker:
                 separators=["\n\n", "\n", " ", ""],
             )
         )
+        
         splits = splitter.split_text(content)
         return [s.strip() for s in splits if s and s.strip()]
 
