@@ -6,13 +6,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-# Ensure project root and rag are on sys.path
-_ROOT_DIR = str(Path(__file__).resolve().parent.parent)
-_RAG_DIR = os.path.join(_ROOT_DIR, "rag")
-if _RAG_DIR not in sys.path:
-    sys.path.insert(0, _RAG_DIR)
-if _ROOT_DIR not in sys.path:
-    sys.path.insert(0, _ROOT_DIR)
+# Ensure backend directory, rag, and project root are on sys.path
+_BACKEND_DIR = str(Path(__file__).resolve().parent.parent)
+_RAG_DIR = os.path.join(_BACKEND_DIR, "rag")
+_REPO_DIR = str(Path(__file__).resolve().parent.parent.parent)
+for _p in (_RAG_DIR, _BACKEND_DIR, _REPO_DIR):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 from intent.schema import DocumentIntent, SubjectContext, DeadlineFilter, TimeFilter
 from intent.extractor import IntentExtractor

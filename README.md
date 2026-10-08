@@ -32,12 +32,19 @@ Smart_doc_agent/
 │   │   ├── api/             # API client services
 │   │   ├── features/        # Upload, Dashboard, Subject, & Profile Views
 │   │   └── types/           # Strict TypeScript contracts & schemas
-├── rag/                     # Python Flask + RAG Pipeline (managed via uv)
-│   ├── ingestion/           # File ingestion, chunking, and parser logic
-│   ├── language_models/     # Groq client integration & SLM prompting
-│   ├── lib/                 # AWS S3 & Supabase clients
-│   ├── modules/             # User, auth, and routing modules
-│   └── app.py               # Flask application entry point
+├── backend/                 # Python Flask + RAG Pipeline (managed via uv)
+│   ├── data/                # BM25 sparse index and document data
+│   │   └── bm25_index/
+│   ├── rag/                 # RAG pipeline and Flask application
+│   │   ├── ingestion/       # File ingestion, chunking, and parser logic
+│   │   ├── language_models/ # Groq & Gemini client integration
+│   │   ├── lib/             # AWS S3 & Supabase clients
+│   │   ├── modules/         # User, auth, and routing modules
+│   │   └── app.py           # Flask application entry point
+│   ├── supabase/            # PostgreSQL migrations
+│   ├── tests/               # Test suites
+│   ├── pyproject.toml       # Python configuration
+│   └── requirements.txt
 ```
 
 ### Core Technologies
@@ -63,12 +70,12 @@ Smart_doc_agent/
 
 ---
 
-### 1. Backend Setup (`rag`)
+### 1. Backend Setup (`backend`)
 
-1. Navigate to the `rag` directory:
+1. Navigate to the `backend` directory:
 
    ```bash
-   cd rag
+   cd backend
    ```
 
 2. Create and configure your environment variables:
@@ -102,7 +109,7 @@ Smart_doc_agent/
 
 3. Install dependencies and run the server using `uv`:
    ```bash
-   uv run app.py
+   uv run python rag/app.py
    ```
 
 The backend server will run on `http://127.0.0.1:5000`.

@@ -1,18 +1,19 @@
 import sys
 from pathlib import Path
 
-# Ensure the rag root directory and project root are on sys.path
+# Ensure rag directory, backend root, and project root are on sys.path
 _RAG_DIR = str(Path(__file__).resolve().parent)
-_REPO_DIR = str(Path(__file__).resolve().parent.parent)
-if _RAG_DIR not in sys.path:
-    sys.path.insert(0, _RAG_DIR)
-if _REPO_DIR not in sys.path:
-    sys.path.insert(0, _REPO_DIR)
+_BACKEND_DIR = str(Path(__file__).resolve().parent.parent)
+_REPO_DIR = str(Path(__file__).resolve().parent.parent.parent)
+for _p in (_RAG_DIR, _BACKEND_DIR, _REPO_DIR):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 
 # Settings are read while importing the modules below, so load .env first.
+load_dotenv(dotenv_path=Path(_BACKEND_DIR) / ".env")
 load_dotenv()
 
 

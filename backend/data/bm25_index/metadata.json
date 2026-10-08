@@ -2,5 +2,5 @@
   "total_chunks": 95,
   "status": "ready",
   "updated_at": "2026-10-07T16:47:17.987995+00:00",
-  "index_dir": "/home/irshad_dev/Repositories/Smart_doc_agent/rag/data/bm25_index"
+  "index_dir": "/home/irshad_dev/Repositories/Smart_doc_agent/backend/data/bm25_index"
 }
