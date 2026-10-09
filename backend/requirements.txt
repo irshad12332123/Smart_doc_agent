@@ -2,14 +2,12 @@ langchain
 langchain-core
 langchain-community
 numpy
-sentence-transformers
 flask
 python-dotenv
 boto3
 supabase
 langchain-text-splitters
 langchain-google-genai
-transformers
 pypdf
 groq
 pymupdf
