@@ -244,7 +244,7 @@ def chat():
 
     # Optional retrieval configuration from request body (with defaults)
     match_count = payload.get("match_count")
-    rerank = payload.get("rerank", True)
+    rerank = payload.get("rerank", False)
     dense_weight = payload.get("dense_weight", 1.5)
     sparse_weight = payload.get("sparse_weight", 0.5)
     document_ids = payload.get("document_ids")
