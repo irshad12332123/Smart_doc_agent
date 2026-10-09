@@ -8,7 +8,6 @@ from config.settings import (
     RRF_K,
 )
 from services.fusion.rrf import RRFEngine, reciprocal_rank_fusion
-from services.reranker.cross_encoder import CrossEncoderReranker
 from services.retriever.base import BaseRetriever
 from services.retriever.dense import DenseRetriever
 from services.retriever.sparse import SparseRetriever
@@ -26,12 +25,12 @@ class HybridRetriever(BaseRetriever):
         self,
         dense_retriever: Optional[DenseRetriever] = None,
         sparse_retriever: Optional[SparseRetriever] = None,
-        reranker: Optional[CrossEncoderReranker] = None,
+        reranker: Optional[Any] = None,
         rrf_k: int = RRF_K,
     ):
         self.dense_retriever = dense_retriever or DenseRetriever()
         self.sparse_retriever = sparse_retriever or SparseRetriever()
-        self.reranker = reranker or CrossEncoderReranker()
+        self.reranker = reranker
         self.rrf_k = rrf_k
         self.rrf_engine = RRFEngine(k=rrf_k)
 
@@ -127,6 +126,9 @@ class HybridRetriever(BaseRetriever):
 
         # 4. Optional Cross-Encoder Re-ranking
         if rerank:
+            if self.reranker is None:
+                from services.reranker.cross_encoder import CrossEncoderReranker
+                self.reranker = CrossEncoderReranker()
             ce_k = rerank_top_k or final_k
             candidates_to_rerank = fused_candidates[:ce_k * 2]
             ranked_results = self.reranker.rerank(
