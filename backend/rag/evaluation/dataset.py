@@ -6,7 +6,7 @@ Every ground-truth chunk_id below exists in ACTUAL_CHUNKS.
 """
 
 from typing import Any
-==> 
+
 ACTUAL_CHUNKS: list[dict[str, Any]] = [
     {
         'id': '00dcdc07-dd7d-422c-b863-9e72e241655e',
