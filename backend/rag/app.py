@@ -44,8 +44,9 @@ for _p in (_RAG_DIR, _BACKEND_DIR, _REPO_DIR):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
+import re
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 
 # Settings are read while importing the modules below, so load .env first.
 load_dotenv(dotenv_path=Path(_BACKEND_DIR) / ".env")
@@ -78,27 +79,71 @@ def create_app() -> Flask:
     app.register_blueprint(ingest)
     app.register_blueprint(auth)
     app.register_blueprint(user)
+    _LOCAL_ORIGIN_REGEX = re.compile(
+        r"^https?://(localhost|127\.0\.0\.1|0\.0\.0\.0)(:\d+)?$", re.IGNORECASE
+    )
+    _VERCEL_APP_REGEX = re.compile(
+        r"^https://smart-doc-agent.*\.vercel\.app$", re.IGNORECASE
+    )
+    _STATIC_ALLOWED_ORIGINS = {
+        "https://smart-doc-agent-git-main-md-irshads-projects-07456f4e.vercel.app",
+        "https://smart-doc-agent-1fcm.onrender.com",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "http://localhost:5000",
+        "http://127.0.0.1:5000",
+        "http://localhost:4173",
+        "http://127.0.0.1:4173",
+    }
+
+    def _is_origin_allowed(origin: str | None) -> bool:
+        if not origin:
+            return False
+        clean = origin.strip().rstrip("/")
+        configured = {
+            o.strip().rstrip("/")
+            for o in (AUTH_ALLOWED_ORIGINS or "").split(",")
+            if o.strip()
+        }
+        if "*" in configured:
+            return True
+        if clean in configured or clean in _STATIC_ALLOWED_ORIGINS:
+            return True
+        if _LOCAL_ORIGIN_REGEX.match(clean):
+            return True
+        if _VERCEL_APP_REGEX.match(clean):
+            return True
+        return False
+
+    def _apply_cors_headers(response, origin: str | None):
+        if origin and _is_origin_allowed(origin):
+            clean_origin = origin.strip().rstrip("/")
+            response.headers["Access-Control-Allow-Origin"] = clean_origin
+            response.headers["Vary"] = "Origin"
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+
+        response.headers["Access-Control-Allow-Headers"] = (
+            "Content-Type, Authorization, X-Requested-With, Accept, Origin"
+        )
+        response.headers["Access-Control-Allow-Methods"] = (
+            "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD"
+        )
+        response.headers["Access-Control-Max-Age"] = "86400"
+        return response
+
+    @app.before_request
+    def handle_options_preflight():
+        if request.method == "OPTIONS":
+            response = Response("", status=204)
+            return _apply_cors_headers(response, request.headers.get("Origin"))
+
     @app.after_request
     def add_cors_headers(response):
-        allowed_origins = {
-            origin.strip()
-            for origin in AUTH_ALLOWED_ORIGINS.split(",")
-            if origin.strip()
-        }
-
-        origin = request.headers.get("Origin")
-
-        # print("REQUEST ORIGIN:", repr(origin))
-        # print("ALLOWED ORIGINS:", allowed_origins)
-
-        if origin in allowed_origins:
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Vary"] = "Origin"
-
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, DELETE, OPTIONS"
-
-        return response
+        return _apply_cors_headers(response, request.headers.get("Origin"))
 
     @app.get("/api/health")
     def health():

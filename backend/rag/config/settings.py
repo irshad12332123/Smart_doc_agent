@@ -25,7 +25,10 @@ AUTH_REGISTRATION_TOKEN_SECRET = os.getenv("AUTH_REGISTRATION_TOKEN_SECRET")
 AUTH_REGISTRATION_TOKEN_MAX_AGE_SECONDS = int(
     os.getenv("AUTH_REGISTRATION_TOKEN_MAX_AGE_SECONDS", "600")
 )
-AUTH_ALLOWED_ORIGINS = os.getenv("AUTH_ALLOWED_ORIGINS", "http://localhost:5173")
+AUTH_ALLOWED_ORIGINS = os.getenv(
+    "AUTH_ALLOWED_ORIGINS",
+    "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://127.0.0.1:8000,http://localhost:5000,http://127.0.0.1:5000,https://smart-doc-agent-git-main-md-irshads-projects-07456f4e.vercel.app,https://smart-doc-agent-1fcm.onrender.com",
+)
 
 # BM25 Sparse Retriever settings
 _BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
