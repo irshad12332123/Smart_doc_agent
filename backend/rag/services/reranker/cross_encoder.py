@@ -1,8 +1,6 @@
 import logging
 from typing import Any, Optional
 
-from sentence_transformers import CrossEncoder
-
 from config.settings import CROSS_ENCODER_MODEL_NAME, CROSS_ENCODER_TOP_K
 
 logger = logging.getLogger(__name__)
@@ -25,11 +23,19 @@ class CrossEncoderReranker:
         self.model_name = model_name or CROSS_ENCODER_MODEL_NAME
         self.max_length = max_length
         self.device = device
-        self._model: Optional[CrossEncoder] = None
+        self._model: Optional[Any] = None
 
-    def _load_model(self) -> CrossEncoder:
+    def _load_model(self) -> Any:
         if self._model is None:
             logger.info(f"Loading Cross-Encoder model: {self.model_name}")
+            try:
+                from sentence_transformers import CrossEncoder
+            except ImportError as e:
+                raise RuntimeError(
+                    "sentence-transformers is required for local Cross-Encoder reranking. "
+                    "Install sentence-transformers or disable cross-encoder re-ranking."
+                ) from e
+
             self._model = CrossEncoder(
                 self.model_name,
                 max_length=self.max_length,
