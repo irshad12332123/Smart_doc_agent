@@ -1,7 +1,14 @@
+import logging
 from typing import Any, List, Optional
 from langchain_core.documents import Document
-from langchain_experimental.text_splitter import SemanticChunker
+from langchain_experimental.text_splitter import (
+    SemanticChunker,
+    calculate_cosine_distances,
+    combine_sentences,
+)
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+logger = logging.getLogger(__name__)
 
 try:
     from embedder.embedding import Embedder
@@ -82,7 +89,7 @@ class Chunker:
         chunk_overlap: Optional[int] = None,
     ) -> List[Document]:
         """
-        Split documents using semantic chunking. If any generated chunk exceeds
+        Split documents using batched semantic chunking. If any generated chunk exceeds
         max_chunk_size, recursively split it into smaller chunks.
         """
         valid_docs = [doc for doc in docs if doc.page_content and doc.page_content.strip()]
@@ -92,8 +99,95 @@ class Chunker:
         max_size = max_chunk_size or self.max_chunk_size
         overlap = chunk_overlap if chunk_overlap is not None else self.chunk_overlap
 
-        # 1. Semantic splitting
-        semantic_docs = self.semantic_splitter.split_documents(valid_docs)
+        # 1. Batched semantic splitting across all documents
+        semantic_docs: List[Document] = []
+        try:
+            doc_sentence_info = []
+            all_sentences_list: List[str] = []
+
+            for doc in valid_docs:
+                s_list = self.semantic_splitter._get_single_sentences_list(doc.page_content)
+                if len(s_list) <= 1:
+                    doc_sentence_info.append({"single": True, "s_list": s_list, "doc": doc})
+                else:
+                    combined = combine_sentences(
+                        [{"sentence": s, "index": i} for i, s in enumerate(s_list)],
+                        self.semantic_splitter.buffer_size,
+                    )
+                    start_idx = len(all_sentences_list)
+                    all_sentences_list.extend([x["combined_sentence"] for x in combined])
+                    end_idx = len(all_sentences_list)
+                    doc_sentence_info.append({
+                        "single": False,
+                        "sentences": combined,
+                        "range": (start_idx, end_idx),
+                        "doc": doc,
+                    })
+
+            # Embed all sentence combinations in one batched call
+            all_embeddings = (
+                self.embedder.generate_embeddings(all_sentences_list)
+                if all_sentences_list
+                else []
+            )
+
+            # Reconstruct semantic chunks per document using pre-computed embeddings
+            for info in doc_sentence_info:
+                if info["single"]:
+                    if info["s_list"]:
+                        semantic_docs.append(
+                            Document(page_content=info["s_list"][0], metadata=info["doc"].metadata)
+                        )
+                    continue
+
+                start_idx, end_idx = info["range"]
+                sub_embeddings = all_embeddings[start_idx:end_idx]
+                sentences = info["sentences"]
+                for i, s in enumerate(sentences):
+                    s["combined_sentence_embedding"] = sub_embeddings[i]
+
+                distances, sentences = calculate_cosine_distances(sentences)
+                if self.semantic_splitter.number_of_chunks is not None:
+                    threshold = self.semantic_splitter._threshold_from_clusters(distances)
+                    breakpoint_array = distances
+                else:
+                    threshold, breakpoint_array = (
+                        self.semantic_splitter._calculate_breakpoint_threshold(distances)
+                    )
+
+                indices_above_thresh = [
+                    i for i, x in enumerate(breakpoint_array) if x > threshold
+                ]
+
+                start = 0
+                for idx in indices_above_thresh:
+                    group = sentences[start : idx + 1]
+                    combined_text = " ".join([d["sentence"] for d in group])
+                    if (
+                        self.semantic_splitter.min_chunk_size is None
+                        or len(combined_text) >= self.semantic_splitter.min_chunk_size
+                    ):
+                        semantic_docs.append(
+                            Document(page_content=combined_text, metadata=info["doc"].metadata)
+                        )
+                    start = idx + 1
+
+                if start < len(sentences):
+                    combined_text = " ".join([d["sentence"] for d in sentences[start:]])
+                    if (
+                        self.semantic_splitter.min_chunk_size is None
+                        or len(combined_text) >= self.semantic_splitter.min_chunk_size
+                    ):
+                        semantic_docs.append(
+                            Document(page_content=combined_text, metadata=info["doc"].metadata)
+                        )
+
+        except Exception as e:
+            logger.warning(
+                f"Batched semantic splitting encountered an issue ({e}). "
+                "Falling back to recursive character splitter."
+            )
+            semantic_docs = self.recursive_splitter.split_documents(valid_docs)
 
         # 2. Check chunk size and fall back to recursive splitter if too large
         final_docs: List[Document] = []
@@ -121,27 +215,15 @@ class Chunker:
         if not text or not text.strip():
             return []
 
-        max_size = max_chunk_size or self.max_chunk_size
-        overlap = chunk_overlap if chunk_overlap is not None else self.chunk_overlap
-
-        # 1. Semantic splitting
-        semantic_chunks = self.semantic_splitter.split_text(text)
-
-        # 2. Fall back to recursive splitter for oversized chunks
-        final_chunks: List[str] = []
-        for chunk in semantic_chunks:
-            chunk_stripped = chunk.strip()
-            if not chunk_stripped:
-                continue
-            if len(chunk_stripped) > max_size:
-                sub_chunks = self._split_oversized_text(
-                    chunk_stripped, max_chunk_size=max_size, chunk_overlap=overlap
-                )
-                final_chunks.extend(sub_chunks)
-            else:
-                final_chunks.append(chunk_stripped)
-
-        return final_chunks
+        doc = Document(page_content=text.strip(), metadata={})
+        split_docs = self.semantic_chunk_documents(
+            [doc], max_chunk_size=max_chunk_size, chunk_overlap=chunk_overlap
+        )
+        return [
+            d.page_content.strip()
+            for d in split_docs
+            if d.page_content and d.page_content.strip()
+        ]
 
     def semantic_chunk(
         self,
