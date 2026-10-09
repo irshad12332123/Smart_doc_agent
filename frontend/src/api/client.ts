@@ -1,6 +1,6 @@
 import type { DocumentInfo, Profile, SourceChunk } from "../types";
 
-const BASE_URL = import.meta.env.BACKEND_API || "http://localhost:5000";
+const BASE_URL = import.meta.env.BACKEND_API_URL;
 
 const jsonHeaders = { "Content-Type": "application/json" };
 
