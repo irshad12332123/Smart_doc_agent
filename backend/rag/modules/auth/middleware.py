@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from functools import wraps
-from typing import Any, Iterable
+from typing import Any
 
 from flask import g, request
 
