@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as I from "lucide-react";
 import { streamChat } from "../../api/client";
 import type { ChatMessage, DocumentInfo, Profile } from "../../types";
-import { getFileTypeTheme } from "../../components/ui/common";
+import { MarkdownView } from "../../components/ui/MarkdownView";
+import { SourcesSidebar } from "./SourcesSidebar";
 
 const suggestions = [
   "Find my pending assignments",
@@ -21,11 +22,52 @@ export function AskPage({
   documents: DocumentInfo[];
   profile?: Profile;
 }) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const storageKey = useMemo(() => {
+    return profile?.id
+      ? `scholarhub_chat_history_${profile.id}`
+      : "scholarhub_chat_history";
+  }, [profile?.id]);
+
+  // Restore chat history from localStorage for this session
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    try {
+      const key = profile?.id
+        ? `scholarhub_chat_history_${profile.id}`
+        : "scholarhub_chat_history";
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.map((m) => ({ ...m, streaming: false }));
+        }
+      }
+    } catch (e) {
+      console.error("Failed to restore chat history from localStorage", e);
+    }
+    return [];
+  });
+
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [sourcesSidebarOpen, setSourcesSidebarOpen] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Sync messages to localStorage whenever they change
+  useEffect(() => {
+    try {
+      if (messages.length === 0) {
+        localStorage.removeItem(storageKey);
+      } else {
+        const toSave = messages.map((m) => ({ ...m, streaming: false }));
+        localStorage.setItem(storageKey, JSON.stringify(toSave));
+      }
+    } catch (e) {
+      console.error("Failed to save chat history to localStorage", e);
+    }
+  }, [messages, storageKey]);
 
   const userSubjects = useMemo(() => {
     if (!profile) return [];
@@ -46,6 +88,13 @@ export function AskPage({
       .filter((s) => s.name);
   }, [profile]);
 
+  const totalSourcesCount = useMemo(() => {
+    return messages.reduce(
+      (acc, m) => acc + (m.sources?.length || 0) + (m.documents?.length || 0),
+      0,
+    );
+  }, [messages]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -64,6 +113,13 @@ export function AskPage({
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const handleClearChat = () => {
+    setMessages([]);
+    localStorage.removeItem(storageKey);
+    setSourcesSidebarOpen(false);
+    setSelectedMessageId(null);
+  };
 
   const send = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -90,14 +146,24 @@ export function AskPage({
       text,
       messages.map((m) => ({ role: m.role, content: m.content })),
       {
-        sources: (s) =>
+        sources: (s) => {
           setMessages((p) =>
             p.map((m) => (m.id === assistantId ? { ...m, sources: s } : m)),
-          ),
-        documents: (docs) =>
+          );
+          setSelectedMessageId(assistantId);
+          if (s && s.length > 0) {
+            setSourcesSidebarOpen(true);
+          }
+        },
+        documents: (docs) => {
           setMessages((p) =>
             p.map((m) => (m.id === assistantId ? { ...m, documents: docs } : m)),
-          ),
+          );
+          setSelectedMessageId(assistantId);
+          if (docs && docs.length > 0) {
+            setSourcesSidebarOpen(true);
+          }
+        },
         token: (t) => {
           full += t;
           setMessages((p) =>
@@ -128,216 +194,213 @@ export function AskPage({
   };
 
   return (
-    <div className="ask-page">
-      <div className="ask-header">
-        <div className="ask-header-title">
-          <div className="brand-mark-ai">
-            <I.Sparkles />
-          </div>
-          <div>
-            <h1>Academic AI Assistant</h1>
-            <p>
-              Ask any question across your uploaded syllabus, lectures, and notices.
-            </p>
-          </div>
-        </div>
-
-        {messages.length > 0 && (
-          <button
-            className="outline-btn clear-chat-btn"
-            onClick={() => setMessages([])}
-            disabled={sending}
-          >
-            <I.RotateCcw /> New Chat
-          </button>
-        )}
-      </div>
-
-      <div className="ask-body">
-        {messages.length === 0 ? (
-          <div className="ask-empty-state">
-            <div className="ask-empty-glow" />
-            <div className="ask-empty-icon">
-              <I.Sparkles />
+    <div className={`ask-layout-container ${sourcesSidebarOpen ? "with-sidebar-open" : ""}`}>
+      <div className="ask-main-pane">
+        <div className="ask-pane-inner">
+          <div className="ask-header">
+            <div className="ask-header-title">
+              <div className="brand-mark-ai">
+                <I.Sparkles />
+              </div>
+              <div>
+                <h1>Academic AI Assistant</h1>
+                <p>
+                  Ask any question across your uploaded syllabus, lectures, and notices.
+                </p>
+              </div>
             </div>
-            <h2>What would you like to know?</h2>
-            <p>
-              I can summarize documents, locate syllabus points, clarify complex
-              concepts, or find specific deadlines with cited sources.
-            </p>
 
-            <div className="ask-suggestions-grid">
-              {suggestions.map((q) => (
+            <div className="ask-header-actions">
+              {totalSourcesCount > 0 && (
                 <button
-                  key={q}
-                  className="ask-suggestion-card"
-                  onClick={() => {
-                    setInput(q);
-                    inputRef.current?.focus();
-                  }}
+                  type="button"
+                  className={`outline-btn toggle-sources-header-btn ${sourcesSidebarOpen ? "active" : ""}`}
+                  onClick={() => setSourcesSidebarOpen((prev) => !prev)}
+                  title={sourcesSidebarOpen ? "Hide referenced sources" : "View referenced sources"}
                 >
-                  <I.HelpCircle className="card-q-icon" />
-                  <span>{q}</span>
-                  <I.ArrowUpRight className="card-arrow-icon" />
+                  {sourcesSidebarOpen ? (
+                    <I.PanelRightClose />
+                  ) : (
+                    <I.PanelRightOpen />
+                  )}
+                  <span>Sources ({totalSourcesCount})</span>
                 </button>
-              ))}
-            </div>
+              )}
 
-            {documents.length === 0 && (
-              <div className="api-note ask-note">
-                <I.Info />
-                <span>
-                  No documents are indexed yet. Documents uploaded by your faculty
-                  or CR will be searchable here.
-                </span>
+              {messages.length > 0 && (
+                <button
+                  type="button"
+                  className="outline-btn clear-chat-btn"
+                  onClick={handleClearChat}
+                  disabled={sending}
+                  title="Clear conversation history"
+                >
+                  <I.RotateCcw /> New Chat
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="ask-body">
+            {messages.length === 0 ? (
+              <div className="ask-empty-state">
+                <div className="ask-empty-glow" />
+                <div className="ask-empty-icon">
+                  <I.Sparkles />
+                </div>
+                <h2>What would you like to know?</h2>
+                <p>
+                  I can summarize documents, locate syllabus points, clarify complex
+                  concepts, or find specific deadlines with cited sources.
+                </p>
+
+                <div className="ask-suggestions-grid">
+                  {suggestions.map((q) => (
+                    <button
+                      key={q}
+                      className="ask-suggestion-card"
+                      onClick={() => {
+                        setInput(q);
+                        inputRef.current?.focus();
+                      }}
+                    >
+                      <I.HelpCircle className="card-q-icon" />
+                      <span>{q}</span>
+                      <I.ArrowUpRight className="card-arrow-icon" />
+                    </button>
+                  ))}
+                </div>
+
+                {documents.length === 0 && (
+                  <div className="api-note ask-note">
+                    <I.Info />
+                    <span>
+                      No documents are indexed yet. Documents uploaded by your faculty
+                      or CR will be searchable here.
+                    </span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="conversation-flow">
+                {messages.map((m) => {
+                  const hasSources =
+                    (m.sources && m.sources.length > 0) ||
+                    (m.documents && m.documents.length > 0);
+                  const sourcesCount =
+                    (m.sources?.length || 0) + (m.documents?.length || 0);
+
+                  return (
+                    <article
+                      className={`chat-message ${m.role} ${m.error ? "msg-error" : ""}`}
+                      key={m.id}
+                    >
+                      <div className="message-avatar-box">
+                        {m.role === "user" ? (
+                          <I.UserRound />
+                        ) : (
+                          <I.Sparkles className="sparkle-spin" />
+                        )}
+                      </div>
+
+                      <div className="message-bubble-wrap">
+                        <div className="message-sender-row">
+                          <span className="sender-name">
+                            {m.role === "user" ? "You" : "ScholarHub Assistant"}
+                          </span>
+                          {m.streaming && (
+                            <span className="streaming-badge">
+                              <span className="pulsing-dot" /> Generating answer…
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="message-text-content">
+                          <MarkdownView
+                            content={m.content}
+                            streaming={m.streaming}
+                          />
+                        </div>
+
+                        {hasSources && (
+                          <div className="message-sources-summary">
+                            <button
+                              type="button"
+                              className={`message-sources-pill ${selectedMessageId === m.id && sourcesSidebarOpen ? "selected" : ""}`}
+                              onClick={() => {
+                                setSelectedMessageId(m.id);
+                                setSourcesSidebarOpen(true);
+                              }}
+                              title="Open sources panel on the right"
+                            >
+                              <I.BookOpen className="pill-icon" />
+                              <span className="pill-count">
+                                {sourcesCount}{" "}
+                                {sourcesCount === 1 ? "source cited" : "sources cited"}
+                              </span>
+                              <span className="pill-divider">•</span>
+                              <span className="pill-action">
+                                {sourcesSidebarOpen && selectedMessageId === m.id
+                                  ? "Viewing in sidebar"
+                                  : "View in sidebar"}
+                                <I.ArrowRight className="pill-arrow" />
+                              </span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })}
+                <div ref={messagesEndRef} />
               </div>
             )}
           </div>
-        ) : (
-          <div className="conversation-flow">
-            {messages.map((m) => (
-              <article
-                className={`chat-message ${m.role} ${m.error ? "msg-error" : ""}`}
-                key={m.id}
+
+          <div className="composer-dock">
+            <form className="composer-bar" onSubmit={send}>
+              <button
+                type="button"
+                className="composer-icon-btn"
+                title="Attach file (available in upload tab)"
+                aria-label="Attach file"
               >
-                <div className="message-avatar-box">
-                  {m.role === "user" ? (
-                    <I.UserRound />
-                  ) : (
-                    <I.Sparkles className="sparkle-spin" />
-                  )}
-                </div>
+                <I.Paperclip />
+              </button>
 
-                <div className="message-bubble-wrap">
-                  <div className="message-sender-row">
-                    <span className="sender-name">
-                      {m.role === "user" ? "You" : "ScholarHub Assistant"}
-                    </span>
-                    {m.streaming && (
-                      <span className="streaming-badge">
-                        <span className="pulsing-dot" /> Generating answer…
-                      </span>
-                    )}
-                  </div>
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask a question or request a summary…"
+                disabled={sending}
+                aria-label="Chat input"
+              />
 
-                  <div className="message-text-content">
-                    <p>
-                      {m.content ||
-                        (m.streaming ? "Searching academic knowledge base…" : "")}
-                      {m.streaming && <span className="streaming-cursor" />}
-                    </p>
-                  </div>
-
-                  {m.sources && m.sources.length > 0 && (
-                    <div className="sources-container">
-                      <div className="sources-header">
-                        <I.BookOpen />
-                        <span>Referenced Sources ({m.sources.length})</span>
-                      </div>
-                      <div className="sources-cards-list">
-                        {m.sources.map((s, idx) => {
-                          const fileType = getFileTypeTheme(
-                            s.filename.split(".").pop() || "",
-                          );
-                          const Icon = fileType.icon;
-                          return (
-                            <div className="source-citation-card" key={s.chunk_id || idx}>
-                              <div className="source-index-badge">{idx + 1}</div>
-                              <div className="source-meta">
-                                <div className="source-filename-row">
-                                  <Icon className="source-file-icon" />
-                                  <strong title={s.filename}>{s.filename}</strong>
-                                </div>
-                                <p className="source-snippet">{s.text}</p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {m.documents && m.documents.length > 0 && (
-                    <div className="sources-container">
-                      <div className="sources-header">
-                        <I.FileText />
-                        <span>Matched Documents ({m.documents.length})</span>
-                      </div>
-                      <div className="sources-cards-list">
-                        {m.documents.map((doc, idx) => {
-                          const fileType = getFileTypeTheme(
-                            doc.filename?.split(".").pop() || "pdf",
-                          );
-                          const Icon = fileType.icon;
-                          return (
-                            <div className="source-citation-card" key={doc.doc_id || idx}>
-                              <div className="source-index-badge">{idx + 1}</div>
-                              <div className="source-meta">
-                                <div className="source-filename-row">
-                                  <Icon className="source-file-icon" />
-                                  <strong title={doc.filename}>{doc.filename}</strong>
-                                </div>
-                                {doc.description && <p className="source-snippet">{doc.description}</p>}
-                                {doc.file_url && (
-                                  <a
-                                    href={doc.file_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="outline-btn"
-                                    style={{ marginTop: "6px", display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "0.8rem", padding: "3px 8px" }}
-                                  >
-                                    <I.Download style={{ width: "12px", height: "12px" }} /> Download
-                                  </a>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </article>
-            ))}
-            <div ref={messagesEndRef} />
+              <button
+                type="submit"
+                className="composer-send-btn"
+                disabled={sending || !input.trim()}
+                title="Send message"
+                aria-label="Send message"
+              >
+                {sending ? <I.Loader2 className="spinning-loader" /> : <I.Send />}
+              </button>
+            </form>
+            <p className="composer-footnote">
+              ScholarHub AI generates responses based on verified batch materials and course syllabus.
+            </p>
           </div>
-        )}
+        </div>
       </div>
 
-      <div className="composer-dock">
-        <form className="composer-bar" onSubmit={send}>
-          <button
-            type="button"
-            className="composer-icon-btn"
-            title="Attach file (available in upload tab)"
-            aria-label="Attach file"
-          >
-            <I.Paperclip />
-          </button>
-
-          <input
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask a question or request a summary…"
-            disabled={sending}
-            aria-label="Chat input"
-          />
-
-          <button
-            type="submit"
-            className="composer-send-btn"
-            disabled={sending || !input.trim()}
-            title="Send message"
-            aria-label="Send message"
-          >
-            {sending ? <I.Loader2 className="spinning-loader" /> : <I.Send />}
-          </button>
-        </form>
-        <p className="composer-footnote">
-          ScholarHub AI generates responses based on verified batch materials and course syllabus.
-        </p>
-      </div>
+      <SourcesSidebar
+        open={sourcesSidebarOpen}
+        onClose={() => setSourcesSidebarOpen(false)}
+        messages={messages}
+        selectedMessageId={selectedMessageId}
+        onSelectMessage={(id) => setSelectedMessageId(id)}
+      />
     </div>
   );
 }
