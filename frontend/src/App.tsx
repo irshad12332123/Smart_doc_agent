@@ -53,6 +53,10 @@ function App() {
   };
 
   const logout = () => {
+    if (session?.profile?.id) {
+      localStorage.removeItem(`scholarhub_chat_history_${session.profile.id}`);
+    }
+    localStorage.removeItem("scholarhub_chat_history");
     localStorage.removeItem("scholarhub-session");
     setSession(null);
     setPage("home");

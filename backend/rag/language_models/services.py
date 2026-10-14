@@ -25,7 +25,7 @@ class CallLLM:
             if entry.get("role") in {"user", "assistant"} and entry.get("content")
         )
 
-        prompt = f"""You are a precise document assistant, if user requires answer in certain length answer them but dont cross more than 100 words. Answer only from the retrieved data.
+        prompt = f"""You are a precise document assistant, if user requires answer in certain length answer them but dont cross more than 1000 words. Answer only from the retrieved data.
                     If the data do not support an answer, say that clearly. Cite every factual claim using
                     the supplied bracket markers such as [1]. Do not invent citations.
                     If the user asks for a list, provide it in a numbered format. If the user asks for a table, provide it in a markdown table format.

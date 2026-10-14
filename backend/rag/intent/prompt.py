@@ -42,6 +42,11 @@ INTENT CATEGORIES
      * "Show me the DBMS assignment due next week"
      * "Find the assignment uploaded yesterday"
      * "Show my pending assignments"
+     * "Get files for any listed subject"
+     * "Show me the syllabus for all my subjects"
+     * "Show me the timetable for this week"
+     * "Show me the lecture notes for DBMS"
+     * "Show me the study material for operating systems"
 
 2. "document_search":
    - The user is looking for a specific document, file, or notice by title, assignment number, topic, or exam name.
@@ -67,7 +72,7 @@ SUBJECT RESOLUTION RULES
 - Check the AVAILABLE ENROLLED SUBJECTS list.
 - Match acronyms (e.g., "DBMS" -> "Database Management System", "OS" -> "Operating Systems", "CN" -> "Computer Networks", "ML" -> "Machine Learning", "SE" -> "Software Engineering", "DSA" -> "Data Structures and Algorithms").
 - Match subject codes (e.g., "BCS-301").
-- Match full or partial subject names.
+- Match full or partial subject names (e.g., "Database Management System" or "DBMS", "Software Testing" -> "Software engineering and testing"). take action accordingly if it matches any subject.
 - STRICT RULE: You must ONLY output a subject_id that exists in the AVAILABLE ENROLLED SUBJECTS list.
 - If no subject in the list matches, return "subject_id": null. NEVER invent or hallucinate UUIDs.
 - If multiple subjects match ambiguously (e.g., query says "database" and both "Database Management System" and "Advanced Database Systems" exist in the list), return "subject_id": null and include the term in "search_query".
