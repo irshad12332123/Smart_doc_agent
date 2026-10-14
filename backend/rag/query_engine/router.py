@@ -4,7 +4,7 @@ from typing import Any, Optional, Sequence
 
 from documents.service import DocumentService
 from intent.extractor import IntentExtractor
-from intent.schema import DocumentIntent, SubjectContext
+from intent.schema import DocumentIntent
 
 logger = logging.getLogger(__name__)
 
