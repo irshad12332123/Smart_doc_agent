@@ -1,10 +1,15 @@
+import hashlib
 import json
+import logging
 from collections import Counter
 from collections.abc import Iterator
+import mimetypes
 from pathlib import Path
-from typing import  Any
-from flask import Blueprint, Response, jsonify, request, stream_with_context
+from typing import Any
+import uuid
+from flask import Blueprint, Response, g, jsonify, request, stream_with_context
 from groq import Groq
+from werkzeug.utils import secure_filename
 
 from modules.auth.middleware import require_auth
 from language_models.services import CallLLM
@@ -13,8 +18,10 @@ from config.settings import (
     S3_BUCKET_NAME,
     GROQ_MODEL,
     S3_SIGNED_URL_TTL_SECONDS,
+    MAX_UPLOAD_BYTES,
 )
 
+from utils.get_file_type import get_file_type
 from lib.aws_s3 import aws_s3_client
 from lib.supabase import get_supabase_client
 from query_engine.rewrite_query import rewrite_query
@@ -24,6 +31,15 @@ from services.ingestion.dense import DenseIngestion
 from services.ingestion.sparse import SparseIngestion
 from services.retriever.sparse import SparseRetriever
 from services.retriever.hybrid import HybridRetriever
+from ingestion.ingest_repository import (
+    create_job,
+    get_job,
+    update_job,
+    find_document_by_hash,
+)
+from async_engine.tasks import process_ingestion_job, sync_sparse_index_task
+
+logger = logging.getLogger(__name__)
 
 ingest = Blueprint("ingest", __name__, url_prefix="/api")
 
@@ -50,7 +66,6 @@ def _document_info(document: dict[str, Any], chunk_counts: Counter[str]) -> dict
 @ingest.route("/ingest", methods=["POST"])
 @require_auth
 def ingest_files():
-    print("request received")
     files = request.files.getlist("files")
     batch_ids = request.form.getlist("batch_ids")
     subject_id = request.form.get("subject_id") or None
@@ -61,43 +76,143 @@ def ingest_files():
     if not batch_ids:
         return jsonify({"detail": "At least one batch is required."}), 400
 
-    supabase = get_supabase_client()
-    del supabase
+    bucket = _required_s3_bucket()
+    uploaded_by = getattr(g.current_user, "id", None) if hasattr(g, "current_user") and g.current_user else None
 
-    completed: list[dict[str, Any]] = []
+    queued_jobs: list[dict[str, Any]] = []
+    skipped_files: list[dict[str, Any]] = []
 
     try:
-        bucket = _required_s3_bucket()
-
-        #initializing the generator--
-        context_meta_data_generator: Groq = load_slm()
-
-        dense_ingester = DenseIngestion()
-
         for uploaded_file in files:
-            completed.append(dense_ingester.ingest(uploaded_file, context_meta_data_generator, subject_id, batch_ids, aws_s3_client, bucket))
+            filename = secure_filename(uploaded_file.filename or "")
+            if not filename:
+                continue
 
-        # Regenerate the BM25 sparse index to keep local index in sync with Supabase
-        try:
-            SparseIngestion().regenerate_index()
-        except Exception as sparse_err:
-            print("Warning: Sparse index regeneration failed after upload:", sparse_err)
+            file_bytes: bytes = uploaded_file.read()
+            if not file_bytes:
+                raise ValueError(f"File '{filename}' is empty")
+
+            if len(file_bytes) > MAX_UPLOAD_BYTES:
+                raise ValueError(f"File '{filename}' exceeds the {MAX_UPLOAD_BYTES // (1024 * 1024)} MB limit")
+
+            # 1. Hash file bytes with sha256
+            file_sha256 = hashlib.sha256(file_bytes).hexdigest()
+
+            # 2. Check if hash already exists in documents table (hash_key column)
+            existing_doc = find_document_by_hash(file_sha256)
+            if existing_doc:
+                logger.info(f"File '{filename}' with hash {file_sha256} already exists in documents table.")
+                skipped_files.append({
+                    "filename": filename,
+                    "file_sha256": file_sha256,
+                    "document_id": str(existing_doc.get("id")),
+                    "reason": "already_exists",
+                    "message": f"File '{filename}' has already been ingested.",
+                })
+                continue
+
+            # 3. Upload object to S3 before starting async processing
+            category = get_file_type(filename)
+            s3_key = f"{category}/{uuid.uuid4().hex}_{filename}"
+            content_type = uploaded_file.mimetype or mimetypes.guess_type(filename)[0] or "application/octet-stream"
+            aws_s3_client.put_object(Bucket=bucket, Key=s3_key, Body=file_bytes, ContentType=content_type)
+
+            # 4. Create record in ingestion_jobs table
+            job_record = create_job(
+                s3_key=s3_key,
+                file_sha256=file_sha256,
+                max_attempts=5,
+            )
+            job_id = job_record["id"]
+
+            # 5. Enqueue Celery task
+            try:
+                task = process_ingestion_job.delay(
+                    job_id=job_id,
+                    subject_id=subject_id,
+                    batch_ids=batch_ids,
+                    filename=filename,
+                    uploaded_by=uploaded_by,
+                )
+                update_job(job_id, celery_task_id=task.id)
+                queued_jobs.append({
+                    "job_id": job_id,
+                    "task_id": task.id,
+                    "filename": filename,
+                    "status": "queued",
+                    "s3_key": s3_key,
+                    "file_sha256": file_sha256,
+                    "doc_id": job_id,
+                })
+            except Exception as celery_err:
+                logger.error(f"Failed to enqueue Celery task for job {job_id}: {celery_err}")
+                update_job(job_id, status="enqueue_failed", error=str(celery_err), error_type=type(celery_err).__name__)
+                queued_jobs.append({
+                    "job_id": job_id,
+                    "task_id": None,
+                    "filename": filename,
+                    "status": "enqueue_failed",
+                    "error": str(celery_err),
+                    "s3_key": s3_key,
+                    "file_sha256": file_sha256,
+                    "doc_id": job_id,
+                })
 
     except (RuntimeError, ValueError) as error:
         return jsonify({"detail": str(error)}), 400
     except Exception as e:
+        logger.exception("Unexpected error during file ingestion enqueue:")
         return jsonify({"detail": "Document ingestion failed. Check the server logs.", "error": str(e)}), 500
 
-    return jsonify({"documents": completed, "total_chunks_added": sum(d["num_chunks"] for d in completed)}), 201
+    if skipped_files and not queued_jobs:
+        return jsonify({
+            "message": "All uploaded files have already been ingested.",
+            "skipped": skipped_files,
+            "jobs": [],
+            "documents": [],
+        }), 200
+
+    return jsonify({
+        "message": f"{len(queued_jobs)} file(s) queued for ingestion.",
+        "jobs": queued_jobs,
+        "documents": queued_jobs,
+        "skipped": skipped_files,
+        "total_queued": len(queued_jobs),
+        "total_skipped": len(skipped_files),
+    }), 202
+
+@ingest.route("/jobs/<job_id>", methods=["GET"])
+def get_job_status(job_id: str):
+    """Retrieve status and metadata of an ingestion job."""
+    try:
+        job = get_job(job_id)
+        if not job:
+            return jsonify({"detail": f"Job {job_id} not found"}), 404
+        return jsonify({"job": job}), 200
+    except Exception as e:
+        return jsonify({"detail": f"Failed to get job status: {e}"}), 500
 
 @ingest.route("/index/sync", methods=["POST"])
 def sync_index():
-    """Manually trigger BM25 sparse index regeneration from Supabase."""
+    """Trigger BM25 sparse index regeneration asynchronously via Celery task."""
     try:
-        metadata = SparseIngestion().regenerate_index()
-        return jsonify({"status": "success", "message": "Sparse BM25 index regenerated successfully", "metadata": metadata}), 200
+        task = sync_sparse_index_task.delay()
+        return jsonify({
+            "status": "queued",
+            "message": "Sparse index regeneration queued asynchronously",
+            "task_id": task.id,
+        }), 202
     except Exception as e:
-        return jsonify({"detail": f"Failed to sync sparse index: {e}"}), 500
+        logger.warning(f"Could not enqueue async sync index ({e}). Running synchronous fallback.")
+        try:
+            metadata = SparseIngestion().regenerate_index()
+            return jsonify({
+                "status": "success",
+                "message": "Sparse BM25 index regenerated synchronously",
+                "metadata": metadata,
+            }), 200
+        except Exception as sync_err:
+            return jsonify({"detail": f"Failed to sync sparse index: {sync_err}"}), 500
 
 @ingest.route("/retrieve/sparse", methods=["POST"])
 def retrieve_sparse():
@@ -298,6 +413,7 @@ def chat():
             )
 
             print("Hybrid retrieved rows count:", len(retrieved_rows))
+            print("Hybrid retrieved rows:", retrieved_rows)
 
             sources = [
                 {
