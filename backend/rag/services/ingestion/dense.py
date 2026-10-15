@@ -127,7 +127,6 @@ class DenseIngestion(BaseIngestion):
         file_bytes: bytes = uploaded_file.read()
 
         if extension == "pdf":
-            print("pdf extractor loaded")
             reader = PdfReader(BytesIO(file_bytes))
             extracted_text = "\n".join(
                 page.extract_text() or ""
@@ -174,5 +173,3 @@ class DenseIngestion(BaseIngestion):
             "filetype": Path(filename).suffix.lower().lstrip("."),
             "num_chunks": chunk_count,
         })
-
-
