@@ -13,4 +13,5 @@ groq
 pymupdf
 bm25s
 PyStemmer
-
+celery
+redis

@@ -1,12 +1,9 @@
 import json
-from werkzeug.utils import secure_filename
 from pathlib import Path
 from config.settings import MAX_UPLOAD_BYTES
 from lib.supabase import get_supabase_client
 from services.ingestion.base import BaseIngestion
-from utils.get_file_type import get_file_type
 import mimetypes
-import uuid
 from pypdf import PdfReader
 from io import BytesIO
 from services.ingestion.constants import DocumentMetaData
@@ -114,17 +111,30 @@ class DenseIngestion(BaseIngestion):
         print("Extracted metadata:", parsed_json)
         return DocumentMetaData.model_validate(parsed_json)
 
-    def ingest(self, uploaded_file,  context_meta_data_generator, subject_id: str | None, batch_ids: list[str],  aws_s3_client, bucket:str):
+    def ingest(
+        self,
+        context_meta_data_generator=None,
+        subject_id: str | None = None,
+        batch_ids: list[str] | None = None,
+        extension: str = "",
+        filename: str = "",
+        s3_key: str = "",
+        file_bytes: bytes = b"",
+        uploaded_by: str | None = None,
+        hash_key: str | None = None,
+    ) -> dict[str, Any]:
 
-        filename = secure_filename(uploaded_file.filename or "")
+        if not filename and s3_key:
+            filename = Path(s3_key).name
 
-        if not filename:
-            raise ValueError("Every upload must have a filename")
+        if not extension and filename:
+            extension = Path(filename).suffix.lower().lstrip(".")
 
-        extension = Path(filename).suffix.lower().lstrip(".")
-        category = get_file_type(filename)
+        if not file_bytes:
+            raise ValueError(f"{filename or 'Document'} is empty")
 
-        file_bytes: bytes = uploaded_file.read()
+        if len(file_bytes) > MAX_UPLOAD_BYTES:
+            raise ValueError(f"{filename} exceeds the {MAX_UPLOAD_BYTES // (1024 * 1024)} MB limit")
 
         if extension == "pdf":
             reader = PdfReader(BytesIO(file_bytes))
@@ -133,39 +143,47 @@ class DenseIngestion(BaseIngestion):
                 for page in reader.pages
             )
         else:
-            extracted_text = file_bytes.decode("utf-8")
+            try:
+                extracted_text = file_bytes.decode("utf-8")
+            except Exception:
+                extracted_text = file_bytes.decode("latin-1", errors="ignore")
 
-        if not file_bytes:
-                    raise ValueError(f"{filename} is empty")
+        if context_meta_data_generator is None:
+            from language_models.sml import load_slm
+            context_meta_data_generator = load_slm()
 
-        if len(file_bytes) > MAX_UPLOAD_BYTES:
-            raise ValueError(f"{filename} exceeds the {MAX_UPLOAD_BYTES // (1024 * 1024)} MB limit")
+        file_context_meta_data: DocumentMetaData = self._get_file_context_meta_data_from_slm(extracted_text, context_meta_data_generator)
 
-        file_context_meta_data: DocumentMetaData =self. _get_file_context_meta_data_from_slm(extracted_text, context_meta_data_generator)
-
-        s3_key = f"{category}/{uuid.uuid4().hex}_{filename}"
-
-        from flask import g
+        user_id = uploaded_by
+        if not user_id:
+            try:
+                from flask import g
+                if hasattr(g, "current_user") and g.current_user:
+                    user_id = getattr(g.current_user, "id", None)
+            except Exception:
+                user_id = None
 
         document_data_to_insert: dict = {
             **file_context_meta_data.model_dump(),
-            "title" : filename,
-            "s3_key" : s3_key,
-            "uploaded_by": g.current_user.id
-            }
+            "title": filename,
+            "s3_key": s3_key,
+        }
+
+        if user_id is not None:
+            document_data_to_insert["uploaded_by"] = user_id
+
+        if hash_key is not None:
+            document_data_to_insert["hash_key"] = hash_key
 
         if subject_id is not None:
             document_data_to_insert["subject_id"] = subject_id
 
         document_id = self._insert_document(document_data_to_insert)
 
-        self._upload_doc_id_per_batches(get_supabase_client(), document_id, batch_ids)
+        if batch_ids:
+            self._upload_doc_id_per_batches(get_supabase_client(), document_id, batch_ids)
 
-        content_type = uploaded_file.mimetype or mimetypes.guess_type(filename)[0] or "application/octet-stream"
-
-        chunk_count =self. _ingest_bytes(file_bytes, filename, s3_key, document_id)
-
-        aws_s3_client.put_object(Bucket=bucket, Key=s3_key, Body=file_bytes, ContentType=content_type)
+        chunk_count = self._ingest_bytes(file_bytes, filename, s3_key, document_id)
 
         return dict({
             "doc_id": document_id,
