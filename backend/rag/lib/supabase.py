@@ -18,7 +18,6 @@ def get_supabase_client() -> Client:
         raise RuntimeError("SUPABASE_URL and SUPABASE_KEY must be configured")
     return create_client(url, key)
 
-
 @lru_cache(maxsize=1)
 def get_supabase_admin_client() -> Client:
     """Return the server-only client used for privileged auth workflows.

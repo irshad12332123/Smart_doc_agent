@@ -12,7 +12,7 @@ import bm25s
 import Stemmer
 
 from config.settings import BM25_INDEX_DIR
-from lib.supabase import get_supabase_client
+from lib.supabase import get_supabase_admin_client
 from services.ingestion.base import BaseIngestion
 
 logger = logging.getLogger(__name__)
@@ -38,16 +38,25 @@ class SparseIngestion(BaseIngestion):
 
     _sync_lock = threading.Lock()
 
-    def __init__(self, index_dir: str | Path | None = None):
+    def __init__(
+        self,
+        index_dir: str | Path | None = None,
+        client: Optional[Any] = None,
+    ):
+        super().__init__(client=client)
         self.index_dir = Path(index_dir or BM25_INDEX_DIR)
         self.stemmer = Stemmer.Stemmer("english")
 
-    def fetch_all_chunks(self, client=None, batch_size: int = 1000) -> list[dict[str, Any]]:
+    def fetch_all_chunks(
+        self,
+        client: Optional[Any] = None,
+        batch_size: int = 1000,
+    ) -> list[dict[str, Any]]:
         """
         Fetch all document chunks and their associated document titles from Supabase
         using pagination to handle large datasets seamlessly.
         """
-        supabase_client = client or get_supabase_client()
+        supabase_client = client or self.client
         all_chunks: list[dict[str, Any]] = []
         start = 0
 
@@ -176,8 +185,8 @@ class SparseIngestion(BaseIngestion):
 
     def regenerate_index(
         self,
-        client=None,
-        save_dir: str | Path | None = None
+        client: Optional[Any] = None,
+        save_dir: str | Path | None = None,
     ) -> dict[str, Any]:
         """
         Regenerate the BM25 index from scratch by fetching current chunks from Supabase.
@@ -185,7 +194,7 @@ class SparseIngestion(BaseIngestion):
         """
         with self._sync_lock:
             logger.info("Starting BM25 sparse index regeneration from Supabase...")
-            chunks = self.fetch_all_chunks(client=client)
+            chunks = self.fetch_all_chunks(client=client or self.client)
             metadata = self.build_and_save_index(chunks, save_dir=save_dir)
             return metadata
 

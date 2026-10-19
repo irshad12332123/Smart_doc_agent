@@ -25,6 +25,9 @@ create table if not exists public.ingestion_jobs (
   updated_at timestamptz not null default now()
 );
 
+-- Ensure document_id is nullable (it is populated after dense ingestion completes)
+alter table public.ingestion_jobs alter column document_id drop not null;
+
 -- 3. Indexes for fast query lookup
 create index if not exists ingestion_jobs_status_idx on public.ingestion_jobs (status);
 create index if not exists ingestion_jobs_file_sha256_idx on public.ingestion_jobs (file_sha256);

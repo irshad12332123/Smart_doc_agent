@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 from config.settings import MAX_UPLOAD_BYTES
-from lib.supabase import get_supabase_client
+from lib.supabase import get_supabase_admin_client
 from services.ingestion.base import BaseIngestion
 import mimetypes
 from pypdf import PdfReader
@@ -23,16 +23,18 @@ def _data(response: Any) -> list[dict[str, Any]]:
 
 class DenseIngestion(BaseIngestion):
 
+    def __init__(self, client: Optional[Any] = None):
+        super().__init__(client=client)
+
     def _insert_document(self, document_data: dict) -> str:
+        response = self.client.table("documents").insert(document_data).execute()
+        rows = _data(response)
 
-            response = get_supabase_client().table("documents").insert(document_data).execute()
-            rows = _data(response)
+        if not rows or not rows[0].get("id"):
+            raise RuntimeError("The documents insert did not return a document id")
+        return str(rows[0]["id"])
 
-            if not rows or not rows[0].get("id"):
-                raise RuntimeError("The documents insert did not return a document id")
-            return str(rows[0]["id"])
-
-    def _ingest_bytes(self,file_bytes: bytes, filename: str, s3_key: str, document_id: str) -> int:
+    def _ingest_bytes(self, file_bytes: bytes, filename: str, s3_key: str, document_id: str) -> int:
         documents = Loader().load(file_bytes, filename)
         if not documents:
             raise ValueError("No readable text was found in this document")
@@ -53,20 +55,20 @@ class DenseIngestion(BaseIngestion):
             }
             for chunk, embedding in zip(chunks, embeddings, strict=True)
         ]
-        get_supabase_client().table("document_chunks").insert(rows).execute()
+        self.client.table("document_chunks").insert(rows).execute()
         return len(rows)
 
-    def _upload_doc_id_per_batches(self, client, document_id: str, batch_ids: list[str]):
-
+    def _upload_doc_id_per_batches(self, document_id: str, batch_ids: list[str], client: Optional[Any] = None):
+        target_client = client or self.client
         document_batch_rows = [
-                {
-                    "document_id": document_id,
-                    "batch_id": batch_id,
-                }
-                for batch_id in batch_ids
-            ]
+            {
+                "document_id": document_id,
+                "batch_id": batch_id,
+            }
+            for batch_id in batch_ids
+        ]
         (
-            client
+            target_client
             .table("document_batches")
             .insert(document_batch_rows)
             .execute()
@@ -181,7 +183,7 @@ class DenseIngestion(BaseIngestion):
         document_id = self._insert_document(document_data_to_insert)
 
         if batch_ids:
-            self._upload_doc_id_per_batches(get_supabase_client(), document_id, batch_ids)
+            self._upload_doc_id_per_batches(document_id, batch_ids)
 
         chunk_count = self._ingest_bytes(file_bytes, filename, s3_key, document_id)
 
