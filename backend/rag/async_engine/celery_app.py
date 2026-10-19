@@ -2,6 +2,7 @@ import os
 import sys
 from pathlib import Path
 from celery import Celery
+from dotenv import load_dotenv
 from kombu import Queue
 
 # Ensure backend, rag, and repo root are in sys.path
@@ -13,6 +14,11 @@ _REPO_DIR = _BACKEND_DIR.parent
 for _p in (str(_CURRENT_DIR), str(_RAG_DIR), str(_BACKEND_DIR), str(_REPO_DIR)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
+
+# Load environment variables for standalone Celery workers
+load_dotenv(dotenv_path=_BACKEND_DIR / ".env")
+load_dotenv(dotenv_path=_RAG_DIR / ".env")
+load_dotenv()
 
 try:
     from config.settings import REDIS_URL as SETTINGS_REDIS_URL

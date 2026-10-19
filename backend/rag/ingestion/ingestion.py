@@ -173,7 +173,8 @@ def ingest_files():
         }), 200
 
     return jsonify({
-        "message": f"{len(queued_jobs)} file(s) queued for ingestion.",
+        "status": "queued",
+        "message": f"Accepted: {len(queued_jobs)} document(s) queued for background ingestion.",
         "jobs": queued_jobs,
         "documents": queued_jobs,
         "skipped": skipped_files,

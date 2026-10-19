@@ -2,6 +2,14 @@ import logging
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Optional
+from dotenv import load_dotenv
+
+# Ensure environment variables are loaded in Celery worker processes
+_BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+_RAG_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(dotenv_path=_BACKEND_DIR / ".env")
+load_dotenv(dotenv_path=_RAG_DIR / ".env")
+load_dotenv()
 
 from async_engine.celery_app import celery
 from config.settings import S3_BUCKET_NAME

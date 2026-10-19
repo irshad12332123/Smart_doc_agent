@@ -87,12 +87,12 @@ export function UploadPage({
     };
 
     setBusy(true);
-    setMessage("Uploading, converting and indexing document…");
+    setMessage("Uploading document to queue…");
     try {
       await documentApi.upload(files, payload);
       setDocuments(await documentApi.list());
       setFiles([]);
-      setMessage("Document successfully processed and indexed for AI search ✓");
+      setMessage("Accepted. Document queued for processing ✓");
     } catch (e: unknown) {
       console.error("[Upload Error]:", e);  
       setMessage(errorMessage(e, "Upload failed. Please check file format."));

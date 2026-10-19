@@ -270,6 +270,69 @@ class TestAsyncIngestion(unittest.TestCase):
         self.assertEqual(body["job"]["status"], "completed")
         self.assertEqual(body["job"]["document_id"], "doc-uuid-123")
 
+    @patch("ingestion.ingest_repository.get_supabase_admin_client")
+    def test_ingest_repository_uses_admin_client_on_creation(self, mock_admin_client):
+        from ingestion.ingest_repository import IngestionRepository, _get_client
+        mock_instance = MagicMock()
+        mock_admin_client.return_value = mock_instance
+
+        # Test _get_client defaults to get_supabase_admin_client
+        client = _get_client()
+        self.assertEqual(client, mock_instance)
+        mock_admin_client.assert_called()
+
+        # Test IngestionRepository assigns client on object creation
+        repo = IngestionRepository()
+        self.assertEqual(repo.client, mock_instance)
+
+    @patch("services.ingestion.base.get_supabase_admin_client")
+    def test_dense_ingestion_client_on_object_creation(self, mock_admin_client):
+        from services.ingestion.dense import DenseIngestion
+        mock_instance = MagicMock()
+        mock_admin_client.return_value = mock_instance
+
+        # Instantiating DenseIngestion gets admin client on object creation
+        dense = DenseIngestion()
+        self.assertEqual(dense.client, mock_instance)
+
+        # Explicit client injection
+        custom_client = MagicMock()
+        dense_custom = DenseIngestion(client=custom_client)
+        self.assertEqual(dense_custom.client, custom_client)
+
+        # Test _insert_document uses self.client directly without calling client()
+        dense_custom.client.table.return_value.insert.return_value.execute.return_value.data = [{"id": "doc-555"}]
+        doc_id = dense_custom._insert_document({"title": "Test Doc"})
+        self.assertEqual(doc_id, "doc-555")
+        dense_custom.client.table.assert_called_with("documents")
+
+        # Test _upload_doc_id_per_batches uses self.client
+        dense_custom.client.table.reset_mock()
+        dense_custom._upload_doc_id_per_batches("doc-555", ["batch-1", "batch-2"])
+        dense_custom.client.table.assert_called_with("document_batches")
+
+    @patch("services.ingestion.base.get_supabase_admin_client")
+    def test_sparse_ingestion_client_on_object_creation(self, mock_admin_client):
+        from services.ingestion.sparse import SparseIngestion
+        mock_instance = MagicMock()
+        mock_admin_client.return_value = mock_instance
+
+        # Instantiating SparseIngestion gets admin client on object creation
+        sparse = SparseIngestion()
+        self.assertEqual(sparse.client, mock_instance)
+
+        # Test fetch_all_chunks uses self.client by default
+        sparse.client.table.return_value.select.return_value.order.return_value.range.return_value.execute.return_value.data = []
+        chunks = sparse.fetch_all_chunks()
+        self.assertEqual(chunks, [])
+        sparse.client.table.assert_called_with("document_chunks")
+
+    def test_non_ingestion_processes_do_not_use_admin_client(self):
+        from documents.repository import DocumentRepository
+        mock_client = MagicMock()
+        doc_repo = DocumentRepository(client=mock_client)
+        self.assertEqual(doc_repo._client, mock_client)
+
 
 if __name__ == "__main__":
     unittest.main()
