@@ -354,6 +354,85 @@ class TestQueryGraph(unittest.TestCase):
         output = run_query("Find rare doc")
         self.assertEqual(output["answer"], "Answer retrieved via fallback.")
 
+    # 11. Endpoint orchestration tests (POST /api/query and POST /api/chat)
+    @patch("ingestion.ingestion.query_graph")
+    def test_query_endpoint_success(self, mock_graph):
+        from app import create_app
+        client = create_app().test_client()
+
+        mock_graph.invoke.return_value = {
+            "query": "What is normalization?",
+            "original_query": "What is normalization?",
+            "route": "rag",
+            "answer": "Normalization organizes database fields.",
+            "documents": [],
+            "sources": [{"chunk_id": "c1", "text": "Normalization info"}],
+            "evaluation": {"sufficiency": True},
+            "sufficient": True,
+            "attempt_count": 0,
+        }
+
+        res = client.post(
+            "/api/query",
+            json={"query": "What is normalization?", "history": []},
+        )
+        self.assertEqual(res.status_code, 200)
+        data = res.get_json()
+        self.assertEqual(data["route"], "rag")
+        self.assertEqual(data["answer"], "Normalization organizes database fields.")
+        self.assertEqual(len(data["sources"]), 1)
+        self.assertTrue(data["sufficient"])
+        mock_graph.invoke.assert_called_once()
+
+    def test_query_endpoint_validation_error(self):
+        from app import create_app
+        client = create_app().test_client()
+
+        # Empty query
+        res = client.post("/api/query", json={"query": ""})
+        self.assertEqual(res.status_code, 400)
+
+        # Invalid history format
+        res = client.post("/api/query", json={"query": "valid", "history": "not-a-list"})
+        self.assertEqual(res.status_code, 400)
+
+    @patch("ingestion.ingestion.query_graph")
+    def test_query_endpoint_internal_error(self, mock_graph):
+        from app import create_app
+        client = create_app().test_client()
+
+        mock_graph.invoke.side_effect = RuntimeError("Graph execution failed")
+        res = client.post("/api/query", json={"query": "test query"})
+        self.assertEqual(res.status_code, 500)
+        self.assertIn("Query orchestration failed", res.get_json()["detail"])
+
+    @patch("ingestion.ingestion.query_graph")
+    def test_chat_endpoint_orchestration_sse(self, mock_graph):
+        from app import create_app
+        client = create_app().test_client()
+
+        mock_graph.invoke.return_value = {
+            "query": "Show DBMS docs",
+            "original_query": "Show DBMS docs",
+            "route": "deterministic",
+            "answer": "Here are the DBMS documents.",
+            "documents": [{"id": "d1", "title": "DBMS Notes"}],
+            "sources": [],
+            "attempt_count": 0,
+        }
+
+        res = client.post(
+            "/api/chat",
+            json={"message": "Show DBMS docs", "history": []},
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("text/event-stream", res.content_type)
+        body = res.get_data(as_text=True)
+        self.assertIn('"type": "documents"', body)
+        self.assertIn('"type": "token"', body)
+        self.assertIn("Here are the DBMS documents.", body)
+        self.assertIn('"type": "done"', body)
+
 
 if __name__ == "__main__":
     unittest.main()
