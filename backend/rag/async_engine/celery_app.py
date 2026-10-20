@@ -30,6 +30,8 @@ except ImportError:
 
 REDIS_URL = os.getenv("REDIS_URL", SETTINGS_REDIS_URL or "redis://localhost:6379/0")
 
+print(REDIS_URL)
+
 celery = Celery(
     "ingestion",
     broker=REDIS_URL,
@@ -52,7 +54,8 @@ celery.conf.update(
 
     # Route failed jobs to a separate queue.
     task_queues=(
-        Queue("ingestion")
+        Queue("ingestion"),
+        Queue("dlq"),
     ),
     task_default_queue="ingestion",
 )
