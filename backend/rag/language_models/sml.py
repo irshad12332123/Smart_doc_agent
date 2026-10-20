@@ -1,4 +1,7 @@
-from config.settings import GROQ_API_KEY
+try:
+    from config.settings import GROQ_API_KEY
+except ImportError:
+    from rag.config.settings import GROQ_API_KEY
 from groq import Groq
 def load_slm() -> Groq:
     """

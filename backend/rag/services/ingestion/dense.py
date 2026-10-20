@@ -151,7 +151,10 @@ class DenseIngestion(BaseIngestion):
                 extracted_text = file_bytes.decode("latin-1", errors="ignore")
 
         if context_meta_data_generator is None:
-            from language_models.sml import load_slm
+            try:
+                from language_models.sml import load_slm
+            except ImportError:
+                from rag.language_models.sml import load_slm
             context_meta_data_generator = load_slm()
 
         file_context_meta_data: DocumentMetaData = self._get_file_context_meta_data_from_slm(extracted_text, context_meta_data_generator)

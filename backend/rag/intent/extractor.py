@@ -5,8 +5,12 @@ from typing import Any, Optional, Sequence
 
 from groq import Groq
 
-from config.settings import GROQ_MODEL
-from language_models.sml import load_slm
+try:
+    from config.settings import GROQ_MODEL
+    from language_models.sml import load_slm
+except ImportError:
+    from rag.config.settings import GROQ_MODEL
+    from rag.language_models.sml import load_slm
 from .prompt import get_intent_extraction_prompt
 from .schema import (
     DeadlineFilter,
