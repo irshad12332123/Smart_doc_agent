@@ -16,3 +16,4 @@ PyStemmer
 celery
 celery[redis]
 redis
+langgraph
