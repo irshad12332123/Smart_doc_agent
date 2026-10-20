@@ -124,4 +124,3 @@ Instructions:
     except Exception as e:
         logger.warning(f"Query rewriting failed with error: {e}. Falling back to original query.")
         return original_query
-
