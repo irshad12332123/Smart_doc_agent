@@ -33,10 +33,7 @@ REDIS_URL = os.getenv("REDIS_URL", SETTINGS_REDIS_URL or "redis://localhost:6379
 celery = Celery(
     "ingestion",
     broker=REDIS_URL,
-    backend=os.getenv(
-        "CELERY_RESULT_BACKEND",
-        "redis://localhost:6379/1"
-    ),
+    backend=REDIS_URL,
     include=["async_engine.tasks", "tasks"],
 )
 
@@ -55,8 +52,7 @@ celery.conf.update(
 
     # Route failed jobs to a separate queue.
     task_queues=(
-        Queue("ingestion"),
-        Queue("dlq"),
+        Queue("ingestion")
     ),
     task_default_queue="ingestion",
 )
