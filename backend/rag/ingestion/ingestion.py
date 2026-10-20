@@ -12,8 +12,12 @@ from groq import Groq
 from werkzeug.utils import secure_filename
 
 from modules.auth.middleware import require_auth
-from language_models.services import CallLLM
-from language_models.sml import load_slm
+try:
+    from language_models.services import CallLLM
+    from language_models.sml import load_slm
+except ImportError:
+    from rag.language_models.services import CallLLM
+    from rag.language_models.sml import load_slm
 from config.settings import (
     S3_BUCKET_NAME,
     GROQ_MODEL,

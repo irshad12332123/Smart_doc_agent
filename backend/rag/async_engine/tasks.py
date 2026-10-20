@@ -1,12 +1,21 @@
 import logging
+import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Optional
 from dotenv import load_dotenv
 
+# Ensure backend, rag, and repo root are in sys.path
+_CURRENT_DIR = Path(__file__).resolve().parent
+_RAG_DIR = _CURRENT_DIR.parent
+_BACKEND_DIR = _RAG_DIR.parent
+_REPO_DIR = _BACKEND_DIR.parent
+
+for _p in (str(_CURRENT_DIR), str(_RAG_DIR), str(_BACKEND_DIR), str(_REPO_DIR)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
 # Ensure environment variables are loaded in Celery worker processes
-_BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
-_RAG_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(dotenv_path=_BACKEND_DIR / ".env")
 load_dotenv(dotenv_path=_RAG_DIR / ".env")
 load_dotenv()

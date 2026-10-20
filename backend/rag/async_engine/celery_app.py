@@ -30,7 +30,6 @@ except ImportError:
 
 REDIS_URL = os.getenv("REDIS_URL", SETTINGS_REDIS_URL or "redis://localhost:6379/0")
 
-print(REDIS_URL)
 
 celery = Celery(
     "ingestion",

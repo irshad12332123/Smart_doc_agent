@@ -333,6 +333,36 @@ class TestAsyncIngestion(unittest.TestCase):
         doc_repo = DocumentRepository(client=mock_client)
         self.assertEqual(doc_repo._client, mock_client)
 
+    @patch("services.ingestion.dense.PdfReader")
+    def test_dense_ingest_loads_slm_without_import_error(self, mock_pdf_reader):
+        from services.ingestion.dense import DenseIngestion
+        dense = DenseIngestion(client=MagicMock())
+
+        mock_slm_instance = MagicMock()
+        mock_meta = MagicMock()
+        mock_meta.model_dump.return_value = {
+            "description": "test summary",
+            "document_type": "notes",
+            "deadline": None,
+        }
+
+        with patch("language_models.sml.load_slm", return_value=mock_slm_instance) as mock_load_slm, \
+             patch.object(dense, "_get_file_context_meta_data_from_slm", return_value=mock_meta), \
+             patch.object(dense, "_insert_document", return_value="doc-999"), \
+             patch.object(dense, "_upload_doc_id_per_batches"), \
+             patch.object(dense, "_ingest_bytes", return_value=3):
+
+            result = dense.ingest(
+                context_meta_data_generator=None,
+                subject_id="sub-1",
+                batch_ids=["b-1"],
+                filename="lecture.txt",
+                file_bytes=b"Hello world content",
+            )
+            mock_load_slm.assert_called_once()
+            self.assertEqual(result["doc_id"], "doc-999")
+            self.assertEqual(result["num_chunks"], 3)
+
 
 if __name__ == "__main__":
     unittest.main()

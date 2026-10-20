@@ -3,7 +3,10 @@ from collections.abc import Iterator, Sequence
 
 from langchain_google_genai import GoogleGenerativeAI
 
-from config.settings import GEMINI_API_KEY, GEMINI_MODEL_NAME
+try:
+    from config.settings import GEMINI_API_KEY, GEMINI_MODEL_NAME
+except ImportError:
+    from rag.config.settings import GEMINI_API_KEY, GEMINI_MODEL_NAME
 
 class CallLLM:
     def __init__(self, model_name: str = GEMINI_MODEL_NAME, api_key: str | None = GEMINI_API_KEY):
