@@ -172,6 +172,29 @@ class TestQueryGraph(unittest.TestCase):
         self.assertEqual(result["query"], "Optimized query for database transactions")
         self.assertEqual(result["attempt_count"], 1)
 
+    @patch("query_graph.rewrite_query")
+    @patch("query_graph.GROQ_MODEL", "test-groq-model")
+    def test_rewrite_query_node_passes_feedback_and_attempt(self, mock_rewrite):
+        mock_rewrite.return_value = "Optimized query for database transactions"
+        state: RAGState = {
+            "query": "current query",
+            "original_query": "initial question",
+            "attempt_count": 1,
+            "evaluation": {"reason": "Missing transaction ACID definitions"},
+        }
+
+        result = rewrite_query_node(state)
+        self.assertEqual(result["query"], "Optimized query for database transactions")
+        self.assertEqual(result["attempt_count"], 2)
+        mock_rewrite.assert_called_once_with(
+            query="current query",
+            model="test-groq-model",
+            history=None,
+            feedback="Missing transaction ACID definitions",
+            attempt=2,
+            original_query="initial question",
+        )
+
     # 9. generate node tests
     def test_generate_formatted_text(self):
         state: RAGState = {"formatted_text": "Pre-formatted documents list"}

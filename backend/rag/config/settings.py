@@ -1,4 +1,16 @@
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+_SETTINGS_DIR = Path(__file__).resolve().parent
+_RAG_DIR = _SETTINGS_DIR.parent
+_BACKEND_DIR = _RAG_DIR.parent
+_REPO_DIR = _BACKEND_DIR.parent
+
+for _env_path in (_BACKEND_DIR / ".env", _RAG_DIR / ".env", _REPO_DIR / ".env"):
+    if _env_path.exists():
+        load_dotenv(dotenv_path=_env_path)
+load_dotenv()
 
 S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
 AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
