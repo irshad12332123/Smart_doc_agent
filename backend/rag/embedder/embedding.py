@@ -39,7 +39,7 @@ class Embedder(Embeddings):
         self.batch_size = max(1, batch_size)
         self.batch_delay = max(0.0, batch_delay)
         self.max_retries = max(1, max_retries)
-        self.api_key = api_key or GEMINI_API_KEY or os.getenv("GOOGLE_API_KEY")
+        self.api_key = api_key or GEMINI_API_KEY or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
         self.model: GoogleGenerativeAIEmbeddings | None = None
         self._cache: dict[str, list[float]] = {}
         self._load_model()
@@ -72,8 +72,18 @@ class Embedder(Embeddings):
                     or "quota" in err_str
                     or "rate limit" in err_str.lower()
                 )
+                is_transient = (
+                    is_rate_limit
+                    or "503" in err_str
+                    or "500" in err_str
+                    or "502" in err_str
+                    or "504" in err_str
+                    or "UNAVAILABLE" in err_str
+                    or "unavailable" in err_str.lower()
+                    or "overloaded" in err_str.lower()
+                )
 
-                if is_rate_limit and attempt < self.max_retries:
+                if is_transient and attempt < self.max_retries:
                     attempt += 1
                     # Extract suggested retry delay from API error message if provided
                     retry_seconds: float = 0.0
@@ -89,7 +99,8 @@ class Embedder(Embeddings):
                         retry_seconds = min(60.0, 2.0 * (2 ** (attempt - 1)))
 
                     logger.warning(
-                        f"Gemini embedding rate limit encountered (attempt {attempt}/{self.max_retries}). "
+                        f"Gemini embedding transient error or rate limit encountered: {err_str[:120]} "
+                        f"(attempt {attempt}/{self.max_retries}). "
                         f"Backing off for {retry_seconds:.1f}s before retry..."
                     )
                     time.sleep(retry_seconds)

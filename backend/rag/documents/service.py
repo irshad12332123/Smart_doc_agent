@@ -45,7 +45,7 @@ class DocumentService:
         raw_docs = self.repository.get_documents_by_filters(
             subject_id=intent.subject_id,
             document_type=intent.document_type,
-            search_query=intent.search_query,
+            # search_query=intent.search_query,
             deadline_start=deadline_start,
             deadline_end=deadline_end,
             created_after=created_after,

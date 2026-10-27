@@ -125,6 +125,53 @@ class TestRewriteQuery(unittest.TestCase):
         result = rewrite_query("Explain neural networks", model="test-model")
         self.assertEqual(result, "Explain neural networks")
 
+    @patch("query_engine.rewrite_query.load_slm")
+    def test_rewrite_query_with_feedback_and_attempt(self, mock_load_slm):
+        mock_client = MagicMock()
+        mock_response = MagicMock()
+        mock_response.choices = [
+            MagicMock(
+                message=MagicMock(content="B-tree index search and structure in relational databases"),
+                finish_reason="stop",
+            )
+        ]
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_load_slm.return_value = mock_client
+
+        result = rewrite_query(
+            query="database indexing",
+            model="test-model",
+            feedback="Evidence missing B-tree details",
+            attempt=2,
+            original_query="What are database indexing techniques?",
+        )
+        self.assertEqual(result, "B-tree index search and structure in relational databases")
+
+        call_kwargs = mock_client.chat.completions.create.call_args.kwargs
+        self.assertEqual(call_kwargs["max_tokens"], 1000)
+        self.assertEqual(call_kwargs["temperature"], 0.2)
+        user_prompt = call_kwargs["messages"][1]["content"]
+        self.assertIn('Evaluation feedback on retrieved evidence: "Evidence missing B-tree details"', user_prompt)
+        self.assertIn('Original user question: "What are database indexing techniques?"', user_prompt)
+        self.assertIn('Previous search query (attempt 1): "database indexing"', user_prompt)
+        self.assertIn("Do NOT repeat the previous query verbatim", user_prompt)
+
+    @patch("query_engine.rewrite_query.load_slm")
+    def test_rewrite_query_handles_length_finish_reason_with_empty_content(self, mock_load_slm):
+        mock_client = MagicMock()
+        mock_response = MagicMock()
+        mock_response.choices = [
+            MagicMock(
+                message=MagicMock(content=""),
+                finish_reason="length",
+            )
+        ]
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_load_slm.return_value = mock_client
+
+        result = rewrite_query("Explain neural networks", model="test-model")
+        self.assertEqual(result, "Explain neural networks")
+
     def test_rewrite_query_empty_query(self):
         self.assertEqual(rewrite_query("", model="test-model"), "")
         self.assertEqual(rewrite_query("   ", model="test-model"), "   ")

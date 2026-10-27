@@ -1,5 +1,104 @@
 {
   "0": {
+    "id": "0630cbfd-6f77-4b4e-9809-54410b487dd5",
+    "chunk_id": "0630cbfd-6f77-4b4e-9809-54410b487dd5",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "2. Login system receives the information. 3. Login system checks the database. 4. Database returns the result. 5.",
+    "text": "2. Login system receives the information. 3. Login system checks the database. 4. Database returns the result. 5.",
+    "page_number": 13,
+    "chunk_index": 26,
+    "title": "software_unit_2.pdf"
+  },
+  "1": {
+    "id": "06a98c90-5a77-4827-8e9e-27370e8cf301",
+    "chunk_id": "06a98c90-5a77-4827-8e9e-27370e8cf301",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Unified Modeling Language (UML) Diagrams\nUnified Modeling Language (UML) is a standardized visual modeling language used to\nvisualize, design, and communicate the structure and behavior of a software system. UML is\nnot a programming language. Example: In an e-commerce system, a UML diagram can show components like User,\nProduct, and Order, and how they interact during processes like placing an order. Need of UML\nUML is essential for clearly visualizing and communicating system design among different\nstakeholders involved in a project. \uf0b7\nSimplifies complex systems: Diagrams make large and complex systems easier to\nunderstand.",
+    "text": "Unified Modeling Language (UML) Diagrams\nUnified Modeling Language (UML) is a standardized visual modeling language used to\nvisualize, design, and communicate the structure and behavior of a software system. UML is\nnot a programming language. Example: In an e-commerce system, a UML diagram can show components like User,\nProduct, and Order, and how they interact during processes like placing an order. Need of UML\nUML is essential for clearly visualizing and communicating system design among different\nstakeholders involved in a project. \uf0b7\nSimplifies complex systems: Diagrams make large and complex systems easier to\nunderstand.",
+    "page_number": 9,
+    "chunk_index": 17,
+    "title": "software_unit_2.pdf"
+  },
+  "2": {
+    "id": "07f8078a-651c-46a3-83ce-93e0f695029e",
+    "chunk_id": "07f8078a-651c-46a3-83ce-93e0f695029e",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "2. Requirements Elicitation\nRequirements are collected from stakeholders such as customers, users, managers, and domain\nexperts.",
+    "text": "2. Requirements Elicitation\nRequirements are collected from stakeholders such as customers, users, managers, and domain\nexperts.",
+    "page_number": 2,
+    "chunk_index": 2,
+    "title": "software_unit_2.pdf"
+  },
+  "3": {
+    "id": "0d0d54bb-0631-4926-bef7-ecb9fd92533c",
+    "chunk_id": "0d0d54bb-0631-4926-bef7-ecb9fd92533c",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Helps estimate time, cost, and resources. SRS Structure\n1. Introduction\nThis section provides the basic information about the software. Includes:\n\uf0b7\nPurpose \u2013 Why the software is being developed. \uf0b7\nScope \u2013 What the system will and will not cover. \uf0b7\nDefinitions \u2013 Technical terms and abbreviations. \uf0b7\nReferences \u2013 Documents, standards, or sources used.",
+    "text": "Helps estimate time, cost, and resources. SRS Structure\n1. Introduction\nThis section provides the basic information about the software. Includes:\n\uf0b7\nPurpose \u2013 Why the software is being developed. \uf0b7\nScope \u2013 What the system will and will not cover. \uf0b7\nDefinitions \u2013 Technical terms and abbreviations. \uf0b7\nReferences \u2013 Documents, standards, or sources used.",
+    "page_number": 18,
+    "chunk_index": 37,
+    "title": "software_unit_2.pdf"
+  },
+  "4": {
+    "id": "120120d3-1970-450d-bfe1-b29a786b97d2",
+    "chunk_id": "120120d3-1970-450d-bfe1-b29a786b97d2",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "e.",
+    "text": "e.",
+    "page_number": 19,
+    "chunk_index": 39,
+    "title": "software_unit_2.pdf"
+  },
+  "5": {
+    "id": "172ef542-ad2a-4747-b644-6b20458e4a86",
+    "chunk_id": "172ef542-ad2a-4747-b644-6b20458e4a86",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "18. What is packet capture? 19. What is ICMP? 20. What is DNS? 21. What is an IP address? 22. What is a MAC address? 23. What is TTL? 24. Why is packet analysis useful in IoT?",
+    "text": "18. What is packet capture? 19. What is ICMP? 20. What is DNS? 21. What is an IP address? 22. What is a MAC address? 23. What is TTL? 24. Why is packet analysis useful in IoT?",
+    "page_number": 9,
+    "chunk_index": 21,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "6": {
+    "id": "17b4ca2a-be6c-492b-a9da-cdebf347f8a7",
+    "chunk_id": "17b4ca2a-be6c-492b-a9da-cdebf347f8a7",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Types of requirements :\n1. Functional Requirements\nFunctional requirements describe the functions or services that the system must provide. Example \u2013 Online Shopping System:",
+    "text": "Types of requirements :\n1. Functional Requirements\nFunctional requirements describe the functions or services that the system must provide. Example \u2013 Online Shopping System:",
+    "page_number": 17,
+    "chunk_index": 33,
+    "title": "software_unit_2.pdf"
+  },
+  "7": {
+    "id": "1b783732-27a2-48ab-8478-2409a072541b",
+    "chunk_id": "1b783732-27a2-48ab-8478-2409a072541b",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "External Interface Requirements\nDescribe how the system interacts with external entities. Types include:\n\uf0b7\nUser interface\n\uf0b7\nHardware interface\n\uf0b7\nSoftware interface\n\uf0b7\nCommunication interface\n4. System Features\nEach major feature can be described in detail. For example:\nFeature: User Login\n\uf0b7\nUser enters username and password. \uf0b7\nSystem validates the credentials. \uf0b7\nIf valid \u2192user is logged in.",
+    "text": "External Interface Requirements\nDescribe how the system interacts with external entities. Types include:\n\uf0b7\nUser interface\n\uf0b7\nHardware interface\n\uf0b7\nSoftware interface\n\uf0b7\nCommunication interface\n4. System Features\nEach major feature can be described in detail. For example:\nFeature: User Login\n\uf0b7\nUser enters username and password. \uf0b7\nSystem validates the credentials. \uf0b7\nIf valid \u2192user is logged in.",
+    "page_number": 20,
+    "chunk_index": 43,
+    "title": "software_unit_2.pdf"
+  },
+  "8": {
+    "id": "1c6f8fdf-7d14-4284-89d9-bd3b0c42e81b",
+    "chunk_id": "1c6f8fdf-7d14-4284-89d9-bd3b0c42e81b",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "It is one of the most commonly used UML diagrams in object-oriented software development. Example: Student Management System\nHere:",
+    "text": "It is one of the most commonly used UML diagrams in object-oriented software development. Example: Student Management System\nHere:",
+    "page_number": 11,
+    "chunk_index": 22,
+    "title": "software_unit_2.pdf"
+  },
+  "9": {
     "id": "1ce9b174-6f90-4704-bf66-33a33485ca2b",
     "chunk_id": "1ce9b174-6f90-4704-bf66-33a33485ca2b",
     "document_id": "52028bff-dc64-40f0-be30-4a30c92ab4eb",
@@ -10,7 +109,106 @@
     "chunk_index": 1,
     "title": "ASSIGNMENT2.pdf"
   },
-  "1": {
+  "10": {
+    "id": "23969089-6194-42ef-89af-db6a26ff3ddc",
+    "chunk_id": "23969089-6194-42ef-89af-db6a26ff3ddc",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Example:\n\u274c\"The system should respond quickly.\"\n\u2705\"The system shall display results within 2 seconds.\"\nOutput: Validated and approved requirements. 5.",
+    "text": "Example:\n\u274c\"The system should respond quickly.\"\n\u2705\"The system shall display results within 2 seconds.\"\nOutput: Validated and approved requirements. 5.",
+    "page_number": 4,
+    "chunk_index": 5,
+    "title": "software_unit_2.pdf"
+  },
+  "11": {
+    "id": "23fdc6ca-08be-4322-841b-20b8e945951e",
+    "chunk_id": "23fdc6ca-08be-4322-841b-20b8e945951e",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "1. Provides clear requirements for developers. 2. Acts as an agreement between customer and development team. 3. Helps in system design and development. 4. Helps testers create test cases. 5. Reduces misunderstandings and requirement changes. 6.",
+    "text": "1. Provides clear requirements for developers. 2. Acts as an agreement between customer and development team. 3. Helps in system design and development. 4. Helps testers create test cases. 5. Reduces misunderstandings and requirement changes. 6.",
+    "page_number": 18,
+    "chunk_index": 36,
+    "title": "software_unit_2.pdf"
+  },
+  "12": {
+    "id": "278eb36e-c60e-4290-93ed-a737f7adae6a",
+    "chunk_id": "278eb36e-c60e-4290-93ed-a737f7adae6a",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Requirement Engineering Process\nRequirements Engineering is the process of identifying, eliciting, analyzing, specifying,\nvalidating, and managing the needs and expectations of stakeholders for a software system. Requirements Engineering Process\n1. Feasibility Study\nChecks whether the proposed system is possible and practical to develop. It considers:\n\uf06c\nTechnical feasibility \u2013 Is the required technology available? \uf06c\nEconomic feasibility \u2013 Is the project affordable? \uf06c\nOperational feasibility \u2013 Will the system work in the organization? \uf06c\nSchedule feasibility \u2013 Can it be completed on time? Output: Feasibility report and decision to proceed.",
+    "text": "Requirement Engineering Process\nRequirements Engineering is the process of identifying, eliciting, analyzing, specifying,\nvalidating, and managing the needs and expectations of stakeholders for a software system. Requirements Engineering Process\n1. Feasibility Study\nChecks whether the proposed system is possible and practical to develop. It considers:\n\uf06c\nTechnical feasibility \u2013 Is the required technology available? \uf06c\nEconomic feasibility \u2013 Is the project affordable? \uf06c\nOperational feasibility \u2013 Will the system work in the organization? \uf06c\nSchedule feasibility \u2013 Can it be completed on time? Output: Feasibility report and decision to proceed.",
+    "page_number": 2,
+    "chunk_index": 1,
+    "title": "software_unit_2.pdf"
+  },
+  "13": {
+    "id": "295b2b70-2612-4f02-889c-be14c818c541",
+    "chunk_id": "295b2b70-2612-4f02-889c-be14c818c541",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Methods include:\n\uf06c\nInterviews\n\uf06c\nQuestionnaires\n\uf06c\nObservation\n\uf06c\nMeetings/workshops\n\uf06c\nBrainstorming\n\uf06c\nPrototyping\nOutput: A list of user and system requirements. 3. Requirements Specification\nThe collected requirements are organized and written clearly in a document, usually called\nthe Software Requirements Specification (SRS). It includes:\nFunctional requirements \u2013 what the system should do. Non-functional requirements \u2013 performance, security, reliability, usability, etc.",
+    "text": "Methods include:\n\uf06c\nInterviews\n\uf06c\nQuestionnaires\n\uf06c\nObservation\n\uf06c\nMeetings/workshops\n\uf06c\nBrainstorming\n\uf06c\nPrototyping\nOutput: A list of user and system requirements. 3. Requirements Specification\nThe collected requirements are organized and written clearly in a document, usually called\nthe Software Requirements Specification (SRS). It includes:\nFunctional requirements \u2013 what the system should do. Non-functional requirements \u2013 performance, security, reliability, usability, etc.",
+    "page_number": 3,
+    "chunk_index": 3,
+    "title": "software_unit_2.pdf"
+  },
+  "14": {
+    "id": "2dd17670-c15b-4b0b-a724-b5b18bfc77bd",
+    "chunk_id": "2dd17670-c15b-4b0b-a724-b5b18bfc77bd",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "2. Economic Feasibility \u2013 Checks whether the project is financially beneficial and\naffordable. 3. Operational Feasibility \u2013 Checks whether the system will work effectively in the\norganization and be accepted by users. 4. Schedule Feasibility \u2013 Checks whether the project can be completed within the required\ntime. 5. Legal Feasibility \u2013 Checks whether the system follows laws, regulations, and legal\nrequirements. Information Modeling\nInformation modeling is the process of representing the data and information used by a\nsoftware system, including how different data items are related to each other.It helps\ndevelopers understand what data the system needs, how it is organized, and how different data\nitems are connected. Common Information Modeling Tools :\n\uf0b7\nER (Entity-Relationship) Diagram\n\uf0b7\nClass Diagram\n\uf0b7\nData Flow Diagram (DFD)\n\uf0b7\nData Dictionary\nDecision Table\nA Decision Table is a tabular method used to represent complex decision-making logic in a",
+    "text": "2. Economic Feasibility \u2013 Checks whether the project is financially beneficial and\naffordable. 3. Operational Feasibility \u2013 Checks whether the system will work effectively in the\norganization and be accepted by users. 4. Schedule Feasibility \u2013 Checks whether the project can be completed within the required\ntime. 5. Legal Feasibility \u2013 Checks whether the system follows laws, regulations, and legal\nrequirements. Information Modeling\nInformation modeling is the process of representing the data and information used by a\nsoftware system, including how different data items are related to each other.It helps\ndevelopers understand what data the system needs, how it is organized, and how different data\nitems are connected. Common Information Modeling Tools :\n\uf0b7\nER (Entity-Relationship) Diagram\n\uf0b7\nClass Diagram\n\uf0b7\nData Flow Diagram (DFD)\n\uf0b7\nData Dictionary\nDecision Table\nA Decision Table is a tabular method used to represent complex decision-making logic in a",
+    "page_number": 23,
+    "chunk_index": 50,
+    "title": "software_unit_2.pdf"
+  },
+  "15": {
+    "id": "367cfc0d-bd0b-4daf-ada4-781723c27cca",
+    "chunk_id": "367cfc0d-bd0b-4daf-ada4-781723c27cca",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "2. Quick Design \u2013 Create a simple design. 3. Build Prototype \u2013 Develop an initial model. 4. Evaluation \u2013 User/customer evaluates it. 5. Feedback \u2013 Collect suggestions and changes. 6. Refinement \u2013 Modify the prototype. 7. Final System \u2013 Develop the complete software.",
+    "text": "2. Quick Design \u2013 Create a simple design. 3. Build Prototype \u2013 Develop an initial model. 4. Evaluation \u2013 User/customer evaluates it. 5. Feedback \u2013 Collect suggestions and changes. 6. Refinement \u2013 Modify the prototype. 7. Final System \u2013 Develop the complete software.",
+    "page_number": 21,
+    "chunk_index": 47,
+    "title": "software_unit_2.pdf"
+  },
+  "16": {
+    "id": "382764eb-292f-40e4-81a6-8d5423540cb3",
+    "chunk_id": "382764eb-292f-40e4-81a6-8d5423540cb3",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "In this level, we highlight the main\nfunctions of the system and breakdown the high-level process of 0-level Data Flow\nDiagram (DFD) into subprocesses. For example, if Level 0 DFD represents a payment\nsystem, Level 1 might break it down into sub-processes like payment processing, invoice\ngeneration, and confirmation of payment.",
+    "text": "In this level, we highlight the main\nfunctions of the system and breakdown the high-level process of 0-level Data Flow\nDiagram (DFD) into subprocesses. For example, if Level 0 DFD represents a payment\nsystem, Level 1 might break it down into sub-processes like payment processing, invoice\ngeneration, and confirmation of payment.",
+    "page_number": 6,
+    "chunk_index": 10,
+    "title": "software_unit_2.pdf"
+  },
+  "17": {
+    "id": "3b2804eb-588b-4713-871e-185f0628496b",
+    "chunk_id": "3b2804eb-588b-4713-871e-185f0628496b",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "26. Open the Python IDE. 27. Create a file named: \niot_sensor.py \n4. Enter the program.",
+    "text": "26. Open the Python IDE. 27. Create a file named: \niot_sensor.py \n4. Enter the program.",
+    "page_number": 11,
+    "chunk_index": 25,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "18": {
+    "id": "3ee9a5ae-9269-491e-9b0b-cb6f491ff16a",
+    "chunk_id": "3ee9a5ae-9269-491e-9b0b-cb6f491ff16a",
+    "document_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
+    "doc_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
+    "content": ".",
+    "text": ".",
+    "page_number": 1,
+    "chunk_index": 0,
+    "title": "Assignment-1.pdf"
+  },
+  "19": {
     "id": "3eea7174-ff5a-46b8-b0b7-fcd879df63a8",
     "chunk_id": "3eea7174-ff5a-46b8-b0b7-fcd879df63a8",
     "document_id": "d901f517-7a86-4580-865f-59462937bb12",
@@ -21,7 +219,238 @@
     "chunk_index": 4,
     "title": "assignment_2_-_Machine_Learning_and_NLP_on_AWS_Cloud.pdf"
   },
-  "2": {
+  "20": {
+    "id": "42cb0488-70bd-43b8-87a8-af740dfc8ccc",
+    "chunk_id": "42cb0488-70bd-43b8-87a8-af740dfc8ccc",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "| \n                  Wi-Fi \n                    | \n               IoT Gateway \n                    | \n                  Cloud \n                    | \n              Web/Mobile App \n                    | \n                   User \nStudent Activity \nPrepare similar designs for any two: \n\u2022 Smart Home \n\u2022 Smart Agriculture \n\u2022 Smart Parking \n\u2022 Smart Hospital \n\u2022 Smart Factory \nResult \nThe physical and logical designs of an IoT-based Smart Classroom were successfully prepared and \nthe major functional blocks of the IoT system were identified. Viva Questions \n19.",
+    "text": "| \n                  Wi-Fi \n                    | \n               IoT Gateway \n                    | \n                  Cloud \n                    | \n              Web/Mobile App \n                    | \n                   User \nStudent Activity \nPrepare similar designs for any two: \n\u2022 Smart Home \n\u2022 Smart Agriculture \n\u2022 Smart Parking \n\u2022 Smart Hospital \n\u2022 Smart Factory \nResult \nThe physical and logical designs of an IoT-based Smart Classroom were successfully prepared and \nthe major functional blocks of the IoT system were identified. Viva Questions \n19.",
+    "page_number": 6,
+    "chunk_index": 10,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "21": {
+    "id": "462f3222-72da-40eb-a2b4-74f5a9785c26",
+    "chunk_id": "462f3222-72da-40eb-a2b4-74f5a9785c26",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Suppose a system checks:\n\uf0b7\nIs the username correct? \uf0b7\nIs the password correct? Conditions / Rules\nR1 R2 R3 R4\nUsername correct?",
+    "text": "Suppose a system checks:\n\uf0b7\nIs the username correct? \uf0b7\nIs the password correct? Conditions / Rules\nR1 R2 R3 R4\nUsername correct?",
+    "page_number": 24,
+    "chunk_index": 53,
+    "title": "software_unit_2.pdf"
+  },
+  "22": {
+    "id": "478500b1-980f-49b9-bda1-7d2c594eba63",
+    "chunk_id": "478500b1-980f-49b9-bda1-7d2c594eba63",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "\u2022 Network \n\u2022 Cloud/server \n\u2022 Applications \n\u2022 Users \nA simplified IoT system can be represented as: \n+-------------+ \n|   Sensors   | \n+------+------+ \n            | \n            v \n+-------------+ \n| IoT Device  | \n+------+------+ \n           | \n           v \n+-------------+ \n|  Network /  | \n|  Gateway    | \n+------+------+ \n            | \n            v \n+-------------+ \n| Cloud/Server| \n+------+------+ \n            | \n            v \n+-------------+ \n| Application | \n+------+------+ \n            | \n            v \n        User \nProblem Statement \nDesign an IoT-based Smart Classroom. The system should monitor:",
+    "text": "\u2022 Network \n\u2022 Cloud/server \n\u2022 Applications \n\u2022 Users \nA simplified IoT system can be represented as: \n+-------------+ \n|   Sensors   | \n+------+------+ \n            | \n            v \n+-------------+ \n| IoT Device  | \n+------+------+ \n           | \n           v \n+-------------+ \n|  Network /  | \n|  Gateway    | \n+------+------+ \n            | \n            v \n+-------------+ \n| Cloud/Server| \n+------+------+ \n            | \n            v \n+-------------+ \n| Application | \n+------+------+ \n            | \n            v \n        User \nProblem Statement \nDesign an IoT-based Smart Classroom. The system should monitor:",
+    "page_number": 4,
+    "chunk_index": 6,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "23": {
+    "id": "47a89ef1-7901-47a7-8fdd-2980ab2a70af",
+    "chunk_id": "47a89ef1-7901-47a7-8fdd-2980ab2a70af",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "5. Students should not capture or analyze network traffic belonging to other users without \npermission. 6. Students should verify IP addresses and network configurations before testing connectivity. 7. Students should save Python programs with meaningful filenames. 8. Students should be prepared for viva questions after each practical. 9. Students should explain the result rather than merely demonstrating the output. 10. All practical work should be submitted according to the schedule specified by the \ninstructor.",
+    "text": "5. Students should not capture or analyze network traffic belonging to other users without \npermission. 6. Students should verify IP addresses and network configurations before testing connectivity. 7. Students should save Python programs with meaningful filenames. 8. Students should be prepared for viva questions after each practical. 9. Students should explain the result rather than merely demonstrating the output. 10. All practical work should be submitted according to the schedule specified by the \ninstructor.",
+    "page_number": 1,
+    "chunk_index": 2,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "24": {
+    "id": "4a229e32-1145-462f-982c-8579934a222a",
+    "chunk_id": "4a229e32-1145-462f-982c-8579934a222a",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Example: Online library System\nUsed for:\n\uf0b7\nRequirement analysis\n\uf0b7\nUnderstanding user requirements\n\uf0b7\nIdentifying system functions\n2. Class Diagram\nA Class Diagram shows the classes, attributes, methods, and relationships in a system.",
+    "text": "Example: Online library System\nUsed for:\n\uf0b7\nRequirement analysis\n\uf0b7\nUnderstanding user requirements\n\uf0b7\nIdentifying system functions\n2. Class Diagram\nA Class Diagram shows the classes, attributes, methods, and relationships in a system.",
+    "page_number": 11,
+    "chunk_index": 21,
+    "title": "software_unit_2.pdf"
+  },
+  "25": {
+    "id": "4a33976a-dae3-45ec-bebe-382900af3a29",
+    "chunk_id": "4a33976a-dae3-45ec-bebe-382900af3a29",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "11. What is ICMP? 12. What is DNS? 13. What is a DNS query? 14. What is a DNS response? 15. What is TTL? 16. What is the difference between a packet and a frame? Result \nNetwork packets were successfully captured and analyzed using Wireshark, and ICMP and DNS \ncommunication was studied. Viva Questions \n17.",
+    "text": "11. What is ICMP? 12. What is DNS? 13. What is a DNS query? 14. What is a DNS response? 15. What is TTL? 16. What is the difference between a packet and a frame? Result \nNetwork packets were successfully captured and analyzed using Wireshark, and ICMP and DNS \ncommunication was studied. Viva Questions \n17.",
+    "page_number": 9,
+    "chunk_index": 19,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "26": {
+    "id": "4d6176d3-569f-464f-8dc5-cfb514fe0526",
+    "chunk_id": "4d6176d3-569f-464f-8dc5-cfb514fe0526",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "28. Select the active network interface. 29. Start packet capture. 30. Open Command Prompt/Terminal.",
+    "text": "28. Select the active network interface. 29. Start packet capture. 30. Open Command Prompt/Terminal.",
+    "page_number": 8,
+    "chunk_index": 16,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "27": {
+    "id": "4e8bb02b-894c-4737-950f-b910122262b5",
+    "chunk_id": "4e8bb02b-894c-4737-950f-b910122262b5",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "7.Component Diagram\nA Component Diagram shows the major software components/modules of a system and their\ndependencies. Example: Online Shopping System\nUsed for:\n\uf0b7\nSoftware architecture\n\uf0b7\nLarge applications\n\uf0b7\nShowing dependencies between modules\n8. Deployment Diagram\nA Deployment Diagram shows the physical arrangement of hardware and where software\ncomponents are deployed.",
+    "text": "7.Component Diagram\nA Component Diagram shows the major software components/modules of a system and their\ndependencies. Example: Online Shopping System\nUsed for:\n\uf0b7\nSoftware architecture\n\uf0b7\nLarge applications\n\uf0b7\nShowing dependencies between modules\n8. Deployment Diagram\nA Deployment Diagram shows the physical arrangement of hardware and where software\ncomponents are deployed.",
+    "page_number": 16,
+    "chunk_index": 30,
+    "title": "software_unit_2.pdf"
+  },
+  "28": {
+    "id": "57e70f94-64db-4541-b988-a89e83e16ab8",
+    "chunk_id": "57e70f94-64db-4541-b988-a89e83e16ab8",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Important symbols\n\uf0b7\nCircle \u2192Start/End\n\uf0b7\nRounded rectangle \u2192Activity\n\uf0b7\nDiamond \u2192Decision\n\uf0b7\nArrow \u2192Flow\nUsed for:\n\uf0b7\nBusiness processes\n\uf0b7\nWorkflows\n\uf0b7\nAlgorithm/process modeling\n6. State Machine Diagram\nA State Machine Diagram shows the different states of an object and how it changes from one\nstate to another because of events.",
+    "text": "Important symbols\n\uf0b7\nCircle \u2192Start/End\n\uf0b7\nRounded rectangle \u2192Activity\n\uf0b7\nDiamond \u2192Decision\n\uf0b7\nArrow \u2192Flow\nUsed for:\n\uf0b7\nBusiness processes\n\uf0b7\nWorkflows\n\uf0b7\nAlgorithm/process modeling\n6. State Machine Diagram\nA State Machine Diagram shows the different states of an object and how it changes from one\nstate to another because of events.",
+    "page_number": 14,
+    "chunk_index": 28,
+    "title": "software_unit_2.pdf"
+  },
+  "29": {
+    "id": "59efda77-62c4-49ab-8003-b9408e01e1dd",
+    "chunk_id": "59efda77-62c4-49ab-8003-b9408e01e1dd",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "\uf0b7\nCan help identify potential issues or problems early in the development process, allowing\nfor adjustments to be made before significant\n\uf0b7\nHelps ensure that the software is developed in a cost-effective and efficient manner\n\uf0b7\nCan improve communication and collaboration between the development team and\nstakeholders\nDisadvantages of Requirements Engineering Process\n\uf0b7\nCan be time-consuming and costly, particularly if the requirements-gathering process is not\nwell-managed\n\uf0b7\nCan be difficult to ensure that all stakeholders' needs and expectations are taken into\naccount\n\uf0b7\nIt Can be challenging to ensure that the requirements are clear, consistent, and complete\n\uf0b7\nChanges in requirements can lead to delays and increased costs in the development process. DFD\nDFD stands for data flow diagram .A Data Flow Diagram (DFD) is a graphical tool used to\nrepresent how data moves through a system.",
+    "text": "\uf0b7\nCan help identify potential issues or problems early in the development process, allowing\nfor adjustments to be made before significant\n\uf0b7\nHelps ensure that the software is developed in a cost-effective and efficient manner\n\uf0b7\nCan improve communication and collaboration between the development team and\nstakeholders\nDisadvantages of Requirements Engineering Process\n\uf0b7\nCan be time-consuming and costly, particularly if the requirements-gathering process is not\nwell-managed\n\uf0b7\nCan be difficult to ensure that all stakeholders' needs and expectations are taken into\naccount\n\uf0b7\nIt Can be challenging to ensure that the requirements are clear, consistent, and complete\n\uf0b7\nChanges in requirements can lead to delays and increased costs in the development process. DFD\nDFD stands for data flow diagram .A Data Flow Diagram (DFD) is a graphical tool used to\nrepresent how data moves through a system.",
+    "page_number": 5,
+    "chunk_index": 7,
+    "title": "software_unit_2.pdf"
+  },
+  "30": {
+    "id": "5c5a8bde-5d7e-46c6-a56e-73a0d7749a92",
+    "chunk_id": "5c5a8bde-5d7e-46c6-a56e-73a0d7749a92",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "\uf06cLevel 2 and Beyond: Further decomposes Level 1 subprocesses for a detailed view of\nspecific functional areas. Useful for large or complex systems requiring deeper\nanalysis.Level 2 DFD is often used when a system is complex and needs further\nbreakdown. It helps provide more granular information about the system\u2019s functioning,\nideal for specific requirements or technical documentation. For instance, in a payment processing system, Level 2 DFD might decompose the payment\nprocessing sub-process into specific steps such as payment verification, funds deduction,\nand transaction completion. Types of DFD :\nThere are two types of Data Flow Diagram (DFD)\n1. Logical DFD\n2.",
+    "text": "\uf06cLevel 2 and Beyond: Further decomposes Level 1 subprocesses for a detailed view of\nspecific functional areas. Useful for large or complex systems requiring deeper\nanalysis.Level 2 DFD is often used when a system is complex and needs further\nbreakdown. It helps provide more granular information about the system\u2019s functioning,\nideal for specific requirements or technical documentation. For instance, in a payment processing system, Level 2 DFD might decompose the payment\nprocessing sub-process into specific steps such as payment verification, funds deduction,\nand transaction completion. Types of DFD :\nThere are two types of Data Flow Diagram (DFD)\n1. Logical DFD\n2.",
+    "page_number": 7,
+    "chunk_index": 11,
+    "title": "software_unit_2.pdf"
+  },
+  "31": {
+    "id": "5e19617b-4d18-4707-9850-cf1b23c40a54",
+    "chunk_id": "5e19617b-4d18-4707-9850-cf1b23c40a54",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "1. To understand requirements clearly. 2. To get customer feedback early. 3. To identify missing requirements. 4. To reduce development risk. 5. To improve the user interface. 6. To detect errors early. 7. To validate the proposed system before full development. Prototyping Process Steps:\n1. Requirements \u2013 Identify basic requirements.",
+    "text": "1. To understand requirements clearly. 2. To get customer feedback early. 3. To identify missing requirements. 4. To reduce development risk. 5. To improve the user interface. 6. To detect errors early. 7. To validate the proposed system before full development. Prototyping Process Steps:\n1. Requirements \u2013 Identify basic requirements.",
+    "page_number": 21,
+    "chunk_index": 46,
+    "title": "software_unit_2.pdf"
+  },
+  "32": {
+    "id": "670da465-682b-4169-b795-a6d727e42619",
+    "chunk_id": "670da465-682b-4169-b795-a6d727e42619",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "Wireshark is a network protocol analyzer that allows users to capture and inspect network \ntraffic. Procedure \u2014 ICMP \n27. Install and open Wireshark.",
+    "text": "Wireshark is a network protocol analyzer that allows users to capture and inspect network \ntraffic. Procedure \u2014 ICMP \n27. Install and open Wireshark.",
+    "page_number": 8,
+    "chunk_index": 15,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "33": {
+    "id": "699baaa9-cabc-40db-8480-4fe0c1bba979",
+    "chunk_id": "699baaa9-cabc-40db-8480-4fe0c1bba979",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Example:\nFor an Online Shopping System, the purpose may be to provide a platform where customers\ncan search, purchase, and track products. 2. Overall Description\nThis gives a general overview of the system without going into detailed requirements. Includes:\na. Product Perspective\nExplains how the new system relates to other systems. b. Product Functions\nProvides a summary of the major functions. Example:\n\uf0b7\nUser registration\n\uf0b7\nProduct search\n\uf0b7\nShopping cart\n\uf0b7\nPayment\n\uf0b7\nOrder tracking\nc. User Characteristics\nDescribes the types of users. Example:\n\uf0b7\nCustomer\n\uf0b7\nAdministrator\nd. Constraints\nLists limitations or restrictions. Example:\n\uf0b7\nMust work on web browsers. \uf0b7\nMust use a particular database. \uf0b7\nMust comply with security requirements.",
+    "text": "Example:\nFor an Online Shopping System, the purpose may be to provide a platform where customers\ncan search, purchase, and track products. 2. Overall Description\nThis gives a general overview of the system without going into detailed requirements. Includes:\na. Product Perspective\nExplains how the new system relates to other systems. b. Product Functions\nProvides a summary of the major functions. Example:\n\uf0b7\nUser registration\n\uf0b7\nProduct search\n\uf0b7\nShopping cart\n\uf0b7\nPayment\n\uf0b7\nOrder tracking\nc. User Characteristics\nDescribes the types of users. Example:\n\uf0b7\nCustomer\n\uf0b7\nAdministrator\nd. Constraints\nLists limitations or restrictions. Example:\n\uf0b7\nMust work on web browsers. \uf0b7\nMust use a particular database. \uf0b7\nMust comply with security requirements.",
+    "page_number": 19,
+    "chunk_index": 38,
+    "title": "software_unit_2.pdf"
+  },
+  "34": {
+    "id": "6a5466a6-dbca-45fa-9bd4-2780fabfd6f4",
+    "chunk_id": "6a5466a6-dbca-45fa-9bd4-2780fabfd6f4",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "\uf0b7\nExample: Customer places an order \u2192System processes order \u2192Order confirmation.",
+    "text": "\uf0b7\nExample: Customer places an order \u2192System processes order \u2192Order confirmation.",
+    "page_number": 8,
+    "chunk_index": 13,
+    "title": "software_unit_2.pdf"
+  },
+  "35": {
+    "id": "6c22d4a0-497d-4365-b341-f6c193737cf4",
+    "chunk_id": "6c22d4a0-497d-4365-b341-f6c193737cf4",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "\uf0b7\nLevel 1 DFD: Breaks the Level 0 process into major subprocesses. Shows internal data\nflows and data stores.In 1-level Data Flow Diagram (DFD), the context diagram is\ndecomposed into multiple bubbles/processes.",
+    "text": "\uf0b7\nLevel 1 DFD: Breaks the Level 0 process into major subprocesses. Shows internal data\nflows and data stores.In 1-level Data Flow Diagram (DFD), the context diagram is\ndecomposed into multiple bubbles/processes.",
+    "page_number": 6,
+    "chunk_index": 9,
+    "title": "software_unit_2.pdf"
+  },
+  "36": {
+    "id": "6e658005-819a-4eca-afcc-49cd43ed8c6a",
+    "chunk_id": "6e658005-819a-4eca-afcc-49cd43ed8c6a",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Describes assumptions made during development. Example:\nUsers are assumed to have an internet connection.",
+    "text": "Describes assumptions made during development. Example:\nUsers are assumed to have an internet connection.",
+    "page_number": 20,
+    "chunk_index": 41,
+    "title": "software_unit_2.pdf"
+  },
+  "37": {
+    "id": "71c2d965-bd8e-429a-9616-bffc3f6bb652",
+    "chunk_id": "71c2d965-bd8e-429a-9616-bffc3f6bb652",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "5. Other Requirements\nThis section can contain additional requirements such as:\n\uf0b7\nSecurity requirements\n\uf0b7\nPerformance requirements\n\uf0b7\nReliability requirements\n\uf0b7\nSafety requirements\n\uf0b7\nLegal/regulatory requirements\nSoftware Prototyping\nSoftware prototyping is a software development technique in which a working model\n(prototype) of the software is created before developing the complete system..The prototype\nhelps developers and customers understand, visualize, and verify the requirements . Why is Prototyping Used?",
+    "text": "5. Other Requirements\nThis section can contain additional requirements such as:\n\uf0b7\nSecurity requirements\n\uf0b7\nPerformance requirements\n\uf0b7\nReliability requirements\n\uf0b7\nSafety requirements\n\uf0b7\nLegal/regulatory requirements\nSoftware Prototyping\nSoftware prototyping is a software development technique in which a working model\n(prototype) of the software is created before developing the complete system..The prototype\nhelps developers and customers understand, visualize, and verify the requirements . Why is Prototyping Used?",
+    "page_number": 21,
+    "chunk_index": 45,
+    "title": "software_unit_2.pdf"
+  },
+  "38": {
+    "id": "7212513c-5fb7-4578-8769-1cc5a2d28a11",
+    "chunk_id": "7212513c-5fb7-4578-8769-1cc5a2d28a11",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "Observation Table \nParameter \nObservation \nSource IP \nDestination IP \nProtocol \nPacket Size \nTTL \nSource Port \nDestination Port \nQuestions for Analysis \n10. What happens when ping is executed?",
+    "text": "Observation Table \nParameter \nObservation \nSource IP \nDestination IP \nProtocol \nPacket Size \nTTL \nSource Port \nDestination Port \nQuestions for Analysis \n10. What happens when ping is executed?",
+    "page_number": 9,
+    "chunk_index": 18,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "39": {
+    "id": "77c533ce-3388-4292-a50c-657de8252e46",
+    "chunk_id": "77c533ce-3388-4292-a50c-657de8252e46",
+    "document_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
+    "doc_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
+    "content": "Q5. Explain the role of algorithms and data structures in NLP. Q6. Explain the role of Algorithms and Data Structures in NLP? Q7.",
+    "text": "Q5. Explain the role of algorithms and data structures in NLP. Q6. Explain the role of Algorithms and Data Structures in NLP? Q7.",
+    "page_number": 2,
+    "chunk_index": 2,
+    "title": "Assignment-1.pdf"
+  },
+  "40": {
+    "id": "7a90dbbf-63ed-4afe-a1f5-334e48ac0f58",
+    "chunk_id": "7a90dbbf-63ed-4afe-a1f5-334e48ac0f58",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "It answers:\nWhere does the software run?",
+    "text": "It answers:\nWhere does the software run?",
+    "page_number": 16,
+    "chunk_index": 31,
+    "title": "software_unit_2.pdf"
+  },
+  "41": {
     "id": "7cd4ef5c-f1c8-47e9-8005-f553b7d1a871",
     "chunk_id": "7cd4ef5c-f1c8-47e9-8005-f553b7d1a871",
     "document_id": "d901f517-7a86-4580-865f-59462937bb12",
@@ -32,7 +461,117 @@
     "chunk_index": 0,
     "title": "assignment_2_-_Machine_Learning_and_NLP_on_AWS_Cloud.pdf"
   },
-  "3": {
+  "42": {
+    "id": "7f5e3467-7657-4c5c-b88d-9b9194fcd41a",
+    "chunk_id": "7f5e3467-7657-4c5c-b88d-9b9194fcd41a",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "PRACTICAL 3 \nSimulation of an IoT Sensor Network using Python \nAim \nTo simulate IoT sensors and generate sensor data using Python. Learning Objectives \nStudents will be able to: \n\u2022 Simulate sensors without physical hardware. \u2022 Generate sensor readings.",
+    "text": "PRACTICAL 3 \nSimulation of an IoT Sensor Network using Python \nAim \nTo simulate IoT sensors and generate sensor data using Python. Learning Objectives \nStudents will be able to: \n\u2022 Simulate sensors without physical hardware. \u2022 Generate sensor readings.",
+    "page_number": 10,
+    "chunk_index": 22,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "43": {
+    "id": "83761069-5ec2-4337-a569-d8b7db23b468",
+    "chunk_id": "83761069-5ec2-4337-a569-d8b7db23b468",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "2. Rules \u2013 Different combinations of conditions. 3. Actions \u2013 What the system should do. 4. Entries \u2013 Values such as Yes/No or True/False. Why Use Decision Tables? \uf0b7\nRepresents complex business rules clearly. \uf0b7\nHelps identify missing cases. \uf0b7\nReduces ambiguity. \uf0b7\nHelps developers and testers create test cases. \uf0b7\nMakes requirements easier to understand.",
+    "text": "2. Rules \u2013 Different combinations of conditions. 3. Actions \u2013 What the system should do. 4. Entries \u2013 Values such as Yes/No or True/False. Why Use Decision Tables? \uf0b7\nRepresents complex business rules clearly. \uf0b7\nHelps identify missing cases. \uf0b7\nReduces ambiguity. \uf0b7\nHelps developers and testers create test cases. \uf0b7\nMakes requirements easier to understand.",
+    "page_number": 24,
+    "chunk_index": 55,
+    "title": "software_unit_2.pdf"
+  },
+  "44": {
+    "id": "83c1f843-16e7-4080-b07d-91fe1584555d",
+    "chunk_id": "83c1f843-16e7-4080-b07d-91fe1584555d",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "What is IoT?",
+    "text": "What is IoT?",
+    "page_number": 6,
+    "chunk_index": 11,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "45": {
+    "id": "859a1331-3fa0-444c-9ba0-6ef502980e43",
+    "chunk_id": "859a1331-3fa0-444c-9ba0-6ef502980e43",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Requirements Management\nRequirements are controlled and maintained throughout the project because they may change. It includes:\n\uf06c\nTracking requirements\n\uf06c\nManaging changes\n\uf06c\nPrioritizing requirements\n\uf06c\nVersion control\n\uf06c\nTraceability\n\uf06c\nImpact analysis\nExample: If the customer requests a new payment method, the team checks how this change\naffects the design, code, cost, and testing. Tools Involved in Requirement Engineering\n\uf0b7\nObservation report\n\uf0b7\nQuestionnaire ( survey, poll )\n\uf0b7\nUse cases\n\uf0b7\nUser stories\n\uf0b7\nRequirement workshop\n\uf0b7\nMind mapping\n\uf0b7\nRoleplaying\n\uf0b7\nPrototyping\nAdvantages of Requirements Engineering Process\n\uf0b7\nHelps ensure that the software being developed meets the needs and expectations of the\nstakeholders",
+    "text": "Requirements Management\nRequirements are controlled and maintained throughout the project because they may change. It includes:\n\uf06c\nTracking requirements\n\uf06c\nManaging changes\n\uf06c\nPrioritizing requirements\n\uf06c\nVersion control\n\uf06c\nTraceability\n\uf06c\nImpact analysis\nExample: If the customer requests a new payment method, the team checks how this change\naffects the design, code, cost, and testing. Tools Involved in Requirement Engineering\n\uf0b7\nObservation report\n\uf0b7\nQuestionnaire ( survey, poll )\n\uf0b7\nUse cases\n\uf0b7\nUser stories\n\uf0b7\nRequirement workshop\n\uf0b7\nMind mapping\n\uf0b7\nRoleplaying\n\uf0b7\nPrototyping\nAdvantages of Requirements Engineering Process\n\uf0b7\nHelps ensure that the software being developed meets the needs and expectations of the\nstakeholders",
+    "page_number": 4,
+    "chunk_index": 6,
+    "title": "software_unit_2.pdf"
+  },
+  "46": {
+    "id": "86d8d9d5-3747-46fa-90b8-9bfcfe9d8e98",
+    "chunk_id": "86d8d9d5-3747-46fa-90b8-9bfcfe9d8e98",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "\uf0b7\nExample: Customer enters order on website \u2192Web server processes it \u2192MySQL\ndatabase stores the order. Advantages of using Data Flow Diagrams (DFD)\nFollowing are the Advantage of Data Flow Diagram (DFD) :\n1. Easy to understand: DFDs are graphical representations that are easy to understand and\ncommunicate, making them useful for non-technical stakeholders and team members. 2. Improves system analysis: DFDs are useful for analyzing a system's processes and data\nflow, which can help identify inefficiencies, redundancies, and other problems that may\nexist in the system. 3. Supports system design: DFDs can be used to design a system's architecture and structure,\nwhich can help ensure that the system is designed to meet the requirements of the\nstakeholders. 4. Enables testing and verification: DFDs can be used to identify the inputs and outputs of a\nsystem, which can help in the testing and verification of the system's functionality. Disadvantages of using Data Flow Diagram (DFD)",
+    "text": "\uf0b7\nExample: Customer enters order on website \u2192Web server processes it \u2192MySQL\ndatabase stores the order. Advantages of using Data Flow Diagrams (DFD)\nFollowing are the Advantage of Data Flow Diagram (DFD) :\n1. Easy to understand: DFDs are graphical representations that are easy to understand and\ncommunicate, making them useful for non-technical stakeholders and team members. 2. Improves system analysis: DFDs are useful for analyzing a system's processes and data\nflow, which can help identify inefficiencies, redundancies, and other problems that may\nexist in the system. 3. Supports system design: DFDs can be used to design a system's architecture and structure,\nwhich can help ensure that the system is designed to meet the requirements of the\nstakeholders. 4. Enables testing and verification: DFDs can be used to identify the inputs and outputs of a\nsystem, which can help in the testing and verification of the system's functionality. Disadvantages of using Data Flow Diagram (DFD)",
+    "page_number": 8,
+    "chunk_index": 15,
+    "title": "software_unit_2.pdf"
+  },
+  "47": {
+    "id": "8719abd4-7d51-41bd-b9db-fb17ec198ee5",
+    "chunk_id": "8719abd4-7d51-41bd-b9db-fb17ec198ee5",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Following are the Disadvantage of Data Flow Diagram (DFD) :\n1. Can be time-consuming: Creating DFDs can be a time-consuming process, especially for\ncomplex systems. 2. Limited focus: DFDs focus primarily on the flow of data in a system, and may not capture\nother important aspects of the system, such as user interface design, system security, or\nsystem performance. 3. Can be difficult to keep up-to-date: DFDs may become out-of-date over time as the system\nevolves and changes. 4. Requires technical expertise: While DFDs are easy to understand, creating them requires a\ncertain level of technical expertise and familiarity with the system being analyzed.",
+    "text": "Following are the Disadvantage of Data Flow Diagram (DFD) :\n1. Can be time-consuming: Creating DFDs can be a time-consuming process, especially for\ncomplex systems. 2. Limited focus: DFDs focus primarily on the flow of data in a system, and may not capture\nother important aspects of the system, such as user interface design, system security, or\nsystem performance. 3. Can be difficult to keep up-to-date: DFDs may become out-of-date over time as the system\nevolves and changes. 4. Requires technical expertise: While DFDs are easy to understand, creating them requires a\ncertain level of technical expertise and familiarity with the system being analyzed.",
+    "page_number": 8,
+    "chunk_index": 16,
+    "title": "software_unit_2.pdf"
+  },
+  "48": {
+    "id": "8785b2ae-41a3-402e-aa82-47300c88f72d",
+    "chunk_id": "8785b2ae-41a3-402e-aa82-47300c88f72d",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "2. Physical DFD\n\uf0b7\nShows how the system is actually implemented. \uf0b7\nIncludes people, software, hardware, databases, and specific processes.",
+    "text": "2. Physical DFD\n\uf0b7\nShows how the system is actually implemented. \uf0b7\nIncludes people, software, hardware, databases, and specific processes.",
+    "page_number": 8,
+    "chunk_index": 14,
+    "title": "software_unit_2.pdf"
+  },
+  "49": {
+    "id": "88e8dcc8-d8ab-451a-af00-90a538c1399d",
+    "chunk_id": "88e8dcc8-d8ab-451a-af00-90a538c1399d",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "What is a sensor?",
+    "text": "What is a sensor?",
+    "page_number": 12,
+    "chunk_index": 28,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "50": {
+    "id": "91b69073-d8ba-49a4-ba9e-7d6bfcfee895",
+    "chunk_id": "91b69073-d8ba-49a4-ba9e-7d6bfcfee895",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "12. Create a new diagram.",
+    "text": "12. Create a new diagram.",
+    "page_number": 5,
+    "chunk_index": 8,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "51": {
+    "id": "92c80dfc-1212-4aa6-a303-c491394672ce",
+    "chunk_id": "92c80dfc-1212-4aa6-a303-c491394672ce",
+    "document_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
+    "doc_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
+    "content": "Assignment  \nQ1. What is Natural Language Processing (NLP)? Explain the objectives of NLP and its \nimportance \nQ2. Explain the concept of Computational Framework for Natural Language Processing. Q3. What is lexicon in NLP. Explain its role. Q4. Discuss the different levels of Linguistic Analysis in NLP.",
+    "text": "Assignment  \nQ1. What is Natural Language Processing (NLP)? Explain the objectives of NLP and its \nimportance \nQ2. Explain the concept of Computational Framework for Natural Language Processing. Q3. What is lexicon in NLP. Explain its role. Q4. Discuss the different levels of Linguistic Analysis in NLP.",
+    "page_number": 1,
+    "chunk_index": 1,
+    "title": "Assignment-1.pdf"
+  },
+  "52": {
     "id": "93652bd2-d959-4939-8a49-e793508107e7",
     "chunk_id": "93652bd2-d959-4939-8a49-e793508107e7",
     "document_id": "d901f517-7a86-4580-865f-59462937bb12",
@@ -43,7 +582,62 @@
     "chunk_index": 3,
     "title": "assignment_2_-_Machine_Learning_and_NLP_on_AWS_Cloud.pdf"
   },
-  "4": {
+  "53": {
+    "id": "949a6f5d-d766-4823-910e-d6659e9d4db0",
+    "chunk_id": "949a6f5d-d766-4823-910e-d6659e9d4db0",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "2. Each practical should be performed individually unless instructed otherwise. 3. Students should maintain a practical record containing: \n\u2022 Aim \n\u2022 Objectives \n\u2022 Requirements \n\u2022 Theory \n\u2022 Procedure \n\u2022 Program/configuration \n\u2022 Output \n\u2022 Result \n4. Students should save screenshots of important outputs and network configurations.",
+    "text": "2. Each practical should be performed individually unless instructed otherwise. 3. Students should maintain a practical record containing: \n\u2022 Aim \n\u2022 Objectives \n\u2022 Requirements \n\u2022 Theory \n\u2022 Procedure \n\u2022 Program/configuration \n\u2022 Output \n\u2022 Result \n4. Students should save screenshots of important outputs and network configurations.",
+    "page_number": 1,
+    "chunk_index": 1,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "54": {
+    "id": "9890b329-901f-4d5c-b5dd-cf83d770e57a",
+    "chunk_id": "9890b329-901f-4d5c-b5dd-cf83d770e57a",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "GENERAL LABORATORY INSTRUCTIONS \n1. Students should read the experiment before starting the practical.",
+    "text": "GENERAL LABORATORY INSTRUCTIONS \n1. Students should read the experiment before starting the practical.",
+    "page_number": 1,
+    "chunk_index": 0,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "55": {
+    "id": "9d275ca2-a201-486c-adc2-993c94399183",
+    "chunk_id": "9d275ca2-a201-486c-adc2-993c94399183",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "\u2022 Analyze packet structure. \u2022 Identify ICMP and DNS traffic. \u2022 Understand protocol layers. Requirements \n\u2022 Computer/Laptop \n\u2022 Wireshark \n\u2022 Internet connection \nTheory \nNetwork communication involves the exchange of packets between devices. A packet generally contains: \n\u2022 Source address \n\u2022 Destination address \n\u2022 Protocol information \n\u2022 Payload \n\u2022 Control information",
+    "text": "\u2022 Analyze packet structure. \u2022 Identify ICMP and DNS traffic. \u2022 Understand protocol layers. Requirements \n\u2022 Computer/Laptop \n\u2022 Wireshark \n\u2022 Internet connection \nTheory \nNetwork communication involves the exchange of packets between devices. A packet generally contains: \n\u2022 Source address \n\u2022 Destination address \n\u2022 Protocol information \n\u2022 Payload \n\u2022 Control information",
+    "page_number": 7,
+    "chunk_index": 14,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "56": {
+    "id": "9ed23067-969d-4f18-a380-832dc3cb8f91",
+    "chunk_id": "9ed23067-969d-4f18-a380-832dc3cb8f91",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "5. Run the program. 6. Observe the generated readings. 7. Modify the threshold value. 8. Add another sensor if required.",
+    "text": "5. Run the program. 6. Observe the generated readings. 7. Modify the threshold value. 8. Add another sensor if required.",
+    "page_number": 11,
+    "chunk_index": 26,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "57": {
+    "id": "a205b127-58fc-4e2c-9f32-53cbf240c0d1",
+    "chunk_id": "a205b127-58fc-4e2c-9f32-53cbf240c0d1",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "It shows data inputs, outputs, data stores, and\nthe processes that transform the data. DFDs provide a high-level overview of system\nfunctionality and are widely used in structured analysis due to their simplicity and clarity for\nboth technical and non-technical users. Levels of Data Flow Diagram\n\uf0b7\nLevel 0 DFD (Context Diagram): Represents the entire system as one single process,\nshowing its interaction with external entities. It highlights major inputs and outputs without\ninternal details.In Level 0 DFD, the system is represented as a single bubble or circle, and\nthe data flows to and from external entities are represented by arrows. The focus is on high-\nlevel interactions, not the detailed workings of the processes inside the system.",
+    "text": "It shows data inputs, outputs, data stores, and\nthe processes that transform the data. DFDs provide a high-level overview of system\nfunctionality and are widely used in structured analysis due to their simplicity and clarity for\nboth technical and non-technical users. Levels of Data Flow Diagram\n\uf0b7\nLevel 0 DFD (Context Diagram): Represents the entire system as one single process,\nshowing its interaction with external entities. It highlights major inputs and outputs without\ninternal details.In Level 0 DFD, the system is represented as a single bubble or circle, and\nthe data flows to and from external entities are represented by arrows. The focus is on high-\nlevel interactions, not the detailed workings of the processes inside the system.",
+    "page_number": 5,
+    "chunk_index": 8,
+    "title": "software_unit_2.pdf"
+  },
+  "58": {
     "id": "a3b30ee1-3787-4d3a-9bb8-7cc93f1f4aa4",
     "chunk_id": "a3b30ee1-3787-4d3a-9bb8-7cc93f1f4aa4",
     "document_id": "d901f517-7a86-4580-865f-59462937bb12",
@@ -54,7 +648,238 @@
     "chunk_index": 1,
     "title": "assignment_2_-_Machine_Learning_and_NLP_on_AWS_Cloud.pdf"
   },
-  "5": {
+  "59": {
+    "id": "a9daab62-5f29-4e59-aca5-8fa33d89f8f2",
+    "chunk_id": "a9daab62-5f29-4e59-aca5-8fa33d89f8f2",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "A Decision Table is a tabular method used to represent complex decision-making logic in a\nsoftware system. It shows conditions, possible combinations of conditions, and the actions that should be\nperformed for each combination.",
+    "text": "A Decision Table is a tabular method used to represent complex decision-making logic in a\nsoftware system. It shows conditions, possible combinations of conditions, and the actions that should be\nperformed for each combination.",
+    "page_number": 23,
+    "chunk_index": 51,
+    "title": "software_unit_2.pdf"
+  },
+  "60": {
+    "id": "afd31864-7b9a-41fa-892b-3d17108399b1",
+    "chunk_id": "afd31864-7b9a-41fa-892b-3d17108399b1",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "What is Wireshark?",
+    "text": "What is Wireshark?",
+    "page_number": 9,
+    "chunk_index": 20,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "61": {
+    "id": "b07adbb8-826a-4864-8e1a-f3ef5d0dc725",
+    "chunk_id": "b07adbb8-826a-4864-8e1a-f3ef5d0dc725",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Unit-2 Software Requirement Analysis And Specification",
+    "text": "Unit-2 Software Requirement Analysis And Specification",
+    "page_number": 1,
+    "chunk_index": 0,
+    "title": "software_unit_2.pdf"
+  },
+  "62": {
+    "id": "b0b67044-919f-435e-8bb9-f0560a715acb",
+    "chunk_id": "b0b67044-919f-435e-8bb9-f0560a715acb",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "\uf0b7\nImproves communication: Developers, designers, architects, and business stakeholders\ncan use a common visual representation. \uf0b7\nSupports planning: Teams can visualize system structure, workflows, and interactions\nbefore writing code. \uf0b7\nHelps documentation: UML diagrams provide a clear reference for understanding and\nmaintaining the system. 1. Structural UML Diagrams\nThese show the static structure of a software system. Diagram\nPurpose\nClass Diagram\nShows classes, attributes, methods, and relationships\nObject Diagram\nShows objects and their relationships at a particular time\nComponent Diagram\nShows software components and their dependencies\nDeployment Diagram\nShows how software is deployed on hardware/devices\nPackage Diagram\nOrganizes model elements into packages\nComposite Structure Diagram Shows the internal structure of a class or component\nProfile Diagram\nExtends UML for specific domains",
+    "text": "\uf0b7\nImproves communication: Developers, designers, architects, and business stakeholders\ncan use a common visual representation. \uf0b7\nSupports planning: Teams can visualize system structure, workflows, and interactions\nbefore writing code. \uf0b7\nHelps documentation: UML diagrams provide a clear reference for understanding and\nmaintaining the system. 1. Structural UML Diagrams\nThese show the static structure of a software system. Diagram\nPurpose\nClass Diagram\nShows classes, attributes, methods, and relationships\nObject Diagram\nShows objects and their relationships at a particular time\nComponent Diagram\nShows software components and their dependencies\nDeployment Diagram\nShows how software is deployed on hardware/devices\nPackage Diagram\nOrganizes model elements into packages\nComposite Structure Diagram Shows the internal structure of a class or component\nProfile Diagram\nExtends UML for specific domains",
+    "page_number": 9,
+    "chunk_index": 18,
+    "title": "software_unit_2.pdf"
+  },
+  "63": {
+    "id": "b747507a-62c8-47bf-95fd-28668030896a",
+    "chunk_id": "b747507a-62c8-47bf-95fd-28668030896a",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "3. Specific Requirements\nThis is usually the most important section because it contains detailed requirements. a. Functional Requirements\nDescribe what the system should do. Example:\nThe system shall allow customers to add products to the shopping cart. b. Non-Functional Requirements\nDescribe how the system should perform. Example:\nThe system shall respond to user requests within 3 seconds. c.",
+    "text": "3. Specific Requirements\nThis is usually the most important section because it contains detailed requirements. a. Functional Requirements\nDescribe what the system should do. Example:\nThe system shall allow customers to add products to the shopping cart. b. Non-Functional Requirements\nDescribe how the system should perform. Example:\nThe system shall respond to user requests within 3 seconds. c.",
+    "page_number": 20,
+    "chunk_index": 42,
+    "title": "software_unit_2.pdf"
+  },
+  "64": {
+    "id": "b9440799-3759-4fc0-96b5-197954d30ca9",
+    "chunk_id": "b9440799-3759-4fc0-96b5-197954d30ca9",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "\uf0b7\nUser can register and log in. \uf0b7\nUser can search for products. \uf0b7\nUser can add products to the cart. \uf0b7\nUser can place an order. \uf0b7\nUser can make payment. \uf0b7\nAdmin can add or delete products.",
+    "text": "\uf0b7\nUser can register and log in. \uf0b7\nUser can search for products. \uf0b7\nUser can add products to the cart. \uf0b7\nUser can place an order. \uf0b7\nUser can make payment. \uf0b7\nAdmin can add or delete products.",
+    "page_number": 18,
+    "chunk_index": 34,
+    "title": "software_unit_2.pdf"
+  },
+  "65": {
+    "id": "b993323a-3b70-4fb1-a135-e75b745c5ff8",
+    "chunk_id": "b993323a-3b70-4fb1-a135-e75b745c5ff8",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "\uf0b7\nIf invalid \u2192error message is displayed.",
+    "text": "\uf0b7\nIf invalid \u2192error message is displayed.",
+    "page_number": 21,
+    "chunk_index": 44,
+    "title": "software_unit_2.pdf"
+  },
+  "66": {
+    "id": "ba3ddaa8-22d7-41d1-b5cc-11090a38f524",
+    "chunk_id": "ba3ddaa8-22d7-41d1-b5cc-11090a38f524",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Sequence Diagram\nA Sequence Diagram shows how objects or users communicate with each other in a particular\nsequence over time. It answers:\nWho sends what message to whom, and in what order?",
+    "text": "Sequence Diagram\nA Sequence Diagram shows how objects or users communicate with each other in a particular\nsequence over time. It answers:\nWho sends what message to whom, and in what order?",
+    "page_number": 12,
+    "chunk_index": 24,
+    "title": "software_unit_2.pdf"
+  },
+  "67": {
+    "id": "bd2c4db4-f4d4-4e8a-9220-98fd91a0c341",
+    "chunk_id": "bd2c4db4-f4d4-4e8a-9220-98fd91a0c341",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Main elements\n\uf0b7\nActor \u2192person or external system\n\uf0b7\nUse Case \u2192function provided by the system\n\uf0b7\nSystem Boundary \u2192defines the scope of the system\n\uf0b7\nAssociation \u2192connection between actor and use case\n\uf0b7\n<<include>> \u2192mandatory/common functionality\n\uf0b7\n<<extend>> \u2192optional functionality",
+    "text": "Main elements\n\uf0b7\nActor \u2192person or external system\n\uf0b7\nUse Case \u2192function provided by the system\n\uf0b7\nSystem Boundary \u2192defines the scope of the system\n\uf0b7\nAssociation \u2192connection between actor and use case\n\uf0b7\n<<include>> \u2192mandatory/common functionality\n\uf0b7\n<<extend>> \u2192optional functionality",
+    "page_number": 10,
+    "chunk_index": 20,
+    "title": "software_unit_2.pdf"
+  },
+  "68": {
+    "id": "c10e84a6-d06f-4fd1-b0d5-901a4d253c13",
+    "chunk_id": "c10e84a6-d06f-4fd1-b0d5-901a4d253c13",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Prototype Process",
+    "text": "Prototype Process",
+    "page_number": 22,
+    "chunk_index": 48,
+    "title": "software_unit_2.pdf"
+  },
+  "69": {
+    "id": "c4629359-e2f8-45a4-bbdc-854c34245799",
+    "chunk_id": "c4629359-e2f8-45a4-bbdc-854c34245799",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "System displays login success/failure. The vertical direction represents time. Used for:\n\uf0b7\nShowing message flow\n\uf0b7\nDesigning system interactions\n\uf0b7\nUnderstanding a particular use case\n5.Activity Diagram\nAn Activity Diagram shows the workflow or sequence of activities in a system. It is similar to a flowchart but is used in UML for modeling system processes. Example: Online Shopping",
+    "text": "System displays login success/failure. The vertical direction represents time. Used for:\n\uf0b7\nShowing message flow\n\uf0b7\nDesigning system interactions\n\uf0b7\nUnderstanding a particular use case\n5.Activity Diagram\nAn Activity Diagram shows the workflow or sequence of activities in a system. It is similar to a flowchart but is used in UML for modeling system processes. Example: Online Shopping",
+    "page_number": 13,
+    "chunk_index": 27,
+    "title": "software_unit_2.pdf"
+  },
+  "70": {
+    "id": "c60c75de-1154-4406-904c-81b1a13bd118",
+    "chunk_id": "c60c75de-1154-4406-904c-81b1a13bd118",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "20. What are the major characteristics of IoT? 21. What is a sensor? 22. What is an actuator? 23. What is an IoT gateway? 24. What is the difference between physical and logical design? 25. Why is connectivity important in IoT? 26. What is the role of the cloud in IoT?",
+    "text": "20. What are the major characteristics of IoT? 21. What is a sensor? 22. What is an actuator? 23. What is an IoT gateway? 24. What is the difference between physical and logical design? 25. Why is connectivity important in IoT? 26. What is the role of the cloud in IoT?",
+    "page_number": 6,
+    "chunk_index": 12,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "71": {
+    "id": "c6a65c7f-efda-4f83-9d48-a2bee72edaac",
+    "chunk_id": "c6a65c7f-efda-4f83-9d48-a2bee72edaac",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Example: Web Application\nExplanation\n\uf0b7\nUser accesses the application through a computer/mobile. \uf0b7\nRequest goes to the web/application server. \uf0b7\nApplication server communicates with database server. Used for:\n\uf0b7\nNetwork architecture\n\uf0b7\nServer configuration\n\uf0b7\nDistributed systems\n\uf0b7\nCloud applications\nSRS\nSRS stands for Software Requirements Specification. It is a document that describes all the requirements of a software system\u2014what the system\nshould do, how it should behave, and what constraints it must follow.",
+    "text": "Example: Web Application\nExplanation\n\uf0b7\nUser accesses the application through a computer/mobile. \uf0b7\nRequest goes to the web/application server. \uf0b7\nApplication server communicates with database server. Used for:\n\uf0b7\nNetwork architecture\n\uf0b7\nServer configuration\n\uf0b7\nDistributed systems\n\uf0b7\nCloud applications\nSRS\nSRS stands for Software Requirements Specification. It is a document that describes all the requirements of a software system\u2014what the system\nshould do, how it should behave, and what constraints it must follow.",
+    "page_number": 17,
+    "chunk_index": 32,
+    "title": "software_unit_2.pdf"
+  },
+  "72": {
+    "id": "c6ea22d3-d71b-40ca-b4a8-27205f0dd5d4",
+    "chunk_id": "c6ea22d3-d71b-40ca-b4a8-27205f0dd5d4",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "13. Create blocks for: \n\u2022 Temperature sensor \n\u2022 Light sensor \n\u2022 Motion/occupancy sensor \n\u2022 IoT controller \n\u2022 Wi-Fi/network \n\u2022 Cloud/server \n\u2022 Application \n\u2022 User \n\u2022 Actuators \n14. Connect the blocks logically. 15. Label the communication links. 16. Create a separate physical architecture. 17. Create a logical architecture. 18. Save the diagram. Expected Diagram \nTemperature Sensor \u2500\u2510 \nLight Sensor \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524 \nMotion Sensor \u2500\u2500\u2500\u2500\u2500\u2500\u2524 \n                    \u2193 \n              IoT Controller",
+    "text": "13. Create blocks for: \n\u2022 Temperature sensor \n\u2022 Light sensor \n\u2022 Motion/occupancy sensor \n\u2022 IoT controller \n\u2022 Wi-Fi/network \n\u2022 Cloud/server \n\u2022 Application \n\u2022 User \n\u2022 Actuators \n14. Connect the blocks logically. 15. Label the communication links. 16. Create a separate physical architecture. 17. Create a logical architecture. 18. Save the diagram. Expected Diagram \nTemperature Sensor \u2500\u2510 \nLight Sensor \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524 \nMotion Sensor \u2500\u2500\u2500\u2500\u2500\u2500\u2524 \n                    \u2193 \n              IoT Controller",
+    "page_number": 5,
+    "chunk_index": 9,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "73": {
+    "id": "cb1f30cd-0ff3-4f63-b05e-26f3f424278e",
+    "chunk_id": "cb1f30cd-0ff3-4f63-b05e-26f3f424278e",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "\u2022 Temperature \n\u2022 Light \n\u2022 Occupancy \nThe system should also be able to control: \n\u2022 Classroom lights \n\u2022 Fan/air conditioning \nProcedure \n11. Open Draw.io.",
+    "text": "\u2022 Temperature \n\u2022 Light \n\u2022 Occupancy \nThe system should also be able to control: \n\u2022 Classroom lights \n\u2022 Fan/air conditioning \nProcedure \n11. Open Draw.io.",
+    "page_number": 5,
+    "chunk_index": 7,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "74": {
+    "id": "ceaec289-885d-4d47-bede-3a18eb7c8489",
+    "chunk_id": "ceaec289-885d-4d47-bede-3a18eb7c8489",
+    "document_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
+    "doc_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
+    "content": "What are Recursive Transition Networks (RTN\u2019s)? Q8. Explain Augmented Transition Networks (ATN\u2019s)? Q9. Discuss challenges in developing NLP systems for Indian Languages. Q10. Explain the role of NLP in Machine Translation.",
+    "text": "What are Recursive Transition Networks (RTN\u2019s)? Q8. Explain Augmented Transition Networks (ATN\u2019s)? Q9. Discuss challenges in developing NLP systems for Indian Languages. Q10. Explain the role of NLP in Machine Translation.",
+    "page_number": 2,
+    "chunk_index": 3,
+    "title": "Assignment-1.pdf"
+  },
+  "75": {
+    "id": "d0552f9d-402c-48e8-8b09-0015850377ae",
+    "chunk_id": "d0552f9d-402c-48e8-8b09-0015850377ae",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Assumptions and Dependencies",
+    "text": "Assumptions and Dependencies",
+    "page_number": 19,
+    "chunk_index": 40,
+    "title": "software_unit_2.pdf"
+  },
+  "76": {
+    "id": "d13516e0-e8e1-49d5-8788-6c9ce29d7bfb",
+    "chunk_id": "d13516e0-e8e1-49d5-8788-6c9ce29d7bfb",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "Expected Output \n-------------------------------- \nIoT Sensor Reading \n-------------------------------- \nTemperature : 28.52 \u00b0C \nHumidity    : 63.25 % \nLight       : 472 lux \n-------------------------------- \nStudent Activity \nModify the program to simulate: \n\u2022 Pressure \n\u2022 Gas concentration \n\u2022 Soil moisture \n\u2022 Water level \nResult \nAn IoT sensor network was successfully simulated using Python without requiring physical \nsensors. Viva Questions \n9.",
+    "text": "Expected Output \n-------------------------------- \nIoT Sensor Reading \n-------------------------------- \nTemperature : 28.52 \u00b0C \nHumidity    : 63.25 % \nLight       : 472 lux \n-------------------------------- \nStudent Activity \nModify the program to simulate: \n\u2022 Pressure \n\u2022 Gas concentration \n\u2022 Soil moisture \n\u2022 Water level \nResult \nAn IoT sensor network was successfully simulated using Python without requiring physical \nsensors. Viva Questions \n9.",
+    "page_number": 12,
+    "chunk_index": 27,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "77": {
+    "id": "d1503215-e6eb-4861-a82c-4579abe58a91",
+    "chunk_id": "d1503215-e6eb-4861-a82c-4579abe58a91",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Example: Online Login\nExplanation\n1. User enters username and password.",
+    "text": "Example: Online Login\nExplanation\n1. User enters username and password.",
+    "page_number": 13,
+    "chunk_index": 25,
+    "title": "software_unit_2.pdf"
+  },
+  "78": {
+    "id": "d3914504-5248-4fbf-9250-d23d9a3c18c0",
+    "chunk_id": "d3914504-5248-4fbf-9250-d23d9a3c18c0",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Constraints and interfaces. Output: SRS document. 4. Requirements Verification and Validation\nThe requirements are checked for quality and correctness. They should be:\n\uf06c\nCorrect\n\uf06c\nComplete\n\uf06c\nConsistent\n\uf06c\nUnambiguous\n\uf06c\nFeasible\n\uf06c\nTestable",
+    "text": "Constraints and interfaces. Output: SRS document. 4. Requirements Verification and Validation\nThe requirements are checked for quality and correctness. They should be:\n\uf06c\nCorrect\n\uf06c\nComplete\n\uf06c\nConsistent\n\uf06c\nUnambiguous\n\uf06c\nFeasible\n\uf06c\nTestable",
+    "page_number": 3,
+    "chunk_index": 4,
+    "title": "software_unit_2.pdf"
+  },
+  "79": {
+    "id": "d4d057d2-c212-4999-978e-137825913e9a",
+    "chunk_id": "d4d057d2-c212-4999-978e-137825913e9a",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "31. Execute: \nping google.com \n6. Stop the capture. 7. Apply the filter: \nicmp \n8. Select an ICMP packet. 9. Identify: \n\u2022 Source IP \n\u2022 Destination IP \n\u2022 Packet length \n\u2022 TTL \n\u2022 ICMP type \nProcedure \u2014 DNS \nExecute: \nnslookup google.com \nCapture the traffic and apply: \ndns \nIdentify the DNS query and response.",
+    "text": "31. Execute: \nping google.com \n6. Stop the capture. 7. Apply the filter: \nicmp \n8. Select an ICMP packet. 9. Identify: \n\u2022 Source IP \n\u2022 Destination IP \n\u2022 Packet length \n\u2022 TTL \n\u2022 ICMP type \nProcedure \u2014 DNS \nExecute: \nnslookup google.com \nCapture the traffic and apply: \ndns \nIdentify the DNS query and response.",
+    "page_number": 8,
+    "chunk_index": 17,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "80": {
     "id": "d6fd8320-0a50-498b-bdc4-a5d0b999682f",
     "chunk_id": "d6fd8320-0a50-498b-bdc4-a5d0b999682f",
     "document_id": "d901f517-7a86-4580-865f-59462937bb12",
@@ -65,7 +890,62 @@
     "chunk_index": 2,
     "title": "assignment_2_-_Machine_Learning_and_NLP_on_AWS_Cloud.pdf"
   },
-  "6": {
+  "81": {
+    "id": "d909223b-5026-46e7-bc4e-f8af9c3192a6",
+    "chunk_id": "d909223b-5026-46e7-bc4e-f8af9c3192a6",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "2. Non-Functional Requirements\nNon-functional requirements describe the quality, performance, security, and other constraints\nof the system. Example \u2013 Online Shopping System:\n\uf0b7\nThe website should load within 3 seconds. \uf0b7\nUser passwords must be encrypted. \uf0b7\nThe system should be available 24/7. \uf0b7\nThe system should support 10,000 concurrent users. \uf0b7\nThe interface should be easy to use. Why is SRS important?",
+    "text": "2. Non-Functional Requirements\nNon-functional requirements describe the quality, performance, security, and other constraints\nof the system. Example \u2013 Online Shopping System:\n\uf0b7\nThe website should load within 3 seconds. \uf0b7\nUser passwords must be encrypted. \uf0b7\nThe system should be available 24/7. \uf0b7\nThe system should support 10,000 concurrent users. \uf0b7\nThe interface should be easy to use. Why is SRS important?",
+    "page_number": 18,
+    "chunk_index": 35,
+    "title": "software_unit_2.pdf"
+  },
+  "82": {
+    "id": "dae2ffa7-577b-4f3b-a4fe-b1731e4d686c",
+    "chunk_id": "dae2ffa7-577b-4f3b-a4fe-b1731e4d686c",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "PRACTICAL 1 \nDesign and Analysis of an IoT System using Functional, Physical \nand Logical Design \nAim \nTo understand the basic characteristics and functional blocks of IoT and design the physical and \nlogical architecture of an IoT-based system. Learning Objectives \nAfter completing this practical, students will be able to: \n\u2022 Define an IoT system. \u2022 Identify the major components of an IoT system.",
+    "text": "PRACTICAL 1 \nDesign and Analysis of an IoT System using Functional, Physical \nand Logical Design \nAim \nTo understand the basic characteristics and functional blocks of IoT and design the physical and \nlogical architecture of an IoT-based system. Learning Objectives \nAfter completing this practical, students will be able to: \n\u2022 Define an IoT system. \u2022 Identify the major components of an IoT system.",
+    "page_number": 3,
+    "chunk_index": 4,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "83": {
+    "id": "db50690b-3785-4540-9125-2fa996d0ef34",
+    "chunk_id": "db50690b-3785-4540-9125-2fa996d0ef34",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Simple Example: Online Login",
+    "text": "Simple Example: Online Login",
+    "page_number": 23,
+    "chunk_index": 52,
+    "title": "software_unit_2.pdf"
+  },
+  "84": {
+    "id": "dbcf246f-a5c7-4d8d-9e77-0ed9f1528b47",
+    "chunk_id": "dbcf246f-a5c7-4d8d-9e77-0ed9f1528b47",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "\u2022 Process sensor data. \u2022 Generate alerts based on thresholds. Requirements \n\u2022 Python 3.x \n\u2022 Any Python IDE \nTheory \nIoT devices frequently collect data from the physical environment. For this practical, physical sensors are replaced by software-generated values. The simulated architecture is: \n+-------------+ \n| Temperature | \n|   Sensor    | \n+------+------+ \n       | \n+------v------+ \n| IoT Device  | \n+------+------+ \n       | \n       v \n Data Processing",
+    "text": "\u2022 Process sensor data. \u2022 Generate alerts based on thresholds. Requirements \n\u2022 Python 3.x \n\u2022 Any Python IDE \nTheory \nIoT devices frequently collect data from the physical environment. For this practical, physical sensors are replaced by software-generated values. The simulated architecture is: \n+-------------+ \n| Temperature | \n|   Sensor    | \n+------+------+ \n       | \n+------v------+ \n| IoT Device  | \n+------+------+ \n       | \n       v \n Data Processing",
+    "page_number": 10,
+    "chunk_index": 23,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "85": {
+    "id": "dc607280-19b6-44a8-a909-576d1379c54f",
+    "chunk_id": "dc607280-19b6-44a8-a909-576d1379c54f",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Example: Order System\nExplanation\nAn order can have states such as:\n\uf0b7\nNew\n\uf0b7\nConfirmed\n\uf0b7\nShipped\n\uf0b7\nDelivered\nUsed for:\n\uf0b7\nATM states\n\uf0b7\nOrder processing\n\uf0b7\nLogin systems\n\uf0b7\nTraffic lights\n\uf0b7\nDevices and controllers",
+    "text": "Example: Order System\nExplanation\nAn order can have states such as:\n\uf0b7\nNew\n\uf0b7\nConfirmed\n\uf0b7\nShipped\n\uf0b7\nDelivered\nUsed for:\n\uf0b7\nATM states\n\uf0b7\nOrder processing\n\uf0b7\nLogin systems\n\uf0b7\nTraffic lights\n\uf0b7\nDevices and controllers",
+    "page_number": 15,
+    "chunk_index": 29,
+    "title": "software_unit_2.pdf"
+  },
+  "86": {
     "id": "dd9a36fc-1a3b-4b0f-82f7-49ef1c62d752",
     "chunk_id": "dd9a36fc-1a3b-4b0f-82f7-49ef1c62d752",
     "document_id": "52028bff-dc64-40f0-be30-4a30c92ab4eb",
@@ -75,5 +955,115 @@
     "page_number": 1,
     "chunk_index": 0,
     "title": "ASSIGNMENT2.pdf"
+  },
+  "87": {
+    "id": "e06b3f66-3f7b-4912-9227-c1c32d2ef154",
+    "chunk_id": "e06b3f66-3f7b-4912-9227-c1c32d2ef154",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Attributes:\n\uf0b7\nstudentId\n\uf0b7\nname\n\uf0b7\nemail\nMethods:\n\uf0b7\nregister()\n\uf0b7\nattendClass()\n\uf0b7\nviewResult()\nUsed for:\n\uf0b7\nDesigning object-oriented systems\n\uf0b7\nDatabase/domain modeling\n\uf0b7\nUnderstanding relationships between classes\n3. Object Diagram\nAn Object Diagram represents instances of classes at a particular point in time. Example:\nHere, Student is the class, while student1 is an object/instance of that class. 4.",
+    "text": "Attributes:\n\uf0b7\nstudentId\n\uf0b7\nname\n\uf0b7\nemail\nMethods:\n\uf0b7\nregister()\n\uf0b7\nattendClass()\n\uf0b7\nviewResult()\nUsed for:\n\uf0b7\nDesigning object-oriented systems\n\uf0b7\nDatabase/domain modeling\n\uf0b7\nUnderstanding relationships between classes\n3. Object Diagram\nAn Object Diagram represents instances of classes at a particular point in time. Example:\nHere, Student is the class, while student1 is an object/instance of that class. 4.",
+    "page_number": 12,
+    "chunk_index": 23,
+    "title": "software_unit_2.pdf"
+  },
+  "88": {
+    "id": "e0776905-921f-413f-99bd-71210f491967",
+    "chunk_id": "e0776905-921f-413f-99bd-71210f491967",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "PRACTICAL 2 \nCapture and Analysis of Network Packets, Protocols and Services \nusing Wireshark \nAim \nTo capture and analyze network packets and identify different protocols and services using \nWireshark. Learning Objectives \nStudents will be able to: \n\u2022 Capture network packets. \u2022 Identify source and destination addresses.",
+    "text": "PRACTICAL 2 \nCapture and Analysis of Network Packets, Protocols and Services \nusing Wireshark \nAim \nTo capture and analyze network packets and identify different protocols and services using \nWireshark. Learning Objectives \nStudents will be able to: \n\u2022 Capture network packets. \u2022 Identify source and destination addresses.",
+    "page_number": 7,
+    "chunk_index": 13,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "89": {
+    "id": "e2b7c073-e229-4332-968e-0860c0e5f54e",
+    "chunk_id": "e2b7c073-e229-4332-968e-0860c0e5f54e",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "LIST OF EXPERIMENTS \nPractical No. Experiment \n1 \nDesign and Analysis of an IoT System using Functional, Physical and Logical Design \n2 \nSimulation of an IoT Sensor Network using Python \n3 \nCapture and Analysis of Network Packets, Protocols and Services using Wireshark",
+    "text": "LIST OF EXPERIMENTS \nPractical No. Experiment \n1 \nDesign and Analysis of an IoT System using Functional, Physical and Logical Design \n2 \nSimulation of an IoT Sensor Network using Python \n3 \nCapture and Analysis of Network Packets, Protocols and Services using Wireshark",
+    "page_number": 2,
+    "chunk_index": 3,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "90": {
+    "id": "e6cf4133-9483-414d-8702-19528a44ba44",
+    "chunk_id": "e6cf4133-9483-414d-8702-19528a44ba44",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Physical DFD\n1. Logical DFD\n\uf0b7\nShows what the system does. \uf0b7\nFocuses on business processes and data flow. \uf0b7\nDoes not show specific technology or hardware.",
+    "text": "Physical DFD\n1. Logical DFD\n\uf0b7\nShows what the system does. \uf0b7\nFocuses on business processes and data flow. \uf0b7\nDoes not show specific technology or hardware.",
+    "page_number": 7,
+    "chunk_index": 12,
+    "title": "software_unit_2.pdf"
+  },
+  "91": {
+    "id": "ecd86e9c-c97d-488c-bd01-57479906d470",
+    "chunk_id": "ecd86e9c-c97d-488c-bd01-57479906d470",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "10. What is sensor data? 11. Why are sensors important in IoT? 12. What is sensor simulation? 13. What is an actuator? 14. Why is Python useful for IoT simulation? 15. What is threshold-based processing?",
+    "text": "10. What is sensor data? 11. Why are sensors important in IoT? 12. What is sensor simulation? 13. What is an actuator? 14. Why is Python useful for IoT simulation? 15. What is threshold-based processing?",
+    "page_number": 12,
+    "chunk_index": 29,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "92": {
+    "id": "f341e23e-9cac-4ba8-8c91-8d5af56de6ab",
+    "chunk_id": "f341e23e-9cac-4ba8-8c91-8d5af56de6ab",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Yes Yes No No\nPassword correct? Yes No Yes No\nActions\nAllow Login\n\u2713\nShow \"Wrong Password\"\n\u2713\nShow \"Invalid Username\"\n\u2713\u2713\nMain Parts of a Decision Table\n1. Conditions \u2013 Factors that affect the decision.",
+    "text": "Yes Yes No No\nPassword correct? Yes No Yes No\nActions\nAllow Login\n\u2713\nShow \"Wrong Password\"\n\u2713\nShow \"Invalid Username\"\n\u2713\u2713\nMain Parts of a Decision Table\n1. Conditions \u2013 Factors that affect the decision.",
+    "page_number": 24,
+    "chunk_index": 54,
+    "title": "software_unit_2.pdf"
+  },
+  "93": {
+    "id": "f38b62c0-0a2d-4248-ae0a-c8aa92666343",
+    "chunk_id": "f38b62c0-0a2d-4248-ae0a-c8aa92666343",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "\u2022 Understand IoT functional blocks. \u2022 Differentiate between physical and logical design. \u2022 Represent an IoT solution using block diagrams. Requirements \n\u2022 Computer/Laptop \n\u2022 Draw.io / diagrams.net \n\u2022 Web browser \nTheory \nAn Internet of Things system consists of physical objects or devices capable of sensing, \nprocessing, communicating and sometimes performing actions. Typical IoT components include: \n\u2022 Sensors \n\u2022 Actuators \n\u2022 Processing units \n\u2022 Communication interfaces \n\u2022 Gateways",
+    "text": "\u2022 Understand IoT functional blocks. \u2022 Differentiate between physical and logical design. \u2022 Represent an IoT solution using block diagrams. Requirements \n\u2022 Computer/Laptop \n\u2022 Draw.io / diagrams.net \n\u2022 Web browser \nTheory \nAn Internet of Things system consists of physical objects or devices capable of sensing, \nprocessing, communicating and sometimes performing actions. Typical IoT components include: \n\u2022 Sensors \n\u2022 Actuators \n\u2022 Processing units \n\u2022 Communication interfaces \n\u2022 Gateways",
+    "page_number": 3,
+    "chunk_index": 5,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "94": {
+    "id": "f648a29b-d229-4ef7-868c-0fe434199e49",
+    "chunk_id": "f648a29b-d229-4ef7-868c-0fe434199e49",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "2. Behavioral UML Diagrams\nThese show how the system behaves and interacts. Diagram\nPurpose\nUse Case Diagram\nShows users (actors) and their interactions with the system\nSequence Diagram\nShows interactions between objects in time order\nActivity Diagram\nShows workflow or sequence of activities\nState Machine Diagram\nShows different states of an object and transitions between them\nCommunication Diagram\nShows\ninteractions\nbetween\nobjects,\nemphasizing\ntheir\nrelationships\nInteraction\nOverview\nDiagram\nGives an overview of different interactions\nTiming Diagram\nShows how object states change over time\nImportant UML diagrams\n1. Use Case Diagram\nA Use Case Diagram shows the interaction between users (actors) and the system.",
+    "text": "2. Behavioral UML Diagrams\nThese show how the system behaves and interacts. Diagram\nPurpose\nUse Case Diagram\nShows users (actors) and their interactions with the system\nSequence Diagram\nShows interactions between objects in time order\nActivity Diagram\nShows workflow or sequence of activities\nState Machine Diagram\nShows different states of an object and transitions between them\nCommunication Diagram\nShows\ninteractions\nbetween\nobjects,\nemphasizing\ntheir\nrelationships\nInteraction\nOverview\nDiagram\nGives an overview of different interactions\nTiming Diagram\nShows how object states change over time\nImportant UML diagrams\n1. Use Case Diagram\nA Use Case Diagram shows the interaction between users (actors) and the system.",
+    "page_number": 10,
+    "chunk_index": 19,
+    "title": "software_unit_2.pdf"
+  },
+  "95": {
+    "id": "fa2c5586-f785-492c-978a-842ca223ad26",
+    "chunk_id": "fa2c5586-f785-492c-978a-842ca223ad26",
+    "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "doc_id": "1c256762-b78e-4145-ba89-520b74b15675",
+    "content": "Program \nimport random \nimport time \n \nfor i in range(10): \n    temperature = round(random.uniform(20, 40), 2) \n    humidity = round(random.uniform(40, 80), 2) \n    light = random.randint(100, 900) \n \n    print(\"--------------------------------\") \n    print(\"IoT Sensor Reading\") \n    print(\"--------------------------------\") \n    print(\"Temperature :\", temperature, \"\u00b0C\") \n    print(\"Humidity    :\", humidity, \"%\") \n    print(\"Light       :\", light, \"lux\") \n \n    if temperature > 35: \n        print(\"ALERT: High Temperature\") \n \n    print(\"--------------------------------\") \n \n    time.sleep(2) \nProcedure \n25. Install Python.",
+    "text": "Program \nimport random \nimport time \n \nfor i in range(10): \n    temperature = round(random.uniform(20, 40), 2) \n    humidity = round(random.uniform(40, 80), 2) \n    light = random.randint(100, 900) \n \n    print(\"--------------------------------\") \n    print(\"IoT Sensor Reading\") \n    print(\"--------------------------------\") \n    print(\"Temperature :\", temperature, \"\u00b0C\") \n    print(\"Humidity    :\", humidity, \"%\") \n    print(\"Light       :\", light, \"lux\") \n \n    if temperature > 35: \n        print(\"ALERT: High Temperature\") \n \n    print(\"--------------------------------\") \n \n    time.sleep(2) \nProcedure \n25. Install Python.",
+    "page_number": 11,
+    "chunk_index": 24,
+    "title": "IOT_lab_1-3.pdf"
+  },
+  "96": {
+    "id": "fa830daa-595d-41a7-b563-d8c8d5a9437d",
+    "chunk_id": "fa830daa-595d-41a7-b563-d8c8d5a9437d",
+    "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "doc_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
+    "content": "Feasibility Study\nFeasibility study is the process of determining whether a proposed software project is practical,\npossible, and worth developing. Types of Feasibility Study\nThere are five main types:\n1. Technical Feasibility \u2013 Checks whether the required technology, hardware, software,\nand technical skills are available.",
+    "text": "Feasibility Study\nFeasibility study is the process of determining whether a proposed software project is practical,\npossible, and worth developing. Types of Feasibility Study\nThere are five main types:\n1. Technical Feasibility \u2013 Checks whether the required technology, hardware, software,\nand technical skills are available.",
+    "page_number": 23,
+    "chunk_index": 49,
+    "title": "software_unit_2.pdf"
   }
 }

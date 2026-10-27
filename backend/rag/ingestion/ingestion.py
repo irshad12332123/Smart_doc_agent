@@ -35,6 +35,13 @@ from services.ingestion.dense import DenseIngestion
 from services.ingestion.sparse import SparseIngestion
 from services.retriever.sparse import SparseRetriever
 from services.retriever.hybrid import HybridRetriever
+try:
+    from query_graph import query_graph, RAGState
+except ImportError:
+    try:
+        from rag.query_graph import query_graph, RAGState
+    except ImportError:
+        from backend.rag.query_graph import query_graph, RAGState
 from ingestion.ingest_repository import (
     create_job,
     get_job,
@@ -349,10 +356,67 @@ def get_document_file(document_id: str):
 def _sse(payload: dict[str, Any]) -> str:
     return f"data: {json.dumps(payload)}\n\n"
 
+@ingest.route("/query", methods=["POST"])
+def query():
+    """
+    Orchestrated RAG query endpoint powered by LangGraph query_graph.invoke().
+    Executes conditional agentic decision support, exact metadata search,
+    hybrid retrieval, evidence evaluation, query rewriting loop, and answer generation.
+    """
+    payload = request.get_json(silent=True) or {}
+    query_text = payload.get("query") or payload.get("message")
+    history = payload.get("history", [])
+
+    if not isinstance(query_text, str) or not query_text.strip():
+        return jsonify({"detail": "A non-empty query string is required."}), 400
+    if not isinstance(history, list):
+        return jsonify({"detail": "History must be a list."}), 400
+
+    raw_subject_list = payload.get("subject_list") or payload.get("subjects") or []
+    match_count = payload.get("match_count")
+    rerank = payload.get("rerank", False)
+    dense_weight = payload.get("dense_weight", 1.5)
+    sparse_weight = payload.get("sparse_weight", 0.5)
+    document_ids = payload.get("document_ids")
+    max_attempts = payload.get("max_attempts", 2)
+
+    try:
+        initial_state: RAGState = {
+            "query": query_text.strip(),
+            "original_query": query_text.strip(),
+            "subject_list": raw_subject_list,
+            "history": history,
+            "match_count": match_count,
+            "rerank": rerank,
+            "dense_weight": dense_weight,
+            "sparse_weight": sparse_weight,
+            "document_ids": document_ids,
+            "attempt_count": 0,
+            "max_attempts": max_attempts,
+        }
+
+        result = query_graph.invoke(initial_state)
+
+        return jsonify({
+            "query": result.get("query"),
+            "original_query": result.get("original_query"),
+            "route": result.get("route"),
+            "answer": result.get("answer"),
+            "documents": result.get("documents", []),
+            "sources": result.get("sources", []),
+            "evaluation": result.get("evaluation"),
+            "sufficient": result.get("sufficient"),
+            "attempt_count": result.get("attempt_count", 0),
+        }), 200
+
+    except Exception as e:
+        logger.exception("Error executing orchestrated query:")
+        return jsonify({"detail": f"Query orchestration failed: {e}"}), 500
+
 @ingest.route("/chat", methods=["POST"])
 def chat():
     payload = request.get_json(silent=True) or {}
-    message = payload.get("message")
+    message = payload.get("message") or payload.get("query")
     history = payload.get("history", [])
 
     if not isinstance(message, str) or not message.strip():
@@ -368,91 +432,40 @@ def chat():
     dense_weight = payload.get("dense_weight", 1.5)
     sparse_weight = payload.get("sparse_weight", 0.5)
     document_ids = payload.get("document_ids")
-
-    if isinstance(raw_subject_list, list):
-        subject_list_names = [
-            str(s).strip() if isinstance(s, (str, int)) else str(s.get("name", "")).strip()
-            for s in raw_subject_list
-            if s
-        ]
-        subject_list_names = [s for s in subject_list_names if s]
-    else:
-        subject_list_names = []
-
-    # Route query through deterministic metadata / document lookup layer
-    router = DocumentRouter()
-    router_result = router.route(
-        query=message,
-        subject_list=raw_subject_list,
-        history=history,
-    )
+    max_attempts = payload.get("max_attempts", 2)
 
     def generate() -> Iterator[str]:
         try:
-            # Case 1: Handled deterministically by metadata/document lookup
-            if not router_result.should_invoke_rag:
-                print(f"Deterministic lookup returned {len(router_result.documents)} documents")
-                if router_result.documents:
-                    yield _sse({"type": "documents", "documents": router_result.documents})
+            initial_state: RAGState = {
+                "query": message.strip(),
+                "original_query": message.strip(),
+                "subject_list": raw_subject_list,
+                "history": history,
+                "match_count": match_count,
+                "rerank": rerank,
+                "dense_weight": dense_weight,
+                "sparse_weight": sparse_weight,
+                "document_ids": document_ids,
+                "attempt_count": 0,
+                "max_attempts": max_attempts,
+            }
 
-                content = router_result.formatted_text or "No matching documents found."
-                yield _sse({"type": "token", "content": content})
-                yield _sse({"type": "done"})
-                return
+            result = query_graph.invoke(initial_state)
 
-            # Case 2: Normal RAG or hybrid fallback
-            print("Router dispatching to Hybrid Retrieval")
+            if result.get("documents"):
+                yield _sse({"type": "documents", "documents": result["documents"]})
 
-            # Rewriting user query only for knowledge/RAG queries to improve embedding/BM25 retrieval
-            rewritten_query = rewrite_query(message, GROQ_MODEL, history=history)
-            rag_query = rewritten_query if rewritten_query else message
+            if result.get("sources"):
+                yield _sse({"type": "sources", "sources": result["sources"]})
 
-            hybrid_retriever = HybridRetriever()
-            retrieved_rows = hybrid_retriever.retrieve(
-                query=rag_query,
-                match_count=match_count,
-                dense_weight=dense_weight,
-                sparse_weight=sparse_weight,
-                rerank=rerank,
-                document_ids=document_ids,
-            )
-
-            print("Hybrid retrieved rows count:", len(retrieved_rows))
-            print("Hybrid retrieved rows:", retrieved_rows)
-
-            sources = [
-                {
-                    "chunk_id": str(row.get("id") or row.get("chunk_id") or index),
-                    "doc_id": str(row.get("document_id") or row.get("doc_id") or ""),
-                    "filename": row.get("title") or row.get("filename") or "Untitled document",
-                    "text": row.get("content") or row.get("text") or "",
-                    "score": float(
-                        row.get("cross_encoder_score")
-                        or row.get("rrf_score")
-                        or row.get("score")
-                        or row.get("similarity")
-                        or 0
-                    ),
-                    "page_number": row.get("page_number", 1),
-                }
-                for index, row in enumerate(retrieved_rows)
-            ]
-
-            yield _sse({"type": "sources", "sources": sources})
-
-            if not sources:
-                yield _sse({"type": "token", "content": "I couldn't find relevant passages in the uploaded documents."})
-            else:
-                context = "\n\n".join(
-                    f"[{index}] {source['text']}"
-                    for index, source in enumerate(sources, start=1)
-                )
-                for token in CallLLM().stream_answer(message, context, history, subject_list=subject_list_names):
-                    yield _sse({"type": "token", "content": token})
+            answer = result.get("answer") or ""
+            if answer:
+                yield _sse({"type": "token", "content": answer})
 
             yield _sse({"type": "done"})
 
         except Exception as e:
+            logger.exception("Error in chat orchestration:")
             yield _sse({"type": "error", "content": f"Unable to answer that question right now. {e}"})
 
     return Response(

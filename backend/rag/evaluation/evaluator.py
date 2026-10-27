@@ -31,6 +31,14 @@ _RAG_DIR = str(Path(__file__).resolve().parent.parent)
 if _RAG_DIR not in sys.path:
     sys.path.insert(0, _RAG_DIR)
 
+from dotenv import load_dotenv
+
+_BACKEND_DIR = Path(_RAG_DIR).parent
+for _env_path in (_BACKEND_DIR / ".env", Path(_RAG_DIR) / ".env", _BACKEND_DIR.parent / ".env"):
+    if _env_path.exists():
+        load_dotenv(dotenv_path=_env_path)
+load_dotenv()
+
 import bm25s
 import numpy as np
 import Stemmer
@@ -160,6 +168,11 @@ class RetrievalEvaluator:
         chunks = get_flattened_chunks()
         self.harness = harness or BenchmarkIndexHarness(chunks)
         self.queries = COLLEGE_EVALUATION_QUERIES
+
+        # Pre-warm query embeddings in a single batch to avoid 1-by-1 API rate-limiting spikes
+        query_texts = [q["query"] for q in self.queries if q.get("query")]
+        if query_texts:
+            self.harness.embedder.generate_embeddings(query_texts)
 
     def evaluate_method(
         self,

@@ -54,6 +54,22 @@ Answer:"""
         for chunk in self.llm.stream(prompt):
             yield str(chunk)
 
+    def generate_answer(
+        self,
+        question: str,
+        context: str,
+        history: Sequence[dict[str, str]] = (),
+        subject_list: Sequence[str] = (),
+    ) -> str:
+        return "".join(
+            self.stream_answer(
+                question=question,
+                context=context,
+                history=history,
+                subject_list=subject_list,
+            )
+        )
+
 
 # Retain the original public name for existing imports.
 Call_LLM = CallLLM

@@ -8,7 +8,6 @@ from intent.schema import DocumentIntent
 
 logger = logging.getLogger(__name__)
 
-
 class RouterResult:
     """
     Represents the output of the query routing process.
@@ -107,6 +106,7 @@ class DocumentRouter:
         subject_list: Sequence[Any] | None = None,
         history: Sequence[dict[str, str]] | None = None,
     ) -> RouterResult:
+
         """
         Main query routing pipeline:
         1. Extract structured intent via SLM.
@@ -114,6 +114,7 @@ class DocumentRouter:
         3. Execute deterministic lookup for metadata queries.
         4. Fallback or route to hybrid retrieval when needed.
         """
+
         normalized_subjects = self.intent_extractor.normalize_subjects(subject_list)
         subject_lookup = {s.id: s.name for s in normalized_subjects}
 
@@ -139,7 +140,7 @@ class DocumentRouter:
             )
 
         elif intent.intent == "document_search":
-            # Attempt deterministic metadata search first
+
             route = "metadata"
             docs = self.document_service.lookup_documents(intent, generate_signed_urls=True)
 
