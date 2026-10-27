@@ -62,6 +62,7 @@ class RAGState(TypedDict, total=False):
 
 
 def route_query(state: RAGState) -> dict[str, Any]:
+    logger.warning(f"Routing query: {state.get('query') or state.get('original_query', '')}")
     """
     Analyzes the query and determines routing between deterministic metadata lookup and hybrid RAG.
     Uses DocumentRouter to extract intent and check deterministic document availability.
@@ -121,6 +122,7 @@ def route_query(state: RAGState) -> dict[str, Any]:
 
 
 def choose_search(state: RAGState) -> Literal["deterministic_search", "rag_search"]:
+    logger.warning(f"Choosing search method based on route: {state.get('route')}")
     """
     Conditional edge: routes to deterministic search if route is metadata/deterministic,
     otherwise routes to hybrid RAG search.
@@ -131,6 +133,7 @@ def choose_search(state: RAGState) -> Literal["deterministic_search", "rag_searc
 
 
 def deterministic_search(state: RAGState) -> dict[str, Any]:
+    logger.warning(f"Performing deterministic search for query: {state.get('query') or state.get('original_query', '')}")
     """
     Performs deterministic SQL/metadata document lookup.
     """
@@ -182,6 +185,7 @@ def after_deterministic(state: RAGState) -> Literal["generate", "rag_search"]:
     Conditional edge: if deterministic exact lookup succeeds, proceeds to generation.
     If exact lookup returns no documents, falls back to hybrid RAG search.
     """
+    logger.warning(f"After deterministic search - Chunks found: {bool(state.get('chunks'))}")
     return "generate" if bool(state.get("chunks")) else "rag_search"
 
 
@@ -239,6 +243,7 @@ def rag_search(state: RAGState) -> dict[str, Any]:
 
 
 def evaluate(state: RAGState) -> dict[str, Any]:
+    logger.warning(f"Evaluating retrieved evidence for query: {state.get('query') or state.get('original_query', '')}")
     """
     Evaluates retrieved evidence using EvidenceEvaluator for relevance, sufficiency, and quality.
     """
@@ -274,19 +279,21 @@ def evaluate(state: RAGState) -> dict[str, Any]:
             "evaluation": eval_result,
         }
     except Exception as e:
-        logger.warning(f"Evidence evaluation failed: {e}. Defaulting to sufficient if chunks exist.")
+        logger.warning(f"Evidence evaluation failed: {e}. Defaulting to insufficient to trigger rewrite loop.")
         return {
-            "sufficient": bool(chunks),
+            "sufficient": False,
             "evaluation": {
-                "relevance": bool(chunks),
-                "sufficiency": bool(chunks),
-                "quality": bool(chunks),
+                "relevance": False,
+                "sufficiency": False,
+                "quality": False,
+                "scores": {"relevance": 0.0, "sufficiency": 0.0, "quality": 0.0},
                 "reason": f"Evaluation error fallback: {e}",
             },
         }
 
 
 def after_evaluation(state: RAGState) -> Literal["generate", "rewrite_query"]:
+    logger.warning(f"After evaluation - Sufficient: {state.get('sufficient')}")
     """
     Conditional edge: if evidence is evaluated as sufficient or max attempts reached,
     proceeds to generate answer. Otherwise, rewrites the query for another retrieval attempt.
@@ -303,22 +310,32 @@ def after_evaluation(state: RAGState) -> Literal["generate", "rewrite_query"]:
 
 
 def rewrite_query_node(state: RAGState) -> dict[str, Any]:
+    current_attempt = state.get("attempt_count", 0)
+    current_query = state.get("query") or state.get("original_query", "")
+    original_query = state.get("original_query") or current_query
+    logger.warning(
+        f"Rewriting query (attempt {current_attempt + 1}) for: {current_query}"
+    )
     """
     Rewrites the search query using Groq SLM to improve retrieval precision.
     """
-    original_query = state.get("original_query") or state.get("query", "")
     history = state.get("history")
-    current_attempt = state.get("attempt_count", 0)
+    evaluation = state.get("evaluation") or {}
+    feedback = evaluation.get("reason")
 
     try:
         rewritten = rewrite_query(
-            query=original_query,
+            query=current_query,
             model=GROQ_MODEL,
             history=history,
+            feedback=feedback,
+            attempt=current_attempt + 1,
+            original_query=original_query,
         )
+        logger.warning(f"Rewritten query: {rewritten}")
     except Exception as e:
         logger.warning(f"Query rewrite failed: {e}. Retaining current query.")
-        rewritten = state.get("query") or original_query
+        rewritten = current_query
 
     return {
         "query": rewritten,
@@ -327,6 +344,7 @@ def rewrite_query_node(state: RAGState) -> dict[str, Any]:
 
 
 def generate(state: RAGState) -> dict[str, Any]:
+    logger.warning(f"Generating answer for query: {state.get('query') or state.get('original_query', '')}")
     """
     Generates a grounded final answer using LLM or returns formatted deterministic lookup.
     """

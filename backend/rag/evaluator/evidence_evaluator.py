@@ -90,7 +90,7 @@ Return JSON only.
                 {"role": "user", "content": prompt},
             ],
             temperature=0,
-            max_tokens=250,
+            max_tokens=1000,
             response_format={"type": "json_object"},
         )
 
