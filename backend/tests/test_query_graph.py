@@ -112,7 +112,7 @@ class TestQueryGraph(unittest.TestCase):
 
     # 4. after_deterministic edge tests
     def test_after_deterministic(self):
-        self.assertEqual(after_deterministic({"chunks": [{"id": "1"}]}), "generate")
+        self.assertEqual(after_deterministic({"chunks": [{"id": "1"}]}), "evaluate")
         self.assertEqual(after_deterministic({"chunks": []}), "rag_search")
         self.assertEqual(after_deterministic({}), "rag_search")
 
@@ -147,6 +147,38 @@ class TestQueryGraph(unittest.TestCase):
         result = evaluate({"original_query": "Explain transactions", "chunks": chunks})
         self.assertTrue(result["sufficient"])
         self.assertEqual(result["evaluation"]["reason"], "Good context")
+
+    @patch("query_graph.EvidenceEvaluator")
+    def test_evaluate_metadata_chunks(self, mock_evaluator_cls):
+        mock_evaluator = MagicMock()
+        mock_evaluator.evaluate.return_value = {
+            "relevance": True,
+            "sufficiency": True,
+            "quality": True,
+            "scores": {"relevance": 0.95, "sufficiency": 0.9, "quality": 0.9},
+            "reason": "Metadata directly matches query",
+        }
+        mock_evaluator_cls.return_value = mock_evaluator
+
+        chunks = [
+            {
+                "id": "doc1",
+                "title": "DBMS Assignment 1",
+                "document_type": "assignment",
+                "subject_name": "Database Systems",
+                "deadline": "2026-11-01",
+            }
+        ]
+        result = evaluate({"original_query": "Find DBMS assignments", "chunks": chunks})
+        self.assertTrue(result["sufficient"])
+        self.assertEqual(result["evaluation"]["reason"], "Metadata directly matches query")
+        mock_evaluator_cls.assert_called_once()
+        call_kwargs = mock_evaluator_cls.call_args[1] if mock_evaluator_cls.call_args[1] else {}
+        call_args = mock_evaluator_cls.call_args[0] if mock_evaluator_cls.call_args[0] else ()
+        evidence_passed = call_kwargs.get("evidence") or (call_args[1] if len(call_args) > 1 else None)
+        self.assertIsNotNone(evidence_passed)
+        self.assertIn("Title: DBMS Assignment 1", evidence_passed[0]["text"])
+        self.assertIn("Type: assignment", evidence_passed[0]["text"])
 
     def test_evaluate_empty_chunks(self):
         result = evaluate({"original_query": "Explain transactions", "chunks": []})
@@ -221,7 +253,8 @@ class TestQueryGraph(unittest.TestCase):
 
     # 10. End-to-end graph tests
     @patch("query_graph.DocumentRouter")
-    def test_e2e_deterministic_path(self, mock_router_cls):
+    @patch("query_graph.EvidenceEvaluator")
+    def test_e2e_deterministic_path(self, mock_evaluator_cls, mock_router_cls):
         mock_router = MagicMock()
         mock_result = MagicMock()
         mock_result.route = "metadata"
@@ -232,9 +265,81 @@ class TestQueryGraph(unittest.TestCase):
         mock_router.route.return_value = mock_result
         mock_router_cls.return_value = mock_router
 
+        mock_evaluator = MagicMock()
+        mock_evaluator.evaluate.return_value = {
+            "relevance": True,
+            "sufficiency": True,
+            "quality": True,
+            "scores": {"relevance": 0.95, "sufficiency": 0.9, "quality": 0.9},
+            "reason": "Deterministic documents matched query",
+        }
+        mock_evaluator_cls.return_value = mock_evaluator
+
         output = run_query("Show DBMS assignments")
         self.assertEqual(output["route"], "deterministic")
+        self.assertTrue(output["sufficient"])
         self.assertEqual(output["answer"], "Here is DBMS Assignment 1")
+        mock_evaluator.evaluate.assert_called_once()
+
+    @patch("query_graph.DocumentRouter")
+    @patch("query_graph.HybridRetriever")
+    @patch("query_graph.EvidenceEvaluator")
+    @patch("query_graph.rewrite_query")
+    @patch("query_graph.CallLLM")
+    def test_e2e_deterministic_insufficient_fallback_to_rag(
+        self,
+        mock_call_llm_cls,
+        mock_rewrite,
+        mock_evaluator_cls,
+        mock_retriever_cls,
+        mock_router_cls,
+    ):
+        mock_router = MagicMock()
+        mock_result = MagicMock()
+        mock_result.route = "metadata"
+        mock_result.should_invoke_rag = False
+        mock_result.documents = [{"id": "d1", "title": "DBMS Assignment 1"}]
+        mock_result.formatted_text = "Here is DBMS Assignment 1"
+        mock_result.intent = DocumentIntent(intent="document_search", search_query="DBMS Assignment 1 details")
+        mock_router.route.return_value = mock_result
+        mock_router_cls.return_value = mock_router
+
+        mock_evaluator = MagicMock()
+        mock_evaluator.evaluate.side_effect = [
+            {
+                "relevance": True,
+                "sufficiency": False,
+                "quality": True,
+                "scores": {"relevance": 0.8, "sufficiency": 0.2, "quality": 0.8},
+                "reason": "Metadata alone does not answer specific question details",
+            },
+            {
+                "relevance": True,
+                "sufficiency": True,
+                "quality": True,
+                "scores": {"relevance": 0.9, "sufficiency": 0.9, "quality": 0.9},
+                "reason": "Retrieved chunks contain complete details",
+            },
+        ]
+        mock_evaluator_cls.return_value = mock_evaluator
+
+        mock_rewrite.return_value = "DBMS Assignment 1 detailed specifications"
+
+        mock_retriever = MagicMock()
+        mock_retriever.retrieve.return_value = [
+            {"id": "c1", "content": "Question 1 requires ER diagram modeling."}
+        ]
+        mock_retriever_cls.return_value = mock_retriever
+
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "Question 1 requires ER diagram modeling."
+        mock_call_llm_cls.return_value = mock_llm
+
+        output = run_query("What does question 1 in DBMS Assignment 1 require?", max_attempts=2)
+        self.assertEqual(output["route"], "rag")
+        self.assertTrue(output["sufficient"])
+        self.assertEqual(output["answer"], "Question 1 requires ER diagram modeling.")
+        self.assertEqual(mock_evaluator.evaluate.call_count, 2)
 
     @patch("query_graph.DocumentRouter")
     @patch("query_graph.HybridRetriever")

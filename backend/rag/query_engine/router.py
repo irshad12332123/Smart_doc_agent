@@ -22,6 +22,7 @@ class RouterResult:
         should_invoke_rag: bool = False,
         resolved_subject_id: Optional[str] = None,
         filter_document_ids: Optional[list[str]] = None,
+        search_query: Optional[str] = None,
     ):
         self.route = route
         self.intent = intent
@@ -30,6 +31,7 @@ class RouterResult:
         self.should_invoke_rag = should_invoke_rag
         self.resolved_subject_id = resolved_subject_id
         self.filter_document_ids = filter_document_ids
+        self.search_query = search_query
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -151,6 +153,7 @@ class DocumentRouter:
                     route="metadata",
                     intent=intent,
                     documents=docs,
+                    search_query=intent.search_query,
                     formatted_text=formatted_text,
                     should_invoke_rag=False,
                     resolved_subject_id=intent.subject_id,
