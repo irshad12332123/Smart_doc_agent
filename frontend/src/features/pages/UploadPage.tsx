@@ -25,10 +25,6 @@ export function UploadPage({
   const [message, setMessage] = useState("");
   const picker = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    console.log("[Auth] Current Profile Data:", profile);
-  }, [profile]);
-
   const batches: { id: string; label: string }[] =
     profile.role === "student"
       ? [
@@ -120,6 +116,9 @@ export function UploadPage({
           setFiles(Array.from(e.dataTransfer.files));
         }}
         onClick={() => picker.current?.click()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") picker.current?.click();
+        }}
         role="button"
         tabIndex={0}
       >
