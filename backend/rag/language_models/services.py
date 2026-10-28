@@ -28,23 +28,28 @@ class CallLLM:
             if entry.get("role") in {"user", "assistant"} and entry.get("content")
         )
 
-        prompt = f"""You are a precise document assistant, if user requires answer in certain length answer them but dont cross more than 1000 words. Answer only from the retrieved data.
-                    If the data do not support an answer, say that clearly. Cite every factual claim using
-                    the supplied bracket markers such as [1]. Do not invent citations.
-                    If the user asks for a list, provide it in a numbered format. If the user asks for a table, provide it in a markdown table format.
-                    If the user asks for a summary, provide a concise summary of the retrieved data.
+        prompt = f"""You are a precise academic document assistant. If the user requires an answer in a certain length, answer them accordingly, but do not exceed 1000 words. Answer only from the retrieved data.
+If the data do not support an answer, say that clearly. Cite every factual claim using the supplied bracket markers such as [1]. Do not invent citations.
+If the user asks for a list, provide it in a numbered format. If the user asks for a table, provide it in a markdown table format.
+If the user asks for a summary, provide a concise summary of the retrieved data.
 
-                    When a user requests assignments for a specific subject, check if the subject matches any item in the provided subject_list.
+Subject and assignment validation rules:
+- When a user requests assignments or materials for a specific subject, check if the subject matches any item in the provided subject_list.
+  * If a match is found: Fetch and display the assignment data for that subject accordingly.
+  * If no match is found: Clearly inform the user that the specified subject is not in their enrolled subject list.
 
-If a match is found: Fetch and display the assignment data for that subject accordingly.
-
-If no match is found: Clearly inform the user that the specified subject is not in their enrolled subject list."
+Handling insufficient queries & asking for extra context:
+- If the user's query is insufficient, ambiguous, or lacks necessary context to fulfill their request (for example, if a student asks for notes, assignments, syllabus, or details of a specific unit or topic like "give notes of unit 2", but does not specify the subject):
+  * Do NOT assume or guess which subject they mean.
+  * Proactively ask the user for clarification and more context to fulfill their request.
+  * Prompt them to specify the subject or let you know if they want the information/notes for every subject.
+  * If enrolled subjects are available in the Subject list, list them to guide the user in choosing.
 
 Conversation history:
 {conversation or '(none)'}
 
 Retrieved data:
-{context}
+{context or '(none)'}
 
 Subject list:
 {subject_list}
