@@ -273,6 +273,7 @@ def evaluate(state: RAGState) -> dict[str, Any]:
                 "quality": False,
                 "scores": {"relevance": 0.0, "sufficiency": 0.0, "quality": 0.0},
                 "reason": "No evidence retrieved.",
+                "extra_info_required": False,
             },
         }
 
@@ -316,6 +317,7 @@ def evaluate(state: RAGState) -> dict[str, Any]:
                 "quality": False,
                 "scores": {"relevance": 0.0, "sufficiency": 0.0, "quality": 0.0},
                 "reason": f"Evaluation error fallback: {e}",
+                "extra_info_required": False,
             },
         }
 
@@ -323,10 +325,15 @@ def evaluate(state: RAGState) -> dict[str, Any]:
 def after_evaluation(state: RAGState) -> Literal["generate", "rewrite_query"]:
     logger.warning(f"After evaluation - Sufficient: {state.get('sufficient')}")
     """
-    Conditional edge: if evidence is evaluated as sufficient or max attempts reached,
+    Conditional edge: if evidence is evaluated as sufficient, extra info is required, or max attempts reached,
     proceeds to generate answer. Otherwise, rewrites the query for another retrieval attempt.
     """
     if state.get("sufficient"):
+        return "generate"
+
+    evaluation = state.get("evaluation") or {}
+    if evaluation.get("extra_info_required"):
+        logger.info("Extra user clarification required; bypassing rewrite loop to generate clarification prompt.")
         return "generate"
 
     attempt_count = state.get("attempt_count", 0)
@@ -379,16 +386,22 @@ def generate(state: RAGState) -> dict[str, Any]:
     """
     Generates a grounded final answer using LLM or returns formatted deterministic lookup.
     """
-    if state.get("formatted_text"):
+    evaluation = state.get("evaluation") or {}
+    is_extra_info_needed = bool(evaluation.get("extra_info_required"))
+
+    if state.get("formatted_text") and not is_extra_info_needed and state.get("sufficient", True):
         return {"answer": state["formatted_text"]}
 
     chunks = state.get("chunks", [])
-    if not chunks:
+    if not chunks and not is_extra_info_needed:
         return {"answer": "I couldn't find relevant passages in the uploaded documents."}
 
     # Deterministic metadata search results without formatted_text
-    if state.get("route") in {"deterministic", "metadata"} and any(
-        "file_url" in c or "s3_key" in c for c in chunks
+    if (
+        state.get("route") in {"deterministic", "metadata"}
+        and not is_extra_info_needed
+        and state.get("sufficient", True)
+        and any("file_url" in c or "s3_key" in c for c in chunks)
     ):
         router = DocumentRouter()
         formatted = router._format_document_list(chunks, state.get("intent"))

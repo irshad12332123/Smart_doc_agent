@@ -193,6 +193,16 @@ class TestQueryGraph(unittest.TestCase):
         self.assertEqual(after_evaluation({"sufficient": False, "attempt_count": 0, "max_attempts": 2}), "rewrite_query")
         # Insufficient and attempts >= max -> generate
         self.assertEqual(after_evaluation({"sufficient": False, "attempt_count": 2, "max_attempts": 2}), "generate")
+        # Insufficient but extra_info_required -> generate directly
+        self.assertEqual(
+            after_evaluation({
+                "sufficient": False,
+                "attempt_count": 0,
+                "max_attempts": 2,
+                "evaluation": {"extra_info_required": True},
+            }),
+            "generate",
+        )
 
     # 8. rewrite_query_node tests
     @patch("query_graph.rewrite_query")
@@ -250,6 +260,40 @@ class TestQueryGraph(unittest.TestCase):
         }
         result = generate(state)
         self.assertEqual(result["answer"], "Transactions satisfy ACID properties.")
+
+    @patch("query_graph.CallLLM")
+    def test_generate_extra_info_required_bypasses_formatted_text(self, mock_call_llm_cls):
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "Please specify the subject or choose all subjects."
+        mock_call_llm_cls.return_value = mock_llm
+
+        state: RAGState = {
+            "original_query": "give notes of unit 2",
+            "formatted_text": "Here are documents...",
+            "chunks": [{"title": "Unit 2 Notes"}],
+            "evaluation": {"extra_info_required": True},
+            "subject_list": ["Database Systems", "Operating Systems"],
+        }
+        result = generate(state)
+        self.assertEqual(result["answer"], "Please specify the subject or choose all subjects.")
+        mock_llm.generate_answer.assert_called_once()
+        self.assertIn("Database Systems", mock_llm.generate_answer.call_args[1]["subject_list"])
+
+    @patch("query_graph.CallLLM")
+    def test_generate_extra_info_required_with_empty_chunks(self, mock_call_llm_cls):
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "Please specify the subject."
+        mock_call_llm_cls.return_value = mock_llm
+
+        state: RAGState = {
+            "original_query": "give notes of unit 2",
+            "chunks": [],
+            "evaluation": {"extra_info_required": True},
+            "subject_list": ["Database Systems"],
+        }
+        result = generate(state)
+        self.assertEqual(result["answer"], "Please specify the subject.")
+        mock_llm.generate_answer.assert_called_once()
 
     # 10. End-to-end graph tests
     @patch("query_graph.DocumentRouter")
@@ -481,6 +525,58 @@ class TestQueryGraph(unittest.TestCase):
 
         output = run_query("Find rare doc")
         self.assertEqual(output["answer"], "Answer retrieved via fallback.")
+
+    @patch("query_graph.DocumentRouter")
+    @patch("query_graph.EvidenceEvaluator")
+    @patch("query_graph.CallLLM")
+    @patch("query_graph.rewrite_query")
+    def test_e2e_extra_info_required_bypasses_rewrite_and_calls_llm(
+        self, mock_rewrite, mock_call_llm_cls, mock_evaluator_cls, mock_router_cls
+    ):
+        mock_router = MagicMock()
+        mock_result = MagicMock()
+        mock_result.route = "metadata"
+        mock_result.should_invoke_rag = False
+        mock_result.documents = [{"id": "d1", "title": "Unit 2 Notes"}]
+        mock_result.formatted_text = "Here is Unit 2 Notes"
+        mock_result.intent = DocumentIntent(intent="document_listing")
+        mock_router.route.return_value = mock_result
+        mock_router_cls.return_value = mock_router
+
+        mock_evaluator = MagicMock()
+        mock_evaluator.evaluate.return_value = {
+            "relevance": False,
+            "sufficiency": False,
+            "quality": True,
+            "extra_info_required": True,
+            "scores": {"relevance": 0.4, "sufficiency": 0.2, "quality": 0.8},
+            "reason": "The query asks for notes of unit 2 without specifying the subject.",
+        }
+        mock_evaluator_cls.return_value = mock_evaluator
+
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = (
+            "Please specify the subject for unit 2 notes, or let me know if you want them for every subject."
+        )
+        mock_call_llm_cls.return_value = mock_llm
+
+        state: RAGState = {
+            "query": "give notes of unit 2",
+            "original_query": "give notes of unit 2",
+            "subject_list": ["DBMS", "Operating Systems"],
+        }
+        result = query_graph.invoke(state)
+
+        self.assertEqual(
+            result["answer"],
+            "Please specify the subject for unit 2 notes, or let me know if you want them for every subject.",
+        )
+        mock_rewrite.assert_not_called()
+        mock_llm.generate_answer.assert_called_once()
+        self.assertEqual(
+            mock_llm.generate_answer.call_args[1]["subject_list"],
+            ["DBMS", "Operating Systems"],
+        )
 
     # 11. Endpoint orchestration tests (POST /api/query and POST /api/chat)
     @patch("ingestion.ingestion.query_graph")
