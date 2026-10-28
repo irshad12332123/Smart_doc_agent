@@ -16,15 +16,27 @@ export function Topbar({
   session,
   page,
   onPage,
+  onToggleSidebar,
+  sidebarOpen,
 }: {
   session: Session;
   page?: Page;
   onPage: (p: Page) => void;
+  onToggleSidebar?: () => void;
+  sidebarOpen?: boolean;
 }) {
   const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="topbar">
+      <button
+        className="mobile-menu-btn"
+        onClick={onToggleSidebar}
+        aria-label={sidebarOpen ? "Close navigation" : "Open navigation"}
+        aria-expanded={sidebarOpen}
+      >
+        {sidebarOpen ? <I.X /> : <I.Menu />}
+      </button>
       <button
         className="mobile-logo"
         onClick={() => onPage("home")}
