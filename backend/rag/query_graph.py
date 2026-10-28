@@ -139,9 +139,17 @@ def deterministic_search(state: RAGState) -> dict[str, Any]:
     """
     existing_chunks = state.get("chunks") or state.get("documents") or []
     if existing_chunks:
+        formatted_text = state.get("formatted_text")
+        if not formatted_text and state.get("intent"):
+            try:
+                router = DocumentRouter()
+                formatted_text = router._format_document_list(existing_chunks, state.get("intent"))
+            except Exception:
+                formatted_text = None
         return {
             "chunks": existing_chunks,
             "documents": existing_chunks,
+            "formatted_text": formatted_text,
         }
 
     intent = state.get("intent")
@@ -180,13 +188,13 @@ def deterministic_search(state: RAGState) -> dict[str, Any]:
         }
 
 
-def after_deterministic(state: RAGState) -> Literal["generate", "rag_search"]:
+def after_deterministic(state: RAGState) -> Literal["evaluate", "rag_search"]:
     """
-    Conditional edge: if deterministic exact lookup succeeds, proceeds to generation.
+    Conditional edge: if deterministic exact lookup finds documents, proceeds to evaluation.
     If exact lookup returns no documents, falls back to hybrid RAG search.
     """
     logger.warning(f"After deterministic search - Chunks found: {bool(state.get('chunks'))}")
-    return "generate" if bool(state.get("chunks")) else "rag_search"
+    return "evaluate" if bool(state.get("chunks")) else "rag_search"
 
 
 def rag_search(state: RAGState) -> dict[str, Any]:
@@ -232,12 +240,18 @@ def rag_search(state: RAGState) -> dict[str, Any]:
         return {
             "chunks": retrieved_rows,
             "sources": sources,
+            "documents": [],
+            "formatted_text": None,
+            "route": "rag",
         }
     except Exception as e:
         logger.warning(f"Hybrid retrieval failed: {e}")
         return {
             "chunks": [],
             "sources": [],
+            "documents": [],
+            "formatted_text": None,
+            "route": "rag",
             "error": str(e),
         }
 
@@ -263,13 +277,27 @@ def evaluate(state: RAGState) -> dict[str, Any]:
         }
 
     try:
-        evidence_payload = [
-            {
-                "text": chunk.get("content") or chunk.get("text") or chunk.get("description") or "",
+        evidence_payload = []
+        for chunk in chunks:
+            text = chunk.get("content") or chunk.get("text")
+            if not text:
+                meta_parts = []
+                if chunk.get("title") or chunk.get("filename"):
+                    meta_parts.append(f"Title: {chunk.get('title') or chunk.get('filename')}")
+                if chunk.get("document_type"):
+                    meta_parts.append(f"Type: {chunk.get('document_type')}")
+                if chunk.get("subject_name"):
+                    meta_parts.append(f"Subject: {chunk.get('subject_name')}")
+                if chunk.get("description"):
+                    meta_parts.append(f"Description: {chunk.get('description')}")
+                if chunk.get("deadline"):
+                    meta_parts.append(f"Deadline: {chunk.get('deadline')}")
+                text = " | ".join(meta_parts) if meta_parts else (chunk.get("title") or chunk.get("filename") or "")
+
+            evidence_payload.append({
+                "text": text,
                 "title": chunk.get("title") or chunk.get("filename") or "",
-            }
-            for chunk in chunks
-        ]
+            })
         evaluator = EvidenceEvaluator(query=query, evidence=evidence_payload)
         eval_result = evaluator.evaluate()
         sufficient = bool(eval_result.get("sufficiency", False))
@@ -340,6 +368,9 @@ def rewrite_query_node(state: RAGState) -> dict[str, Any]:
     return {
         "query": rewritten,
         "attempt_count": current_attempt + 1,
+        "formatted_text": None,
+        "documents": [],
+        "route": "rag",
     }
 
 
