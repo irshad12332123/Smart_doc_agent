@@ -108,17 +108,6 @@ export function Topbar({
           )}
         </button>
 
-        {/* Notifications Button */}
-        <button
-          className="icon-button top-notif-btn"
-          onClick={() => onPage("notices")}
-          title="Notices and announcements"
-          aria-label="Notices"
-        >
-          <I.Bell />
-          <span className="notif-dot" />
-        </button>
-
         {/* Profile Avatar Button */}
         <button
           className="avatar"

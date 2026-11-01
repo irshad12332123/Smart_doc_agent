@@ -304,6 +304,14 @@ p {
   flex-direction: column;
 }
 
+/* The assistant owns the viewport below the top bar. Only its message and
+   source regions scroll; the application shell stays fixed like a chat app. */
+.content-area-chat {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
 .page {
   max-width: 1200px;
   width: 100%;
@@ -1744,10 +1752,9 @@ p {
   display: flex;
   flex: 1;
   width: 100%;
-  height: calc(100vh - 64px);
-  max-height: calc(100vh - 64px);
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
-  position: relative;
 }
 
 .ask-main-pane {
@@ -1755,8 +1762,8 @@ p {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow-y: auto;
+  min-height: 0;
+  overflow: hidden;
   padding: 28px 40px 20px;
   transition: padding 0.2s ease;
 }
@@ -1768,6 +1775,7 @@ p {
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-height: 0;
 }
 
 /* Fallback for legacy class if referenced */
@@ -1787,6 +1795,7 @@ p {
   border-bottom: 1px solid var(--line);
   gap: 16px;
   flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 .ask-header-title {
@@ -1873,9 +1882,12 @@ p {
 
 .ask-body {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  margin-bottom: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 4px;
 }
 
 .ask-empty-state {
@@ -2333,34 +2345,19 @@ p {
 /* --------------------------------------------------------------------------
    RIGHT SIDEBAR FOR REFERENCED SOURCES
    -------------------------------------------------------------------------- */
-.sources-backdrop {
-  display: none;
-}
-
 .sources-sidebar {
   width: 380px;
   min-width: 340px;
   max-width: 420px;
   height: 100%;
+  min-height: 0;
   background-color: var(--panel);
   border-left: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   position: relative;
-  z-index: 20;
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.06);
-  animation: slideInRight 0.22s ease-out;
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0.7;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 .sources-sidebar-header {
@@ -2735,10 +2732,8 @@ p {
 
 /* Composer Dock */
 .composer-dock {
-  position: sticky;
-  bottom: 12px;
-  margin-top: auto;
-  z-index: 10;
+  flex-shrink: 0;
+  padding-top: 14px;
 }
 
 .composer-bar {
@@ -4521,24 +4516,6 @@ textarea:focus {
   .ask-main-pane {
     padding: 16px 14px 14px;
   }
-  .sources-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(2px);
-    z-index: 45;
-  }
-  .sources-sidebar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 88vw;
-    max-width: 380px;
-    z-index: 50;
-    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.25);
-  }
   .message-bubble-wrap {
     max-width: 90%;
   }
@@ -5332,5 +5309,73 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
   .auth-action-btn {
     padding-left: 12px;
     padding-right: 12px;
+  }
+}
+
+/* Chat shell final layout rules. Keep these after the route polish rules so
+   the assistant remains a fixed-height application surface. */
+.content-area-chat {
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.ask-layout-container {
+  height: 100%;
+  max-height: none;
+  min-height: 0;
+}
+
+.ask-main-pane {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ask-pane-inner {
+  min-height: 0;
+}
+
+.ask-body {
+  min-height: 0;
+  margin-bottom: 0;
+  overflow-y: auto;
+}
+
+.composer-dock {
+  position: static;
+  z-index: auto;
+  margin-top: 0;
+}
+
+.sources-sidebar {
+  position: relative;
+  inset: auto;
+  height: 100%;
+  max-height: none;
+  z-index: auto;
+  box-shadow: none;
+  animation: none;
+}
+
+@media (max-width: 768px) {
+  .ask-layout-container.with-sidebar-open {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .ask-layout-container.with-sidebar-open .ask-main-pane {
+    flex: 1 1 58%;
+    min-height: 0;
+  }
+
+  .sources-sidebar {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    height: min(42dvh, 420px);
+    flex: 0 0 min(42dvh, 420px);
+    border-left: 0;
+    border-top: 1px solid var(--border);
   }
 }

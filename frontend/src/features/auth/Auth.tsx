@@ -224,11 +224,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
               <strong className="feature-box-title">Cited Evidence</strong>
               <p className="feature-box-desc">Exact slide, page, and chunk previews with SLM checks</p>
             </div>
-            <div className="hero-feature-box">
-              <span className="feature-box-tag">OFFICIAL</span>
-              <strong className="feature-box-title">Faculty Notices</strong>
-              <p className="feature-box-desc">Direct announcements and assignment deadline tracking</p>
-            </div>
           </div>
 
         </div>
