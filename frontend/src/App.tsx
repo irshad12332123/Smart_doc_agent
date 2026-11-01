@@ -8,10 +8,8 @@ import { Topbar } from "./components/layout/Topbar";
 import { Auth } from "./features/auth/Auth";
 import { AdminPage } from "./features/pages/AdminPage";
 import { AskPage } from "./features/pages/AskPage";
-import { DraftPage } from "./features/pages/DraftPage";
 import { HomePage } from "./features/pages/HomePage";
 import { LibraryPage } from "./features/pages/LibraryPage";
-import { NoticesPage } from "./features/pages/NoticesPage";
 import { SubjectsPage } from "./features/pages/SubjectsPage";
 import { UploadPage } from "./features/pages/UploadPage";
 import { ProfilePage } from "./features/profile/ProfilePage";
@@ -110,7 +108,7 @@ function App() {
           onToggleSidebar={() => setSidebarOpen((open) => !open)}
           sidebarOpen={sidebarOpen}
         />
-        <div className="content-area">
+        <div className={`content-area ${page === "ask" ? "content-area-chat" : ""}`}>
           <PageView
             page={page}
             setPage={setPage}
@@ -147,8 +145,6 @@ function PageView(props: {
       return (
         <LibraryPage documents={props.documents} docError={props.docError} />
       );
-    case "notices":
-      return <NoticesPage />;
     case "subjects":
       return (
         <SubjectsPage profile={props.session.profile} setPage={props.setPage} />
@@ -163,8 +159,6 @@ function PageView(props: {
           setDocuments={props.setDocuments}
         />
       );
-    case "draft":
-      return <DraftPage />;
     case "admin":
       return <AdminPage />;
   }

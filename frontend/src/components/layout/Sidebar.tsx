@@ -59,11 +59,9 @@ export function Sidebar({
                 ? I.Sparkles
                 : item.id === "library"
                   ? I.Library
-                  : item.id === "notices"
-                    ? I.Bell
-                    : item.id === "subjects"
-                      ? I.BookOpen
-                      : I.UserRound;
+                : item.id === "subjects"
+                  ? I.BookOpen
+                  : I.UserRound;
 
           const isActive = page === item.id;
 
@@ -93,15 +91,6 @@ export function Sidebar({
                 <I.UploadCloud />
               </span>
               <span className="nav-text">Upload material</span>
-            </button>
-            <button
-              className={`nav-item ${page === "draft" ? "active" : ""}`}
-              onClick={() => onPage("draft")}
-            >
-              <span className="nav-icon-box">
-                <I.FilePenLine />
-              </span>
-              <span className="nav-text">Draft notice</span>
             </button>
           </div>
         )}
