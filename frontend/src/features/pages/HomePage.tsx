@@ -53,16 +53,11 @@ export function HomePage({
       <section className="hero">
         <div className="hero-badge">
           <I.Sparkles className="hero-badge-icon" />
-          <span>AI-Powered Academic Intelligence</span>
+          <span>Academic workspace</span>
         </div>
-        <h1 className="hero-title">
-          Everything your batch needs.
-          <br />
-          <span className="hero-gradient-text">All in one place.</span>
-        </h1>
+        <h1 className="hero-title">Your academic workspace</h1>
         <p className="hero-subtitle">
-          Instant answers from verified notes, assignments, syllabi, PDFs, and
-          faculty notices with direct citations.
+          Search verified course materials and get AI answers grounded in your documents.
         </p>
 
         <form className="ask-bar" onSubmit={submit}>

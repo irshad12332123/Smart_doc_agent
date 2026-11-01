@@ -20,6 +20,7 @@ function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [checking, setChecking] = useState(true);
   const [page, setPage] = useState<Page>("home");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [documents, setDocuments] = useState<DocumentInfo[]>([]);
   const [docError, setDocError] = useState("");
 
@@ -60,6 +61,12 @@ function App() {
     localStorage.removeItem("scholarhub-session");
     setSession(null);
     setPage("home");
+    setSidebarOpen(false);
+  };
+
+  const navigate = (nextPage: Page) => {
+    setPage(nextPage);
+    setSidebarOpen(false);
   };
 
   if (checking) {
@@ -83,11 +90,26 @@ function App() {
       <Sidebar
         session={session}
         page={page}
-        onPage={setPage}
+        onPage={navigate}
         onLogout={logout}
+        mobileOpen={sidebarOpen}
       />
+      {sidebarOpen && (
+        <button
+          className="sidebar-backdrop"
+          type="button"
+          aria-label="Close navigation"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
       <main className="main">
-        <Topbar session={session} page={page} onPage={setPage} />
+        <Topbar
+          session={session}
+          page={page}
+          onPage={navigate}
+          onToggleSidebar={() => setSidebarOpen((open) => !open)}
+          sidebarOpen={sidebarOpen}
+        />
         <div className="content-area">
           <PageView
             page={page}
