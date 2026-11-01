@@ -94,6 +94,14 @@ function App() {
         onLogout={logout}
         mobileOpen={sidebarOpen}
       />
+      {sidebarOpen && (
+        <button
+          className="sidebar-backdrop"
+          type="button"
+          aria-label="Close navigation"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
       <main className="main">
         <Topbar
           session={session}
