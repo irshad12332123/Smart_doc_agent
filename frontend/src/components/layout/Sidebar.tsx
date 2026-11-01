@@ -9,11 +9,13 @@ export function Sidebar({
   page,
   onPage,
   onLogout,
+  mobileOpen,
 }: {
   session: Session;
   page: Page;
   onPage: (p: Page) => void;
   onLogout: () => void;
+  mobileOpen?: boolean;
 }) {
   const { theme, toggleTheme } = useTheme();
   const isFaculty = session.profile.role === "faculty";
@@ -21,8 +23,16 @@ export function Sidebar({
   const isCr = session.profile.role === "student";
 
   return (
-    <aside className="sidebar">
-      <div className="logo" onClick={() => onPage("home")} role="button" tabIndex={0}>
+    <aside className={`sidebar ${mobileOpen ? "mobile-open" : ""}`}>
+      <div
+        className="logo"
+        onClick={() => onPage("home")}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") onPage("home");
+        }}
+        role="button"
+        tabIndex={0}
+      >
         <span className="brand-mark">
           <I.GraduationCap />
         </span>
