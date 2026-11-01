@@ -97,13 +97,8 @@ export function SourcesSidebar({
   if (!open) return null;
 
   return (
-    <>
-      <div className="sources-backdrop" onClick={onClose} aria-hidden="true" />
-      <aside
-        className="sources-sidebar"
-        aria-label="Referenced sources panel"
-      >
-        <div className="sources-sidebar-header">
+    <aside className="sources-sidebar" aria-label="Referenced sources panel">
+      <div className="sources-sidebar-header">
           <div className="sources-sidebar-title">
             <div className="sources-header-icon">
               <I.BookOpen />
@@ -125,10 +120,10 @@ export function SourcesSidebar({
           >
             <I.X />
           </button>
-        </div>
+      </div>
 
         {/* Response switcher if multiple assistant responses have sources */}
-        {messagesWithSources.length > 1 && (
+      {messagesWithSources.length > 1 && (
           <div className="sources-sidebar-nav">
             <div className="sources-tab-group">
               <button
@@ -174,9 +169,9 @@ export function SourcesSidebar({
               </div>
             )}
           </div>
-        )}
+      )}
 
-        <div className="sources-sidebar-content">
+      <div className="sources-sidebar-content">
           {totalCitations === 0 ? (
             <div className="sources-sidebar-empty">
               <div className="empty-sources-icon">
@@ -315,8 +310,7 @@ export function SourcesSidebar({
               )}
             </>
           )}
-        </div>
-      </aside>
-    </>
+      </div>
+    </aside>
   );
 }

@@ -5,7 +5,6 @@ import type { Page } from "../../types/navigation";
 import {
   DocumentCard,
   Empty,
-  Notice,
   SectionTitle,
   SubjectCard,
 } from "../../components/ui/common";
@@ -13,7 +12,6 @@ import {
 const suggestions = [
   { text: "Find my pending assignments", icon: I.FileCheck2 },
   { text: "Show Machine Learning notes", icon: I.BrainCircuit },
-  { text: "What are the latest notices?", icon: I.BellRing },
   { text: "Find Software Engineering PDFs", icon: I.BookOpen },
 ];
 
@@ -122,32 +120,6 @@ export function HomePage({
             ))}
           </div>
         )}
-      </section>
-
-      {/* Important Notices Section */}
-      <section className="home-section">
-        <SectionTitle
-          icon={I.Megaphone}
-          title="Important notices"
-          action="All notices"
-          onAction={() => setPage("notices")}
-        />
-        <div className="notice-list">
-          <Notice
-            title="Semester 5 Mid-Term Evaluation Guidelines"
-            text="Project submissions and lab records must be verified by respective faculty mentors before next Friday."
-            priority="important"
-            date="Today"
-            author="Academic Dean"
-          />
-          <Notice
-            title="Cloud Computing Lab Environment Updated"
-            text="AWS student account credentials have been updated for ML and NLP coursework batches."
-            priority="info"
-            date="Yesterday"
-            author="Faculty Office"
-          />
-        </div>
       </section>
 
       {/* Explore Subjects Section */}
