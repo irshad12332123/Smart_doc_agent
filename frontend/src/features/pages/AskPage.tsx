@@ -8,8 +8,8 @@ import { SourcesSidebar } from "./SourcesSidebar";
 const suggestions = [
   "Find my pending assignments",
   "Show Machine Learning notes",
-  "What are the latest notices?",
   "Find Software Engineering PDFs",
+  "Explain the IoT lab experiments",
 ];
 
 const uid = () =>
@@ -150,19 +150,11 @@ export function AskPage({
           setMessages((p) =>
             p.map((m) => (m.id === assistantId ? { ...m, sources: s } : m)),
           );
-          setSelectedMessageId(assistantId);
-          if (s && s.length > 0) {
-            setSourcesSidebarOpen(true);
-          }
         },
         documents: (docs) => {
           setMessages((p) =>
             p.map((m) => (m.id === assistantId ? { ...m, documents: docs } : m)),
           );
-          setSelectedMessageId(assistantId);
-          if (docs && docs.length > 0) {
-            setSourcesSidebarOpen(true);
-          }
         },
         token: (t) => {
           full += t;
@@ -205,7 +197,7 @@ export function AskPage({
               <div>
                 <h1>Academic AI Assistant</h1>
                 <p>
-                  Ask any question across your uploaded syllabus, lectures, and notices.
+                  Ask any question across your uploaded syllabus, lectures, and course materials.
                 </p>
               </div>
             </div>

@@ -11,7 +11,6 @@ export function Error({ text }: { text: string }) {
     </div>
   );
 }
-
 export function Empty({
   message,
   actionLabel,
@@ -236,67 +235,5 @@ export function SubjectCard({
         <I.ArrowRight className="subject-arrow" />
       </div>
     </button>
-  );
-}
-
-export function Notice({
-  title,
-  text,
-  priority = "info",
-  date = "Today",
-  author = "Faculty Office",
-}: {
-  title: string;
-  text: string;
-  priority?: "info" | "alert" | "important" | "event";
-  date?: string;
-  author?: string;
-}) {
-  const getPriorityDetails = () => {
-    switch (priority) {
-      case "alert":
-      case "important":
-        return {
-          icon: I.AlertCircle,
-          label: "Important",
-          badgeClass: "badge-alert",
-        };
-      case "event":
-        return {
-          icon: I.CalendarCheck2,
-          label: "Event",
-          badgeClass: "badge-event",
-        };
-      case "info":
-      default:
-        return {
-          icon: I.BellRing,
-          label: "Announcement",
-          badgeClass: "badge-info",
-        };
-    }
-  };
-
-  const { icon: PriorityIcon, label, badgeClass } = getPriorityDetails();
-
-  return (
-    <article className={`notice-card ${priority}`}>
-      <div className="notice-icon-box">
-        <PriorityIcon />
-      </div>
-      <div className="notice-content">
-        <div className="notice-header">
-          <div className="notice-meta-left">
-            <span className={`notice-badge ${badgeClass}`}>{label}</span>
-            <span className="notice-author">{author}</span>
-          </div>
-          <span className="notice-date">
-            <I.Clock /> {date}
-          </span>
-        </div>
-        <h3 className="notice-title">{title}</h3>
-        <p className="notice-text">{text}</p>
-      </div>
-    </article>
   );
 }

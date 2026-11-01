@@ -182,17 +182,6 @@ export function ProfilePage({ session }: { session: Session }) {
 
           <button className="pref-card">
             <div className="pref-icon-box">
-              <I.Bell />
-            </div>
-            <div className="pref-meta">
-              <strong>Notifications</strong>
-              <small>Course alerts & notice updates</small>
-            </div>
-            <I.ChevronRight className="pref-arrow" />
-          </button>
-
-          <button className="pref-card">
-            <div className="pref-icon-box">
               <I.ShieldCheck />
             </div>
             <div className="pref-meta">

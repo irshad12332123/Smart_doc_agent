@@ -224,18 +224,8 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
               <strong className="feature-box-title">Cited Evidence</strong>
               <p className="feature-box-desc">Exact slide, page, and chunk previews with SLM checks</p>
             </div>
-            <div className="hero-feature-box">
-              <span className="feature-box-tag">OFFICIAL</span>
-              <strong className="feature-box-title">Faculty Notices</strong>
-              <p className="feature-box-desc">Direct announcements and assignment deadline tracking</p>
-            </div>
           </div>
 
-        </div>
-
-        <div className="auth-foot">
-          <span className="footer-code">VER. 2.4 // SCHOLARHUB CORE</span>
-          <span className="footer-status">● SYSTEM ACTIVE</span>
         </div>
       </div>
 
@@ -642,10 +632,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
             <div className="auth-flow-container">
               <div className="auth-step-pane">
                 <div className="pane-header">
-                  <div className="admin-badge-strip">
-                    <I.ShieldAlert className="admin-badge-icon" />
-                    <span>RESTRICTED INSTITUTIONAL CONSOLE</span>
-                  </div>
                   <h2 className="pane-title">Admin Sign In</h2>
                   <p className="pane-subtitle">
                     Direct access for authorized university administrators and platform controllers.
@@ -708,13 +694,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                     )}
                   </button>
                 </form>
-
-                <div className="admin-notice-box">
-                  <I.Lock className="notice-lock-icon" />
-                  <span>
-                    All administrative operations, document indexations, and permission escalations are cryptographically audited.
-                  </span>
-                </div>
               </div>
             </div>
           )}
