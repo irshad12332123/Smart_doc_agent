@@ -1,4 +1,4 @@
-import json
+from measure_time_taken.time_taken import measure_node
 import logging
 from typing import Any, Literal, Optional, Sequence, TypedDict
 
@@ -74,7 +74,7 @@ def route_query(state: RAGState) -> dict[str, Any]:
     subject_list = state.get("subject_list")
     history = state.get("history")
 
-    explicit_route = state.get("route")
+    explicit_route = state.get("route") if attempt_count == 0 else None
     if explicit_route:
         normalized_route = "deterministic" if explicit_route in {"deterministic", "metadata"} else "rag"
         return {
@@ -98,13 +98,14 @@ def route_query(state: RAGState) -> dict[str, Any]:
         else:
             route = "rag"
 
+        formatted_text = result.formatted_text if (result.documents and len(result.documents) > 0) else None
         return {
             "query": query,
             "original_query": original_query,
             "route": route,
             "chunks": result.documents or [],
             "documents": result.documents or [],
-            "formatted_text": result.formatted_text,
+            "formatted_text": formatted_text,
             "intent": result.intent,
             "attempt_count": attempt_count,
             "max_attempts": max_attempts,
@@ -169,10 +170,13 @@ def deterministic_search(state: RAGState) -> dict[str, Any]:
             docs = router_res.documents
             intent = router_res.intent
 
-        formatted_text = state.get("formatted_text")
-        if not formatted_text and docs and intent:
-            router = DocumentRouter()
-            formatted_text = router._format_document_list(docs, intent)
+        formatted_text = None
+        if docs:
+            if state.get("formatted_text"):
+                formatted_text = state.get("formatted_text")
+            elif intent:
+                router = DocumentRouter()
+                formatted_text = router._format_document_list(docs, intent)
 
         return {
             "chunks": docs,
@@ -188,13 +192,30 @@ def deterministic_search(state: RAGState) -> dict[str, Any]:
         }
 
 
-def after_deterministic(state: RAGState) -> Literal["evaluate", "rag_search"]:
+def after_deterministic(state: RAGState) -> Literal["evaluate", "rewrite_query", "generate"]:
     """
-    Conditional edge: if deterministic exact lookup finds documents, proceeds to evaluation.
-    If exact lookup returns no documents, falls back to hybrid RAG search.
+    Conditional edge:
+    - If deterministic exact lookup finds documents, proceeds to evaluation.
+    - If deterministic lookup fails/finds no documents and attempts remain, routes to rewrite_query.
+    - If max attempts have been exhausted, does NOT fall back to rag_search; routes to generate output through LLM.
     """
-    logger.warning(f"After deterministic search - Chunks found: {bool(state.get('chunks'))}")
-    return "evaluate" if bool(state.get("chunks")) else "rag_search"
+    has_chunks = bool(state.get("chunks") or state.get("documents"))
+    logger.warning(f"After deterministic search - Chunks found: {has_chunks}")
+    if has_chunks:
+        return "evaluate"
+
+    attempt_count = state.get("attempt_count", 0)
+    max_attempts = state.get("max_attempts", 2)
+    if attempt_count < max_attempts:
+        logger.info(
+            f"Deterministic search failed to find documents (attempt {attempt_count}/{max_attempts}). Routing to rewrite_query."
+        )
+        return "rewrite_query"
+
+    logger.info(
+        f"Deterministic search exhausted max attempts ({attempt_count}/{max_attempts}). Routing directly to generate (LLM generation without RAG fallback)."
+    )
+    return "generate"
 
 
 def rag_search(state: RAGState) -> dict[str, Any]:
@@ -289,6 +310,8 @@ def evaluate(state: RAGState) -> dict[str, Any]:
                     meta_parts.append(f"Type: {chunk.get('document_type')}")
                 if chunk.get("subject_name"):
                     meta_parts.append(f"Subject: {chunk.get('subject_name')}")
+                if chunk.get("unit") is not None:
+                    meta_parts.append(f"Unit: {chunk.get('unit')}")
                 if chunk.get("description"):
                     meta_parts.append(f"Description: {chunk.get('description')}")
                 if chunk.get("deadline"):
@@ -358,6 +381,15 @@ def rewrite_query_node(state: RAGState) -> dict[str, Any]:
     evaluation = state.get("evaluation") or {}
     feedback = evaluation.get("reason")
 
+    if not feedback:
+        if state.get("route") in {"deterministic", "metadata"} or state.get("intent"):
+            feedback = (
+                "A previous deterministic document lookup returned 0 matching documents. "
+                "Reformulate the query to clarify the target subject, unit, or document type keywords."
+            )
+        else:
+            feedback = "A previous retrieval attempt did not return sufficient or relevant documents."
+
     try:
         rewritten = rewrite_query(
             query=current_query,
@@ -377,7 +409,11 @@ def rewrite_query_node(state: RAGState) -> dict[str, Any]:
         "attempt_count": current_attempt + 1,
         "formatted_text": None,
         "documents": [],
-        "route": "rag",
+        "chunks": [],
+        "route": None,
+        "intent": None,
+        "sufficient": False,
+        "evaluation": None,
     }
 
 
@@ -388,19 +424,17 @@ def generate(state: RAGState) -> dict[str, Any]:
     """
     evaluation = state.get("evaluation") or {}
     is_extra_info_needed = bool(evaluation.get("extra_info_required"))
+    chunks = state.get("chunks", [])
 
     if state.get("formatted_text") and not is_extra_info_needed and state.get("sufficient", True):
         return {"answer": state["formatted_text"]}
-
-    chunks = state.get("chunks", [])
-    if not chunks and not is_extra_info_needed:
-        return {"answer": "I couldn't find relevant passages in the uploaded documents."}
 
     # Deterministic metadata search results without formatted_text
     if (
         state.get("route") in {"deterministic", "metadata"}
         and not is_extra_info_needed
         and state.get("sufficient", True)
+        and bool(chunks)
         and any("file_url" in c or "s3_key" in c for c in chunks)
     ):
         router = DocumentRouter()
@@ -442,17 +476,30 @@ def generate(state: RAGState) -> dict[str, Any]:
             "error": str(e),
         }
 
-
 # Orchestration Graph Construction
 builder = StateGraph(RAGState)
 
-builder.add_node("router", route_query)
-builder.add_node("deterministic_search", deterministic_search)
-builder.add_node("rag_search", rag_search)
-builder.add_node("evaluate", evaluate)
-builder.add_node("rewrite_query", rewrite_query_node)
-builder.add_node("generate", generate)
+# Register nodes with performance measurement
+builder.add_node("router",
+    measure_node("router", route_query))
 
+builder.add_node("deterministic_search",
+    measure_node("deterministic_search", deterministic_search))
+
+builder.add_node("rag_search",
+    measure_node("rag_search", rag_search))
+
+builder.add_node("evaluate",
+    measure_node("evaluate", evaluate))
+
+builder.add_node("rewrite_query",
+    measure_node("rewrite_query", rewrite_query_node))
+
+builder.add_node("generate",
+    measure_node("generate", generate))
+
+
+# Define graph edges
 builder.add_edge(START, "router")
 
 builder.add_conditional_edges(
@@ -472,9 +519,11 @@ builder.add_conditional_edges(
     after_evaluation,
 )
 
-builder.add_edge("rewrite_query", "rag_search")
+builder.add_edge("rewrite_query", "router")
 builder.add_edge("generate", END)
 
+
+# Compile only after registering nodes and edges
 query_graph = builder.compile()
 
 
