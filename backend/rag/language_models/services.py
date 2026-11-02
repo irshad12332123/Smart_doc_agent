@@ -1,4 +1,4 @@
-
+import time
 from collections.abc import Iterator, Sequence
 
 from langchain_google_genai import GoogleGenerativeAI
@@ -66,7 +66,10 @@ Answer:"""
         history: Sequence[dict[str, str]] = (),
         subject_list: Sequence[str] = (),
     ) -> str:
-        return "".join(
+        start_time = time.perf_counter()
+
+        # Collect the streamed response chunks into a single string
+        answer = "".join(
             self.stream_answer(
                 question=question,
                 context=context,
@@ -74,6 +77,11 @@ Answer:"""
                 subject_list=subject_list,
             )
         )
+
+        elapsed_time = time.perf_counter() - start_time
+        print(f"[CallLLM] generate_answer completed in {elapsed_time:.4f} seconds.")
+
+        return answer
 
 
 # Retain the original public name for existing imports.
