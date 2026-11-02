@@ -1,3 +1,4 @@
+from measure_time_taken import time_taken
 import hashlib
 import json
 import logging
@@ -415,6 +416,7 @@ def query():
 
 @ingest.route("/chat", methods=["POST"])
 def chat():
+
     payload = request.get_json(silent=True) or {}
     message = payload.get("message") or payload.get("query")
     history = payload.get("history", [])
@@ -436,6 +438,7 @@ def chat():
 
     def generate() -> Iterator[str]:
         try:
+
             initial_state: RAGState = {
                 "query": message.strip(),
                 "original_query": message.strip(),
