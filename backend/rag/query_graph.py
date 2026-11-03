@@ -462,26 +462,15 @@ def rewrite_query_node(state: RAGState) -> dict[str, Any]:
 def generate(state: RAGState) -> dict[str, Any]:
     logger.warning(f"Generating answer for query: {state.get('query') or state.get('original_query', '')}")
     """
-    Generates a grounded final answer using LLM or returns formatted deterministic lookup.
+    Generates a grounded final answer using LLM with reasoning over retrieved evidence/documents.
     """
     evaluation = state.get("evaluation") or {}
     is_extra_info_needed = bool(evaluation.get("extra_info_required"))
     chunks = state.get("chunks", [])
 
-    if state.get("formatted_text") and not is_extra_info_needed and state.get("sufficient", True):
+    # If formatted_text is provided without raw chunks, return it directly
+    if state.get("formatted_text") and not chunks and not is_extra_info_needed and state.get("sufficient", True):
         return {"answer": state["formatted_text"]}
-
-    # Deterministic metadata search results without formatted_text
-    if (
-        state.get("route") in {"deterministic", "metadata"}
-        and not is_extra_info_needed
-        and state.get("sufficient", True)
-        and bool(chunks)
-        and any("file_url" in c or "s3_key" in c for c in chunks)
-    ):
-        router = DocumentRouter()
-        formatted = router._format_document_list(chunks, state.get("intent"))
-        return {"answer": formatted}
 
     query = state.get("original_query") or state.get("query", "")
     history = state.get("history") or []
@@ -497,10 +486,37 @@ def generate(state: RAGState) -> dict[str, Any]:
     else:
         subject_list_names = []
 
-    context = "\n\n".join(
-        f"[{idx}] {chunk.get('content') or chunk.get('text') or chunk.get('description') or ''}"
-        for idx, chunk in enumerate(chunks, start=1)
-    )
+    context_entries = []
+    for idx, chunk in enumerate(chunks, start=1):
+        content = chunk.get("content") or chunk.get("text")
+        meta_parts = []
+        if chunk.get("title") or chunk.get("filename"):
+            meta_parts.append(f"Title: {chunk.get('title') or chunk.get('filename')}")
+        if chunk.get("document_type"):
+            meta_parts.append(f"Type: {chunk.get('document_type')}")
+        if chunk.get("subject_name"):
+            meta_parts.append(f"Subject: {chunk.get('subject_name')}")
+        if chunk.get("unit") is not None:
+            meta_parts.append(f"Unit: {chunk.get('unit')}")
+        if chunk.get("deadline"):
+            meta_parts.append(f"Deadline: {chunk.get('deadline')}")
+        if chunk.get("description"):
+            meta_parts.append(f"Description: {chunk.get('description')}")
+        if chunk.get("file_url") or chunk.get("url"):
+            meta_parts.append(f"File URL: {chunk.get('file_url') or chunk.get('url')}")
+
+        if content and meta_parts:
+            entry = f"[{idx}] " + " | ".join(meta_parts) + f"\nContent: {content}"
+        elif content:
+            entry = f"[{idx}] {content}"
+        elif meta_parts:
+            entry = f"[{idx}] " + " | ".join(meta_parts)
+        else:
+            entry = f"[{idx}] (Empty document)"
+
+        context_entries.append(entry)
+
+    context = "\n\n".join(context_entries)
 
     try:
         caller = CallLLM()
@@ -513,6 +529,8 @@ def generate(state: RAGState) -> dict[str, Any]:
         return {"answer": answer}
     except Exception as e:
         logger.warning(f"Grounded generation failed: {e}")
+        if state.get("formatted_text"):
+            return {"answer": state["formatted_text"]}
         return {
             "answer": f"Unable to generate an answer right now. Context retrieved ({len(chunks)} chunks).",
             "error": str(e),

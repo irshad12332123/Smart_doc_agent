@@ -314,10 +314,36 @@ class TestQueryGraph(unittest.TestCase):
         self.assertEqual(result["answer"], "Please specify the subject.")
         mock_llm.generate_answer.assert_called_once()
 
+    @patch("query_graph.CallLLM")
+    def test_generate_reasons_between_multiple_documents(self, mock_call_llm_cls):
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "Here are your Unit 2 notes: [DBMS Unit 2 Notes.pdf](https://example.com/u2.pdf)"
+        mock_call_llm_cls.return_value = mock_llm
+
+        chunks = [
+            {"title": "DBMS Unit 1 Notes.pdf", "unit": 1, "document_type": "notes", "file_url": "https://example.com/u1.pdf"},
+            {"title": "DBMS Unit 2 Notes.pdf", "unit": 2, "document_type": "notes", "file_url": "https://example.com/u2.pdf"},
+            {"title": "DBMS Unit 3 Notes.pdf", "unit": 3, "document_type": "notes", "file_url": "https://example.com/u3.pdf"},
+        ]
+        state: RAGState = {
+            "query": "give notes of unit 2",
+            "original_query": "give notes of unit 2",
+            "chunks": chunks,
+            "route": "deterministic",
+        }
+        result = generate(state)
+        self.assertEqual(result["answer"], "Here are your Unit 2 notes: [DBMS Unit 2 Notes.pdf](https://example.com/u2.pdf)")
+        mock_call_llm_cls.assert_called_once()
+        call_kwargs = mock_llm.generate_answer.call_args[1]
+        self.assertIn("DBMS Unit 2 Notes.pdf", call_kwargs["context"])
+        self.assertIn("https://example.com/u2.pdf", call_kwargs["context"])
+        self.assertIn("Unit: 2", call_kwargs["context"])
+
     # 10. End-to-end graph tests
+    @patch("query_graph.CallLLM")
     @patch("query_graph.DocumentRouter")
     @patch("query_graph.EvidenceEvaluator")
-    def test_e2e_deterministic_path(self, mock_evaluator_cls, mock_router_cls):
+    def test_e2e_deterministic_path(self, mock_evaluator_cls, mock_router_cls, mock_call_llm_cls):
         mock_router = MagicMock()
         mock_result = MagicMock()
         mock_result.route = "metadata"
@@ -338,11 +364,17 @@ class TestQueryGraph(unittest.TestCase):
         }
         mock_evaluator_cls.return_value = mock_evaluator
 
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "Here is DBMS Assignment 1"
+        mock_call_llm_cls.return_value = mock_llm
+
         output = run_query("Show DBMS assignments")
         self.assertEqual(output["route"], "deterministic")
         self.assertTrue(output["sufficient"])
         self.assertEqual(output["answer"], "Here is DBMS Assignment 1")
         mock_evaluator.evaluate.assert_called_once()
+        mock_call_llm_cls.assert_called_once()
+        mock_llm.generate_answer.assert_called_once()
 
     @patch("query_graph.DocumentRouter")
     @patch("query_graph.HybridRetriever")
@@ -570,6 +602,7 @@ class TestQueryGraph(unittest.TestCase):
         self.assertEqual(mock_router.route.call_count, 2)
         mock_retriever.retrieve.assert_not_called()
 
+    @patch("query_graph.CallLLM")
     @patch("query_graph.DocumentRouter")
     @patch("query_graph.DocumentService")
     @patch("query_graph.EvidenceEvaluator")
@@ -580,6 +613,7 @@ class TestQueryGraph(unittest.TestCase):
         mock_evaluator_cls,
         mock_service_cls,
         mock_router_cls,
+        mock_call_llm_cls,
     ):
         mock_router = MagicMock()
 
@@ -612,6 +646,10 @@ class TestQueryGraph(unittest.TestCase):
         mock_evaluator.evaluate.return_value = {"sufficiency": True, "scores": {}, "reason": "Found doc"}
         mock_evaluator_cls.return_value = mock_evaluator
 
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "Here are the notes: DBMS Unit 2 Notes.pdf"
+        mock_call_llm_cls.return_value = mock_llm
+
         output = run_query("give notes of unit 2", max_attempts=2)
         self.assertEqual(output["route"], "deterministic")
         self.assertTrue(output["sufficient"])
@@ -619,6 +657,8 @@ class TestQueryGraph(unittest.TestCase):
         self.assertEqual(output["attempt_count"], 1)
         mock_rewrite.assert_called_once()
         self.assertEqual(mock_router.route.call_count, 2)
+        mock_call_llm_cls.assert_called_once()
+        mock_llm.generate_answer.assert_called_once()
 
     @patch("query_graph.DocumentRouter")
     @patch("query_graph.DocumentService")

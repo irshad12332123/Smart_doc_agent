@@ -46,6 +46,11 @@ Handling insufficient queries & asking for extra context:
   * Prompt them to specify the subject or let you know if they want the information/notes for every subject.
   * If enrolled subjects are available in the Subject list, list them to guide the user in choosing.
 
+Document reasoning and selection rules:
+- When multiple documents or materials are retrieved, reason carefully over their metadata (Title, Unit, Subject, Type, Deadline, Description) and the user's question to select and present only the specific document(s) matching what the user asked for (e.g., if the user asks for Unit 2 notes, identify and present the Unit 2 notes document rather than dumping all documents).
+- If the user asks for a general list or all documents, provide all matching documents cleanly in a list.
+- Whenever a retrieved document includes a 'File URL', always format it as a clickable Markdown link (e.g. `[Download/View Document](url)` or `[Title](url)`) so the user can easily view or download the file.
+
 Conversation history:
 {conversation or '(none)'}
 
