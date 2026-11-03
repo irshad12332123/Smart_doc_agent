@@ -85,6 +85,41 @@ def route_query(state: RAGState) -> dict[str, Any]:
             "max_attempts": max_attempts,
         }
 
+    # If already on the deterministic route (e.g. during a rewrite retry), stay deterministic
+    # without re-deciding route or falling back to RAG.
+    if state.get("route") in {"deterministic", "metadata"}:
+        try:
+            router = DocumentRouter()
+            result: RouterResult = router.route(
+                query=query,
+                subject_list=subject_list,
+                history=history,
+            )
+            formatted_text = result.formatted_text if (result.documents and len(result.documents) > 0) else None
+            return {
+                "query": query,
+                "original_query": original_query,
+                "route": "deterministic",
+                "chunks": result.documents or [],
+                "documents": result.documents or [],
+                "formatted_text": formatted_text,
+                "intent": result.intent,
+                "attempt_count": attempt_count,
+                "max_attempts": max_attempts,
+            }
+        except Exception as e:
+            logger.warning(f"Error during deterministic retry routing: {e}.")
+            return {
+                "query": query,
+                "original_query": original_query,
+                "route": "deterministic",
+                "chunks": [],
+                "documents": [],
+                "formatted_text": None,
+                "attempt_count": attempt_count,
+                "max_attempts": max_attempts,
+            }
+
     try:
         router = DocumentRouter()
         result: RouterResult = router.route(
@@ -196,8 +231,9 @@ def after_deterministic(state: RAGState) -> Literal["evaluate", "rewrite_query",
     """
     Conditional edge:
     - If deterministic exact lookup finds documents, proceeds to evaluation.
-    - If deterministic lookup fails/finds no documents and attempts remain, routes to rewrite_query.
-    - If max attempts have been exhausted, does NOT fall back to rag_search; routes to generate output through LLM.
+    - If deterministic lookup fails/finds no documents and this is the first attempt (attempt_count == 0),
+      routes to rewrite_query for a single retry attempt (no max_attempts loop).
+    - If file not found after that single try, routes directly to generate without re-deciding route or looping again.
     """
     has_chunks = bool(state.get("chunks") or state.get("documents"))
     logger.warning(f"After deterministic search - Chunks found: {has_chunks}")
@@ -205,15 +241,15 @@ def after_deterministic(state: RAGState) -> Literal["evaluate", "rewrite_query",
         return "evaluate"
 
     attempt_count = state.get("attempt_count", 0)
-    max_attempts = state.get("max_attempts", 2)
-    if attempt_count < max_attempts:
+    if attempt_count == 0:
         logger.info(
-            f"Deterministic search failed to find documents (attempt {attempt_count}/{max_attempts}). Routing to rewrite_query."
+            "Deterministic search failed to find documents (attempt 0). Routing to rewrite_query (single try)."
         )
         return "rewrite_query"
 
     logger.info(
-        f"Deterministic search exhausted max attempts ({attempt_count}/{max_attempts}). Routing directly to generate (LLM generation without RAG fallback)."
+        f"Deterministic search failed to find documents after rewrite (attempt {attempt_count}). "
+        "Routing directly to generate without re-deciding route or looping again."
     )
     return "generate"
 
@@ -404,13 +440,19 @@ def rewrite_query_node(state: RAGState) -> dict[str, Any]:
         logger.warning(f"Query rewrite failed: {e}. Retaining current query.")
         rewritten = current_query
 
+    # If this rewrite came from after_deterministic (file not found in deterministic search, no evaluation),
+    # preserve route as "deterministic" so it retries deterministically without re-deciding route to RAG.
+    # If it came from after_evaluation (insufficient evidence for detailed question), allow re-routing.
+    is_from_deterministic_search = state.get("route") in {"deterministic", "metadata"} and not state.get("evaluation")
+    preserved_route = "deterministic" if is_from_deterministic_search else None
+
     return {
         "query": rewritten,
         "attempt_count": current_attempt + 1,
         "formatted_text": None,
         "documents": [],
         "chunks": [],
-        "route": None,
+        "route": preserved_route,
         "intent": None,
         "sufficient": False,
         "evaluation": None,
