@@ -9,7 +9,8 @@ def get_intent_extraction_prompt(
 ) -> str:
     """
     Constructs a detailed system/user instruction prompt for the SLM to perform
-    intent classification, document type extraction, subject resolution, and temporal parsing.
+    intent classification, document type extraction, subject resolution, unit extraction,
+    and temporal parsing.
     """
     subject_list_json = json.dumps(
         [
@@ -31,7 +32,7 @@ AVAILABLE ENROLLED SUBJECTS:
 INTENT CATEGORIES
 ==================================================
 1. "document_listing":
-   - The user is asking to list, retrieve, view, or check documents/files/notices/assignments based on category, subject, or date.
+   - The user is asking to fetch, list, retrieve, view, or check documents/files/notices/assignments based on category, subject, unit, or date.
    - The user is NOT asking a conceptual question about the contents inside the document.
    - Examples:
      * "Give me all assignments for DBMS"
@@ -47,15 +48,19 @@ INTENT CATEGORIES
      * "Show me the timetable for this week"
      * "Show me the lecture notes for DBMS"
      * "Show me the study material for operating systems"
+     * "Give notes of unit 2"
+     * "Give notes of unit 2 for DBMS"
+     * "Give me unit 1 pdf"
 
 2. "document_search":
-   - The user is looking for a specific document, file, or notice by title, assignment number, topic, or exam name.
+   - The user is looking for a specific document, file, or notice by unit, title, assignment number, topic, or exam name.
    - Examples:
      * "Find the notice about the mid semester exam"
      * "Find the PDF for DBMS assignment 2"
      * "Find assignment 2 of DBMS"
      * "Locate the OS lab assignment on thread synchronization"
      * "Find the circular regarding fee payment"
+     * "Find unit 3 notes for DBMS"
 
 3. "normal_rag_query":
    - The user is asking a conceptual, explanatory, informational, or knowledge question requiring reading and synthesizing document text.
@@ -78,6 +83,7 @@ SUBJECT RESOLUTION RULES
 - If multiple subjects match ambiguously (e.g., query says "database" and both "Database Management System" and "Advanced Database Systems" exist in the list), return "subject_id": null and include the term in "search_query".
 
 ==================================================
+UNIT & METADATA FILTERING RULES
 DOCUMENT TYPE CLASSIFICATION
 ==================================================
 Possible values: "assignment", "notice", "study_material", "notes", "announcement", "syllabus", "time_table", "other", or null.
@@ -104,6 +110,7 @@ Output MUST be a single, valid JSON object matching this schema:
   "intent": "document_listing" | "document_search" | "normal_rag_query",
   "document_type": "assignment" | "notice" | "study_material" | "notes" | "announcement" | "syllabus" | "time_table" | "other" | null,
   "subject_id": "<exact uuid from AVAILABLE ENROLLED SUBJECTS>" | null,
+  "unit": <integer academic unit/module number e.g. 1, 2, 3, or null>,
   "search_query": "<string with specific title/topic keywords if searching, or null>",
   "deadline_filter": {{
     "type": "before" | "after" | "between" | null,

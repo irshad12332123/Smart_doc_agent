@@ -45,12 +45,14 @@ class DocumentService:
         raw_docs = self.repository.get_documents_by_filters(
             subject_id=intent.subject_id,
             document_type=intent.document_type,
-            # search_query=intent.search_query,
+            unit=getattr(intent, "unit", None),
+            search_query=intent.search_query,
             deadline_start=deadline_start,
             deadline_end=deadline_end,
             created_after=created_after,
             created_before=created_before,
             limit=intent.limit,
+            metadata_filters=getattr(intent, "metadata_filters", None),
         )
 
         processed_docs: list[dict[str, Any]] = []
@@ -70,13 +72,14 @@ class DocumentService:
             doc_id = str(doc.get("id") or "")
             title = doc.get("title") or "Untitled Document"
 
-            processed_docs.append({
+            doc_dict = {
                 "id": doc_id,
                 "doc_id": doc_id,
                 "title": title,
                 "filename": title,
                 "description": doc.get("description") or "",
                 "document_type": doc.get("document_type") or "other",
+                "unit": doc.get("unit"),
                 "subject_id": str(doc.get("subject_id") or "") if doc.get("subject_id") else None,
                 "subject_name": doc.get("subject_name"),
                 "subject_code": doc.get("subject_code"),
@@ -87,6 +90,14 @@ class DocumentService:
                 "deadline": doc.get("deadline"),
                 "created_at": doc.get("created_at"),
                 "updated_at": doc.get("updated_at"),
-            })
+            }
 
+            # Extensible: pass through any additional/future columns in doc
+            for k, v in doc.items():
+                if k not in doc_dict:
+                    doc_dict[k] = v
+
+            processed_docs.append(doc_dict)
+
+        logger.debug(f"processed_docs count: {len(processed_docs)}")
         return processed_docs

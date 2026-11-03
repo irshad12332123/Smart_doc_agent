@@ -18,7 +18,7 @@
   --panel-hover: #f8fafc;
   --card-bg: #ffffff;
   --card-hover: #ffffff;
-  
+
   --sidebar-bg: #ffffff;
   --topbar-bg: rgba(255, 255, 255, 0.85);
 
@@ -900,6 +900,7 @@ p {
   color: var(--primary);
   display: grid;
   place-items: center;
+
 }
 
 .ask-bar-icon svg {

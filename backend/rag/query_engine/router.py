@@ -67,26 +67,35 @@ class DocumentRouter:
         """
         Formats retrieved documents into a clean, markdown-formatted response for the user.
         """
-        doc_type_display = (intent.document_type or "document").replace("_", " ")
+        raw_type = (intent.document_type or "document").replace("_", " ")
+        doc_type_plural = raw_type if raw_type.endswith("s") else f"{raw_type}s"
 
         if not docs:
-            if subject_name:
-                return f"I couldn't find any {doc_type_display}s for **{subject_name}** in your records."
+            if subject_name and getattr(intent, "unit", None) is not None:
+                return f"I couldn't find any {doc_type_plural} for **{subject_name}** (Unit {intent.unit}) in your records."
+            elif subject_name:
+                return f"I couldn't find any {doc_type_plural} for **{subject_name}** in your records."
+            elif getattr(intent, "unit", None) is not None:
+                return f"I couldn't find any {doc_type_plural} for Unit {intent.unit} in your records."
             elif intent.search_query:
                 return f"I couldn't find any documents matching '{intent.search_query}'."
-            return f"I couldn't find any {doc_type_display}s matching your request."
+            return f"I couldn't find any {doc_type_plural} matching your request."
 
         subject_header = f" for **{subject_name}**" if subject_name else ""
-        header = f"Here are the {doc_type_display}s{subject_header} ({len(docs)} found):\n\n"
+        unit_header = f" (Unit {intent.unit})" if getattr(intent, "unit", None) is not None else ""
+        header = f"Here are the {doc_type_plural}{subject_header}{unit_header} ({len(docs)} found):\n\n"
 
         lines = [header]
         for idx, doc in enumerate(docs, start=1):
             title = doc.get("title") or "Untitled document"
+            unit = doc.get("unit")
             desc = doc.get("description")
             deadline = doc.get("deadline")
             file_url = doc.get("file_url")
 
             item_lines = [f"{idx}. **{title}**"]
+            if unit is not None:
+                item_lines.append(f"   - **Unit:** {unit}")
             if deadline:
                 # Simple friendly date presentation if ISO
                 clean_deadline = deadline.replace("T", " ").split(".")[0]
@@ -191,6 +200,7 @@ class DocumentRouter:
             "intent": intent.intent,
             "document_type": intent.document_type,
             "subject_id": intent.subject_id,
+            "unit": getattr(intent, "unit", None),
             "search_query": intent.search_query,
             "retrieval_route": route,
         }

@@ -1,5 +1,6 @@
-from typing import Literal, Optional
-from pydantic import BaseModel, Field, ConfigDict
+import re
+from typing import Any, Literal, Optional
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 IntentType = Literal["document_listing", "document_search", "normal_rag_query"]
 
@@ -53,7 +54,7 @@ class TimeFilter(BaseModel):
 
 
 class DocumentIntent(BaseModel):
-    model_config = ConfigDict(extra="ignore")
+    model_config = ConfigDict(extra="allow")
 
     intent: IntentType = Field(
         ...,
@@ -67,10 +68,34 @@ class DocumentIntent(BaseModel):
         None,
         description="UUID of the matched subject strictly from the user's available subjects list, otherwise null",
     )
+    unit: Optional[int] = Field(
+        None,
+        description="Academic unit or module number (e.g. 1, 2, 3) for unit-level document filtering, otherwise null",
+    )
     search_query: Optional[str] = Field(
         None,
-        description="Extracted keywords, assignment number, or title keywords for metadata lookup, or null for general listings",
+        description="Optional legacy/fallback keywords if searching non-unit terms, otherwise null",
     )
     deadline_filter: Optional[DeadlineFilter] = None
     time_filter: Optional[TimeFilter] = None
     limit: int = Field(20, description="Maximum number of documents to retrieve")
+    metadata_filters: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Flexible key-value pairs for additional/future metadata column filters",
+    )
+
+    @field_validator("unit", mode="before")
+    @classmethod
+    def parse_unit(cls, v: Any) -> Optional[int]:
+        if v is None:
+            return None
+        if isinstance(v, int):
+            return v
+        if isinstance(v, str):
+            v_clean = v.strip()
+            if not v_clean or v_clean.lower() in ("null", "none", "n/a", "na", ""):
+                return None
+            match = re.search(r"\b\d+\b", v_clean)
+            if match:
+                return int(match.group(0))
+        return None

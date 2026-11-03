@@ -86,11 +86,12 @@ class DenseIngestion(BaseIngestion):
         if client is None:
             raise ValueError("No client passed in the meta dta extractor")
 
-        system_prompt = """You are an expert metadata extractor. Extract details from the provided text into a valid JSON object matching this schema:
+        system_prompt = """You are an expert metadata extractor for academic documents. Extract details from the provided text into a valid JSON object matching this schema:
     {
         "description": "string (50-100 words summary)",
         "document_type": "notice" | "assignment" | "syllabus" | "notes" | "time_table" | "others",
-        "deadline": "YYYY-MM-DD (optional, null if not present)"
+        "deadline": "YYYY-MM-DD (optional, null if not present)",
+        "unit": integer (optional academic unit, module, or chapter number e.g. 1, 2, 3, or null if not applicable)
     }
     Return ONLY a valid JSON object with no markdown wrappers or additional text."""
 

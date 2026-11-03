@@ -254,6 +254,51 @@ class IntentExtractor:
             if search_query.lower() in {"null", "none", ""}:
                 search_query = None
 
+        # Validate unit
+        unit: Optional[int] = None
+        raw_unit = raw_intent.get("unit")
+        if raw_unit is not None:
+            try:
+                if isinstance(raw_unit, int):
+                    unit = raw_unit
+                elif isinstance(raw_unit, str):
+                    clean_u = raw_unit.strip()
+                    if clean_u.lower() not in {"null", "none", "n/a", ""}:
+                        import re
+                        m = re.search(r"\b\d+\b", clean_u)
+                        if m:
+                            unit = int(m.group(0))
+            except (ValueError, TypeError):
+                unit = None
+
+        # If LLM put unit pattern in search_query (e.g. "unit 2"), normalize to unit metadata
+        if search_query:
+            import re
+            m = re.match(r"^unit\s*(\d+)$", search_query.strip(), flags=re.IGNORECASE)
+            if m:
+                if unit is None:
+                    unit = int(m.group(1))
+                search_query = None
+
+        # Flexible metadata filters for future extensible document columns
+        known_keys = {
+            "intent",
+            "document_type",
+            "subject_id",
+            "unit",
+            "search_query",
+            "deadline_filter",
+            "time_filter",
+            "limit",
+            "metadata_filters",
+        }
+        metadata_filters: dict[str, Any] = {}
+        if isinstance(raw_intent.get("metadata_filters"), dict):
+            metadata_filters.update(raw_intent["metadata_filters"])
+        for k, v in raw_intent.items():
+            if k not in known_keys and v is not None:
+                metadata_filters[k] = v
+
         # Handle deadline_filter
         deadline_filter_obj: Optional[DeadlineFilter] = None
         raw_deadline = raw_intent.get("deadline_filter")
@@ -292,8 +337,10 @@ class IntentExtractor:
             intent=intent_type,
             document_type=document_type,
             subject_id=subject_id,
+            unit=unit,
             search_query=search_query,
             deadline_filter=deadline_filter_obj,
             time_filter=time_filter_obj,
             limit=limit,
+            metadata_filters=metadata_filters,
         )

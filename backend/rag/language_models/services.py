@@ -1,4 +1,4 @@
-
+import time
 from collections.abc import Iterator, Sequence
 
 from langchain_google_genai import GoogleGenerativeAI
@@ -22,6 +22,7 @@ class CallLLM:
         subject_list: Sequence[str] = (),
     ) -> Iterator[str]:
 
+        # print(f"context : {context} \n history: {history} \n question: {question}")
         conversation = "\n".join(
             f"{entry['role'].capitalize()}: {entry['content']}"
             for entry in history[-10:]
@@ -45,6 +46,11 @@ Handling insufficient queries & asking for extra context:
   * Prompt them to specify the subject or let you know if they want the information/notes for every subject.
   * If enrolled subjects are available in the Subject list, list them to guide the user in choosing.
 
+Document reasoning and selection rules:
+- When multiple documents or materials are retrieved, reason carefully over their metadata (Title, Unit, Subject, Type, Deadline, Description) and the user's question to select and present only the specific document(s) matching what the user asked for (e.g., if the user asks for Unit 2 notes, identify and present the Unit 2 notes document rather than dumping all documents).
+- If the user asks for a general list or all documents, provide all matching documents cleanly in a list.
+- Whenever a retrieved document includes a 'File URL', always format it as a clickable Markdown link (e.g. `[Download/View Document](url)` or `[Title](url)`) so the user can easily view or download the file.
+
 Conversation history:
 {conversation or '(none)'}
 
@@ -66,7 +72,10 @@ Answer:"""
         history: Sequence[dict[str, str]] = (),
         subject_list: Sequence[str] = (),
     ) -> str:
-        return "".join(
+        start_time = time.perf_counter()
+
+        # Collect the streamed response chunks into a single string
+        answer = "".join(
             self.stream_answer(
                 question=question,
                 context=context,
@@ -74,6 +83,11 @@ Answer:"""
                 subject_list=subject_list,
             )
         )
+
+        elapsed_time = time.perf_counter() - start_time
+        print(f"[CallLLM] generate_answer completed in {elapsed_time:.4f} seconds.")
+
+        return answer
 
 
 # Retain the original public name for existing imports.

@@ -112,9 +112,22 @@ class TestQueryGraph(unittest.TestCase):
 
     # 4. after_deterministic edge tests
     def test_after_deterministic(self):
+        # Found chunks -> evaluate
         self.assertEqual(after_deterministic({"chunks": [{"id": "1"}]}), "evaluate")
-        self.assertEqual(after_deterministic({"chunks": []}), "rag_search")
-        self.assertEqual(after_deterministic({}), "rag_search")
+        # Empty chunks and attempt_count == 0 -> rewrite_query (single retry attempt)
+        self.assertEqual(
+            after_deterministic({"chunks": [], "attempt_count": 0, "max_attempts": 2}),
+            "rewrite_query",
+        )
+        # Empty chunks and attempt_count >= 1 -> generate directly (no max_attempts loop, no re-deciding route)
+        self.assertEqual(
+            after_deterministic({"chunks": [], "attempt_count": 1, "max_attempts": 2}),
+            "generate",
+        )
+        self.assertEqual(
+            after_deterministic({"chunks": [], "attempt_count": 2, "max_attempts": 2}),
+            "generate",
+        )
 
     # 5. rag_search node tests
     @patch("query_graph.HybridRetriever")
@@ -243,10 +256,16 @@ class TestQueryGraph(unittest.TestCase):
         result = generate(state)
         self.assertEqual(result["answer"], "Pre-formatted documents list")
 
-    def test_generate_empty_chunks(self):
+    @patch("query_graph.CallLLM")
+    def test_generate_empty_chunks(self, mock_call_llm_cls):
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "I could not find the requested documents."
+        mock_call_llm_cls.return_value = mock_llm
+
         state: RAGState = {"chunks": []}
         result = generate(state)
-        self.assertIn("couldn't find relevant passages", result["answer"])
+        self.assertEqual(result["answer"], "I could not find the requested documents.")
+        mock_llm.generate_answer.assert_called_once()
 
     @patch("query_graph.CallLLM")
     def test_generate_grounded_answer(self, mock_call_llm_cls):
@@ -295,10 +314,36 @@ class TestQueryGraph(unittest.TestCase):
         self.assertEqual(result["answer"], "Please specify the subject.")
         mock_llm.generate_answer.assert_called_once()
 
+    @patch("query_graph.CallLLM")
+    def test_generate_reasons_between_multiple_documents(self, mock_call_llm_cls):
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "Here are your Unit 2 notes: [DBMS Unit 2 Notes.pdf](https://example.com/u2.pdf)"
+        mock_call_llm_cls.return_value = mock_llm
+
+        chunks = [
+            {"title": "DBMS Unit 1 Notes.pdf", "unit": 1, "document_type": "notes", "file_url": "https://example.com/u1.pdf"},
+            {"title": "DBMS Unit 2 Notes.pdf", "unit": 2, "document_type": "notes", "file_url": "https://example.com/u2.pdf"},
+            {"title": "DBMS Unit 3 Notes.pdf", "unit": 3, "document_type": "notes", "file_url": "https://example.com/u3.pdf"},
+        ]
+        state: RAGState = {
+            "query": "give notes of unit 2",
+            "original_query": "give notes of unit 2",
+            "chunks": chunks,
+            "route": "deterministic",
+        }
+        result = generate(state)
+        self.assertEqual(result["answer"], "Here are your Unit 2 notes: [DBMS Unit 2 Notes.pdf](https://example.com/u2.pdf)")
+        mock_call_llm_cls.assert_called_once()
+        call_kwargs = mock_llm.generate_answer.call_args[1]
+        self.assertIn("DBMS Unit 2 Notes.pdf", call_kwargs["context"])
+        self.assertIn("https://example.com/u2.pdf", call_kwargs["context"])
+        self.assertIn("Unit: 2", call_kwargs["context"])
+
     # 10. End-to-end graph tests
+    @patch("query_graph.CallLLM")
     @patch("query_graph.DocumentRouter")
     @patch("query_graph.EvidenceEvaluator")
-    def test_e2e_deterministic_path(self, mock_evaluator_cls, mock_router_cls):
+    def test_e2e_deterministic_path(self, mock_evaluator_cls, mock_router_cls, mock_call_llm_cls):
         mock_router = MagicMock()
         mock_result = MagicMock()
         mock_result.route = "metadata"
@@ -319,11 +364,17 @@ class TestQueryGraph(unittest.TestCase):
         }
         mock_evaluator_cls.return_value = mock_evaluator
 
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "Here is DBMS Assignment 1"
+        mock_call_llm_cls.return_value = mock_llm
+
         output = run_query("Show DBMS assignments")
         self.assertEqual(output["route"], "deterministic")
         self.assertTrue(output["sufficient"])
         self.assertEqual(output["answer"], "Here is DBMS Assignment 1")
         mock_evaluator.evaluate.assert_called_once()
+        mock_call_llm_cls.assert_called_once()
+        mock_llm.generate_answer.assert_called_once()
 
     @patch("query_graph.DocumentRouter")
     @patch("query_graph.HybridRetriever")
@@ -339,13 +390,21 @@ class TestQueryGraph(unittest.TestCase):
         mock_router_cls,
     ):
         mock_router = MagicMock()
-        mock_result = MagicMock()
-        mock_result.route = "metadata"
-        mock_result.should_invoke_rag = False
-        mock_result.documents = [{"id": "d1", "title": "DBMS Assignment 1"}]
-        mock_result.formatted_text = "Here is DBMS Assignment 1"
-        mock_result.intent = DocumentIntent(intent="document_search", search_query="DBMS Assignment 1 details")
-        mock_router.route.return_value = mock_result
+        mock_meta_result = MagicMock()
+        mock_meta_result.route = "metadata"
+        mock_meta_result.should_invoke_rag = False
+        mock_meta_result.documents = [{"id": "d1", "title": "DBMS Assignment 1"}]
+        mock_meta_result.formatted_text = "Here is DBMS Assignment 1"
+        mock_meta_result.intent = DocumentIntent(intent="document_search", search_query="DBMS Assignment 1 details")
+
+        mock_rag_result = MagicMock()
+        mock_rag_result.route = "hybrid"
+        mock_rag_result.should_invoke_rag = True
+        mock_rag_result.documents = []
+        mock_rag_result.formatted_text = None
+        mock_rag_result.intent = DocumentIntent(intent="normal_rag_query")
+
+        mock_router.route.side_effect = [mock_meta_result, mock_rag_result]
         mock_router_cls.return_value = mock_router
 
         mock_evaluator = MagicMock()
@@ -384,6 +443,7 @@ class TestQueryGraph(unittest.TestCase):
         self.assertTrue(output["sufficient"])
         self.assertEqual(output["answer"], "Question 1 requires ER diagram modeling.")
         self.assertEqual(mock_evaluator.evaluate.call_count, 2)
+        self.assertEqual(mock_router.route.call_count, 2)
 
     @patch("query_graph.DocumentRouter")
     @patch("query_graph.HybridRetriever")
@@ -486,15 +546,17 @@ class TestQueryGraph(unittest.TestCase):
     @patch("query_graph.HybridRetriever")
     @patch("query_graph.EvidenceEvaluator")
     @patch("query_graph.CallLLM")
-    def test_e2e_deterministic_fallback_to_rag(
+    @patch("query_graph.rewrite_query")
+    def test_e2e_deterministic_file_not_found_generates_directly_without_rag_fallback(
         self,
+        mock_rewrite,
         mock_call_llm_cls,
         mock_evaluator_cls,
         mock_retriever_cls,
         mock_service_cls,
         mock_router_cls,
     ):
-        # Router thinks it might be deterministic
+        # Router thinks it is deterministic
         mock_router = MagicMock()
         mock_router_res = MagicMock()
         mock_router_res.route = "metadata"
@@ -502,7 +564,15 @@ class TestQueryGraph(unittest.TestCase):
         mock_router_res.documents = []  # No documents found
         mock_router_res.formatted_text = None
         mock_router_res.intent = DocumentIntent(intent="document_search", search_query="rare doc")
-        mock_router.route.return_value = mock_router_res
+
+        mock_rag_res = MagicMock()
+        mock_rag_res.route = "hybrid"
+        mock_rag_res.should_invoke_rag = True
+        mock_rag_res.documents = []
+        mock_rag_res.formatted_text = None
+        mock_rag_res.intent = DocumentIntent(intent="normal_rag_query")
+
+        mock_router.route.side_effect = [mock_router_res, mock_rag_res]
         mock_router_cls.return_value = mock_router
 
         # DocumentService also returns empty
@@ -510,7 +580,8 @@ class TestQueryGraph(unittest.TestCase):
         mock_service.lookup_documents.return_value = []
         mock_service_cls.return_value = mock_service
 
-        # Falls back to rag_search
+        mock_rewrite.return_value = "rare primary source document archive"
+
         mock_retriever = MagicMock()
         mock_retriever.retrieve.return_value = [{"id": "c1", "content": "Found via hybrid search"}]
         mock_retriever_cls.return_value = mock_retriever
@@ -520,11 +591,114 @@ class TestQueryGraph(unittest.TestCase):
         mock_evaluator_cls.return_value = mock_evaluator
 
         mock_llm = MagicMock()
-        mock_llm.generate_answer.return_value = "Answer retrieved via fallback."
+        mock_llm.generate_answer.return_value = "Answer retrieved directly without RAG."
         mock_call_llm_cls.return_value = mock_llm
 
-        output = run_query("Find rare doc")
-        self.assertEqual(output["answer"], "Answer retrieved via fallback.")
+        output = run_query("Find rare doc", max_attempts=2)
+        self.assertEqual(output["answer"], "Answer retrieved directly without RAG.")
+        self.assertEqual(output["route"], "deterministic")
+        self.assertEqual(output["attempt_count"], 1)
+        mock_rewrite.assert_called_once()
+        self.assertEqual(mock_router.route.call_count, 2)
+        mock_retriever.retrieve.assert_not_called()
+
+    @patch("query_graph.CallLLM")
+    @patch("query_graph.DocumentRouter")
+    @patch("query_graph.DocumentService")
+    @patch("query_graph.EvidenceEvaluator")
+    @patch("query_graph.rewrite_query")
+    def test_e2e_deterministic_approach_fails_rewrites_and_finds_document(
+        self,
+        mock_rewrite,
+        mock_evaluator_cls,
+        mock_service_cls,
+        mock_router_cls,
+        mock_call_llm_cls,
+    ):
+        mock_router = MagicMock()
+
+        # Attempt 0: User query fails to find docs in metadata
+        res1 = MagicMock()
+        res1.route = "metadata"
+        res1.should_invoke_rag = False
+        res1.documents = []
+        res1.formatted_text = None
+        res1.intent = DocumentIntent(intent="document_listing", document_type="notes", unit=2)
+
+        # Attempt 1: Rewritten query matches unit 2 notes document
+        res2 = MagicMock()
+        res2.route = "metadata"
+        res2.should_invoke_rag = False
+        res2.documents = [{"id": "d1", "title": "DBMS Unit 2 Notes.pdf", "unit": 2, "file_url": "https://example.com/u2.pdf"}]
+        res2.formatted_text = "Here are the notes for DBMS (Unit 2):\n1. **DBMS Unit 2 Notes.pdf**"
+        res2.intent = DocumentIntent(intent="document_listing", document_type="notes", unit=2)
+
+        mock_router.route.side_effect = [res1, res2]
+        mock_router_cls.return_value = mock_router
+
+        mock_service = MagicMock()
+        mock_service.lookup_documents.side_effect = [[], [{"id": "d1", "title": "DBMS Unit 2 Notes.pdf", "unit": 2, "file_url": "https://example.com/u2.pdf"}]]
+        mock_service_cls.return_value = mock_service
+
+        mock_rewrite.return_value = "give DBMS notes for unit 2"
+
+        mock_evaluator = MagicMock()
+        mock_evaluator.evaluate.return_value = {"sufficiency": True, "scores": {}, "reason": "Found doc"}
+        mock_evaluator_cls.return_value = mock_evaluator
+
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "Here are the notes: DBMS Unit 2 Notes.pdf"
+        mock_call_llm_cls.return_value = mock_llm
+
+        output = run_query("give notes of unit 2", max_attempts=2)
+        self.assertEqual(output["route"], "deterministic")
+        self.assertTrue(output["sufficient"])
+        self.assertIn("DBMS Unit 2 Notes.pdf", output["answer"])
+        self.assertEqual(output["attempt_count"], 1)
+        mock_rewrite.assert_called_once()
+        self.assertEqual(mock_router.route.call_count, 2)
+        mock_call_llm_cls.assert_called_once()
+        mock_llm.generate_answer.assert_called_once()
+
+    @patch("query_graph.DocumentRouter")
+    @patch("query_graph.DocumentService")
+    @patch("query_graph.HybridRetriever")
+    @patch("query_graph.rewrite_query")
+    @patch("query_graph.CallLLM")
+    def test_e2e_deterministic_exhausted_attempts_generates_via_llm_without_rag(
+        self,
+        mock_call_llm_cls,
+        mock_rewrite,
+        mock_retriever_cls,
+        mock_service_cls,
+        mock_router_cls,
+    ):
+        mock_router = MagicMock()
+        mock_res = MagicMock()
+        mock_res.route = "metadata"
+        mock_res.should_invoke_rag = False
+        mock_res.documents = []
+        mock_res.formatted_text = None
+        mock_res.intent = DocumentIntent(intent="document_listing", document_type="notes", unit=99)
+        mock_router.route.return_value = mock_res
+        mock_router_cls.return_value = mock_router
+
+        mock_service = MagicMock()
+        mock_service.lookup_documents.return_value = []
+        mock_service_cls.return_value = mock_service
+
+        mock_rewrite.return_value = "DBMS Unit 99 lecture notes"
+
+        mock_llm = MagicMock()
+        mock_llm.generate_answer.return_value = "I checked your enrolled subjects and documents, but Unit 99 notes are not available."
+        mock_call_llm_cls.return_value = mock_llm
+
+        output = run_query("give notes of unit 99 for DBMS", max_attempts=1)
+        self.assertEqual(output["answer"], "I checked your enrolled subjects and documents, but Unit 99 notes are not available.")
+        # RAG retriever must NOT be called
+        mock_retriever_cls.assert_not_called()
+        mock_call_llm_cls.assert_called_once()
+        mock_llm.generate_answer.assert_called_once()
 
     @patch("query_graph.DocumentRouter")
     @patch("query_graph.EvidenceEvaluator")
