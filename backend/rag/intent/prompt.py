@@ -84,11 +84,6 @@ SUBJECT RESOLUTION RULES
 
 ==================================================
 UNIT & METADATA FILTERING RULES
-==================================================
-- "unit": An integer representing the specific curriculum/course unit, module, or chapter number if requested (e.g., "unit 2", "unit-3", "unit 1 notes", "module 4", "chapter 2" -> 2, 3, 1, 4, 2). Return null if no specific unit is requested.
-- We filter documents directly by unit metadata. Do NOT put unit references (such as "unit 2") into "search_query". When filtering by unit, set "search_query": null unless there are distinct separate search terms.
-
-==================================================
 DOCUMENT TYPE CLASSIFICATION
 ==================================================
 Possible values: "assignment", "notice", "study_material", "notes", "announcement", "syllabus", "time_table", "other", or null.
