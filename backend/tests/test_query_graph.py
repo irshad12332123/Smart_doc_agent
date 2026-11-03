@@ -114,16 +114,16 @@ class TestQueryGraph(unittest.TestCase):
     def test_after_deterministic(self):
         # Found chunks -> evaluate
         self.assertEqual(after_deterministic({"chunks": [{"id": "1"}]}), "evaluate")
-        # Empty chunks and attempts < max -> rewrite_query (does NOT fall back directly to rag)
+        # Empty chunks and attempt_count == 0 -> rewrite_query (single retry attempt)
         self.assertEqual(
             after_deterministic({"chunks": [], "attempt_count": 0, "max_attempts": 2}),
             "rewrite_query",
         )
+        # Empty chunks and attempt_count >= 1 -> generate directly (no max_attempts loop, no re-deciding route)
         self.assertEqual(
             after_deterministic({"chunks": [], "attempt_count": 1, "max_attempts": 2}),
-            "rewrite_query",
+            "generate",
         )
-        # Empty chunks and attempts >= max -> generate (no fallback to rag_search)
         self.assertEqual(
             after_deterministic({"chunks": [], "attempt_count": 2, "max_attempts": 2}),
             "generate",
@@ -515,7 +515,7 @@ class TestQueryGraph(unittest.TestCase):
     @patch("query_graph.EvidenceEvaluator")
     @patch("query_graph.CallLLM")
     @patch("query_graph.rewrite_query")
-    def test_e2e_deterministic_fallback_to_rag(
+    def test_e2e_deterministic_file_not_found_generates_directly_without_rag_fallback(
         self,
         mock_rewrite,
         mock_call_llm_cls,
@@ -524,7 +524,7 @@ class TestQueryGraph(unittest.TestCase):
         mock_service_cls,
         mock_router_cls,
     ):
-        # Router thinks it might be deterministic
+        # Router thinks it is deterministic
         mock_router = MagicMock()
         mock_router_res = MagicMock()
         mock_router_res.route = "metadata"
@@ -550,7 +550,6 @@ class TestQueryGraph(unittest.TestCase):
 
         mock_rewrite.return_value = "rare primary source document archive"
 
-        # Falls back to rag_search
         mock_retriever = MagicMock()
         mock_retriever.retrieve.return_value = [{"id": "c1", "content": "Found via hybrid search"}]
         mock_retriever_cls.return_value = mock_retriever
@@ -560,13 +559,16 @@ class TestQueryGraph(unittest.TestCase):
         mock_evaluator_cls.return_value = mock_evaluator
 
         mock_llm = MagicMock()
-        mock_llm.generate_answer.return_value = "Answer retrieved via fallback."
+        mock_llm.generate_answer.return_value = "Answer retrieved directly without RAG."
         mock_call_llm_cls.return_value = mock_llm
 
-        output = run_query("Find rare doc")
-        self.assertEqual(output["answer"], "Answer retrieved via fallback.")
+        output = run_query("Find rare doc", max_attempts=2)
+        self.assertEqual(output["answer"], "Answer retrieved directly without RAG.")
+        self.assertEqual(output["route"], "deterministic")
+        self.assertEqual(output["attempt_count"], 1)
         mock_rewrite.assert_called_once()
         self.assertEqual(mock_router.route.call_count, 2)
+        mock_retriever.retrieve.assert_not_called()
 
     @patch("query_graph.DocumentRouter")
     @patch("query_graph.DocumentService")
