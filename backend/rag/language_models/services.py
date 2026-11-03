@@ -22,6 +22,7 @@ class CallLLM:
         subject_list: Sequence[str] = (),
     ) -> Iterator[str]:
 
+        # print(f"context : {context} \n history: {history} \n question: {question}")
         conversation = "\n".join(
             f"{entry['role'].capitalize()}: {entry['content']}"
             for entry in history[-10:]
