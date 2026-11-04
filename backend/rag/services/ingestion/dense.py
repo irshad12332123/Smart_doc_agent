@@ -91,8 +91,13 @@ class DenseIngestion(BaseIngestion):
         "description": "string (50-100 words summary)",
         "document_type": "notice" | "assignment" | "syllabus" | "notes" | "time_table" | "others",
         "deadline": "YYYY-MM-DD (optional, null if not present)",
-        "unit": integer (optional academic unit, module, or chapter number e.g. 1, 2, 3, or null if not applicable)
+        "unit": integer or string (optional academic unit, module, or chapter e.g. 1, 2, 'A', 'B', 'I', 'II', or null if not applicable)
     }
+    Note for unit:
+    - If units are labeled with numbers: 1, 2, 3 -> 1, 2, 3
+    - If units are labeled with letters: Unit A -> 1, Unit B -> 2, Unit C -> 3, Unit D -> 4, etc.
+    - If units are labeled with Roman numerals: Unit I -> 1, Unit II -> 2, Unit III -> 3, Unit IV -> 4, etc.
+    You may provide either the integer value or the label string; the system normalizes it.
     Return ONLY a valid JSON object with no markdown wrappers or additional text."""
 
         # Using Groq's JSON object mode guarantees valid JSON output
