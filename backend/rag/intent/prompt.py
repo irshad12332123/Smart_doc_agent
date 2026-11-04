@@ -50,7 +50,11 @@ INTENT CATEGORIES
      * "Show me the study material for operating systems"
      * "Give notes of unit 2"
      * "Give notes of unit 2 for DBMS"
+     * "Give notes of unit B"
+     * "Give notes of unit B for DBMS"
+     * "Show notes for unit II"
      * "Give me unit 1 pdf"
+     * "Give me unit A assignment"
 
 2. "document_search":
    - The user is looking for a specific document, file, or notice by unit, title, assignment number, topic, or exam name.
@@ -61,6 +65,7 @@ INTENT CATEGORIES
      * "Locate the OS lab assignment on thread synchronization"
      * "Find the circular regarding fee payment"
      * "Find unit 3 notes for DBMS"
+     * "Find unit B notes for DBMS"
 
 3. "normal_rag_query":
    - The user is asking a conceptual, explanatory, informational, or knowledge question requiring reading and synthesizing document text.
@@ -85,8 +90,12 @@ SUBJECT RESOLUTION RULES
 ==================================================
 UNIT & METADATA FILTERING RULES
 ==================================================
-- "unit": An integer representing the specific curriculum/course unit, module, or chapter number if requested (e.g., "unit 2", "unit-3", "unit 1 notes", "module 4", "chapter 2" -> 2, 3, 1, 4, 2). Return null if no specific unit is requested.
-- We filter documents directly by unit metadata. Do NOT put unit references (such as "unit 2") into "search_query". When filtering by unit, set "search_query": null unless there are distinct separate search terms.
+- "unit": An integer representing the specific curriculum/course unit, module, or chapter number if requested:
+  * Arabic digits: "unit 2", "unit-3", "module 4", "chapter 1" -> 2, 3, 4, 1.
+  * Letters: "unit a" / "unit A" -> 1, "unit b" / "unit B" -> 2, "unit c" / "unit C" -> 3, "unit d" -> 4, etc.
+  * Roman numerals: "unit i" / "unit I" -> 1, "unit ii" / "unit II" -> 2, "unit iii" / "unit III" -> 3, "unit iv" / "unit IV" -> 4, etc.
+  * Return null if no specific unit is requested.
+- We filter documents directly by unit metadata. Do NOT put unit references (such as "unit 2", "unit B", "unit I") into "search_query". When filtering by unit, set "search_query": null unless there are distinct separate search terms.
 
 ==================================================
 DOCUMENT TYPE CLASSIFICATION
