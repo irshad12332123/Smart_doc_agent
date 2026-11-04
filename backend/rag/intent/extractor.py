@@ -20,6 +20,14 @@ from .schema import (
     TimeFilter,
 )
 
+try:
+    from services.ingestion.constants import parse_unit_value
+except ImportError:
+    try:
+        from rag.services.ingestion.constants import parse_unit_value
+    except ImportError:
+        from backend.rag.services.ingestion.constants import parse_unit_value
+
 logger = logging.getLogger(__name__)
 
 VALID_DOCUMENT_TYPES: set[str] = {
@@ -258,26 +266,16 @@ class IntentExtractor:
         unit: Optional[int] = None
         raw_unit = raw_intent.get("unit")
         if raw_unit is not None:
-            try:
-                if isinstance(raw_unit, int):
-                    unit = raw_unit
-                elif isinstance(raw_unit, str):
-                    clean_u = raw_unit.strip()
-                    if clean_u.lower() not in {"null", "none", "n/a", ""}:
-                        import re
-                        m = re.search(r"\b\d+\b", clean_u)
-                        if m:
-                            unit = int(m.group(0))
-            except (ValueError, TypeError):
-                unit = None
+            unit = parse_unit_value(raw_unit)
 
-        # If LLM put unit pattern in search_query (e.g. "unit 2"), normalize to unit metadata
+        # If LLM put unit pattern in search_query (e.g. "unit 2", "unit b", "unit ii"), normalize to unit metadata
         if search_query:
             import re
-            m = re.match(r"^unit\s*(\d+)$", search_query.strip(), flags=re.IGNORECASE)
+            m = re.match(r"^(?:unit|module|chapter)\s*[-:]?\s*([a-z0-9]+)$", search_query.strip(), flags=re.IGNORECASE)
             if m:
-                if unit is None:
-                    unit = int(m.group(1))
+                extracted_unit = parse_unit_value(search_query.strip())
+                if unit is None and extracted_unit is not None:
+                    unit = extracted_unit
                 search_query = None
 
         # Flexible metadata filters for future extensible document columns
