@@ -710,6 +710,78 @@ class TestDeterministicLookup(unittest.TestCase):
         formatted = router._format_document_list([], intent, subject_name="DBMS")
         self.assertEqual(formatted, "I couldn't find any notes for **DBMS** (Unit 5) in your records.")
 
+    # 25. Unit metadata extraction handles letters (a, b, c) and Roman numerals (i, ii, iv)
+    def test_unit_extraction_letters_and_roman_numerals(self):
+        from services.ingestion.constants import DocumentMetaData
+
+        # Letters
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit A").unit, 1)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit B").unit, 2)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit C").unit, 3)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="b").unit, 2)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="B").unit, 2)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="c").unit, 3)
+
+        # Roman numerals
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit I").unit, 1)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit II").unit, 2)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit III").unit, 3)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit IV").unit, 4)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="iv").unit, 4)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="IV").unit, 4)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit V").unit, 5)
+
+        # Words
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit two").unit, 2)
+
+    # 26. IntentExtractor handles letter and Roman numeral unit search queries
+    def test_intent_extractor_normalizes_letter_and_roman_unit_query(self):
+        extractor = IntentExtractor()
+
+        # "unit b" in search_query
+        res1 = extractor.validate_and_sanitize(
+            raw_intent={
+                "intent": "document_listing",
+                "document_type": "notes",
+                "subject_id": "uuid-dbms-1",
+                "unit": None,
+                "search_query": "unit b",
+            },
+            valid_subject_ids=self.valid_subject_ids,
+            reference_time=self.ref_time,
+        )
+        self.assertEqual(res1.unit, 2)
+        self.assertIsNone(res1.search_query)
+
+        # "unit II" in search_query
+        res2 = extractor.validate_and_sanitize(
+            raw_intent={
+                "intent": "document_listing",
+                "document_type": "notes",
+                "subject_id": "uuid-dbms-1",
+                "unit": None,
+                "search_query": "unit II",
+            },
+            valid_subject_ids=self.valid_subject_ids,
+            reference_time=self.ref_time,
+        )
+        self.assertEqual(res2.unit, 2)
+        self.assertIsNone(res2.search_query)
+
+        # "unit": "B" in raw_intent
+        res3 = extractor.validate_and_sanitize(
+            raw_intent={
+                "intent": "document_listing",
+                "document_type": "notes",
+                "subject_id": "uuid-dbms-1",
+                "unit": "B",
+                "search_query": None,
+            },
+            valid_subject_ids=self.valid_subject_ids,
+            reference_time=self.ref_time,
+        )
+        self.assertEqual(res3.unit, 2)
+
 
 
 if __name__ == "__main__":
