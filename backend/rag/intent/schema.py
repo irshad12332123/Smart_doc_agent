@@ -2,6 +2,14 @@ import re
 from typing import Any, Literal, Optional
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+try:
+    from services.ingestion.constants import parse_unit_value
+except ImportError:
+    try:
+        from rag.services.ingestion.constants import parse_unit_value
+    except ImportError:
+        from backend.rag.services.ingestion.constants import parse_unit_value
+
 IntentType = Literal["document_listing", "document_search", "normal_rag_query"]
 
 DocumentType = Literal[
@@ -87,15 +95,4 @@ class DocumentIntent(BaseModel):
     @field_validator("unit", mode="before")
     @classmethod
     def parse_unit(cls, v: Any) -> Optional[int]:
-        if v is None:
-            return None
-        if isinstance(v, int):
-            return v
-        if isinstance(v, str):
-            v_clean = v.strip()
-            if not v_clean or v_clean.lower() in ("null", "none", "n/a", "na", ""):
-                return None
-            match = re.search(r"\b\d+\b", v_clean)
-            if match:
-                return int(match.group(0))
-        return None
+        return parse_unit_value(v)
