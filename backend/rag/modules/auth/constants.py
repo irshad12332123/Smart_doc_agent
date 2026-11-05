@@ -16,6 +16,10 @@ class StudentRole(StrEnum):
     REGULAR="regular"
     CLASS_REPRESENTATIVE="cr"
 
+class AuthorizedRolesToAcessUpload(StrEnum):
+    StudentRole.CLASS_REPRESENTATIVE
+    GlobalRole.FACULTY
+
 
 REGISTRY_CONFIG = {
     RegistryType.STUDENT: {
