@@ -40,8 +40,12 @@ function App() {
 
   useEffect(() => {
     if (!session) return;
+    const batchId =
+      session.profile.role === "student"
+        ? session.profile.student_data?.batch_id
+        : undefined;
     documentApi
-      .list()
+      .list(batchId)
       .then(setDocuments)
       .catch(() => setDocError("Documents could not be loaded."));
   }, [session]);
