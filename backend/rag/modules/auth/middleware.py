@@ -8,7 +8,7 @@ from lib.supabase import get_supabase_client
 
 from .constants import GlobalRole, StudentRole
 from .errors import AuthError
-
+from rag.modules.user.services import _get_single_row_from_supabase_where
 
 def require_auth(view: Callable[..., Any]) -> Callable[..., Any]:
     @wraps(view)
@@ -47,7 +47,18 @@ def require_role(*roles: GlobalRole | StudentRole) -> Callable[[Callable[..., An
         @require_auth
         @wraps(view)
         def wrapped(*args: Any, **kwargs: Any):
-            if g.current_profile.get("role") not in {role.value for role in roles}:
+            role: str= g.current_profile.get("role")
+            if role == "student":
+                # if Student role is not CR reject
+                # get Student role
+                student_record_data = _get_single_row_from_supabase_where(["id"], ["profile_id", str(g.current_user.id)], "students", client=get_supabase_client())
+
+                batch_membership_record_data = _get_single_row_from_supabase_where(["id",], ["student_id", student_record_data["id"]], "batch_memberships", client=get_supabase_client())
+
+                student_role_record_data =  _get_single_row_from_supabase_where(["role"], ["batch_membership_id", str(batch_membership_record_data["id"])], "student_batch_roles", client=get_supabase_client())
+
+                role = student_role_record_data["role"]
+            if role not in {role.value for role in roles}:
                 raise AuthError("You do not have permission to perform this action", 403)
             return view(*args, **kwargs)
         return wrapped
