@@ -62,10 +62,6 @@ class Student(User):
 
             student_record_data = _get_single_row_from_supabase_where(["id", "student_id", "registered_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
 
-            # print(student_record_data["id"])
-            # print(student_record_data["registered_email"])
-            # print(student_record_data["name"])
-
             batch_membership_record_data = _get_single_row_from_supabase_where(["id", "batch_id",], ["student_id", student_record_data["id"]], "batch_memberships", self._client)
 
             student_role_record_data =  _get_single_row_from_supabase_where(["role"], ["batch_membership_id", str(batch_membership_record_data["id"])], "student_batch_roles", self._client)
