@@ -71,6 +71,9 @@ def _document_info(document: dict[str, Any], chunk_counts: Counter[str]) -> dict
 def ingest_files():
     files = request.files.getlist("files")
     batch_ids = request.form.getlist("batch_ids")
+    batch_id = request.form.get("batch_id") or request.form.get("batchId")
+    if not batch_ids and batch_id:
+        batch_ids = [batch_id]
     subject_id = request.form.get("subject_id") or None
 
     if not files:
@@ -136,6 +139,7 @@ def ingest_files():
                     batch_ids=batch_ids,
                     filename=filename,
                     uploaded_by=uploaded_by,
+                    batch_id=batch_id or (batch_ids[0] if batch_ids else None),
                 )
                 update_job(job_id, celery_task_id=task.id)
                 queued_jobs.append({
@@ -293,14 +297,62 @@ def run_evaluation():
         return jsonify({"detail": f"Evaluation benchmark failed: {e}"}), 500
 
 @ingest.route("/documents", methods=["GET"])
+@require_auth
 def list_documents():
     try:
         client = get_supabase_client()
-        documents = _data(client.table("documents").select("id,title,s3_key,created_at").execute())
+        # Accept batch_id from query parameters (or json body fallback if provided)
+        user_batch_id = (
+            request.args.get("batch_id")
+            or request.args.get("batchId")
+            or (request.get_json(silent=True) or {}).get("batch_id")
+            or (request.get_json(silent=True) or {}).get("batchId")
+        )
+
+        # Fallback: Auto-resolve batch_id from student profile if caller didn't pass it
+        if not user_batch_id and getattr(g, "current_profile", {}).get("role") == "student":
+            try:
+                from modules.user.services import _get_single_row_from_supabase_where
+                student_record = _get_single_row_from_supabase_where(
+                    ["id"], ["profile_id", str(g.current_user.id)], "students", client=client
+                )
+                if student_record and student_record.get("id"):
+                    membership = _get_single_row_from_supabase_where(
+                        ["batch_id"], ["student_id", student_record["id"]], "batch_memberships", client=client
+                    )
+                    if membership and membership.get("batch_id"):
+                        user_batch_id = membership["batch_id"]
+            except Exception as ex:
+                logger.warning(f"Could not auto-resolve batch_id for student: {ex}")
+
+        if user_batch_id:
+            # Check document_batches junction table as documents may be mapped there or via documents.batch_id
+            doc_batches = _data(
+                client.table("document_batches").select("document_id").eq("batch_id", user_batch_id).execute()
+            )
+            batch_doc_ids = [str(r["document_id"]) for r in doc_batches if r.get("document_id")]
+
+            if batch_doc_ids:
+                documents = _data(
+                    client.table("documents")
+                    .select("id,title,s3_key,created_at")
+                    .or_(f"batch_id.eq.{user_batch_id},id.in.({','.join(batch_doc_ids)})")
+                    .execute()
+                )
+            else:
+                documents = _data(
+                    client.table("documents")
+                    .select("id,title,s3_key,created_at")
+                    .eq("batch_id", user_batch_id)
+                    .execute()
+                )
+
+        print(f"Documents Gathered: {len(documents)}")
         chunks = _data(client.table("document_chunks").select("document_id").execute())
         counts = Counter(str(chunk["document_id"]) for chunk in chunks)
         return jsonify([_document_info(document, counts) for document in documents])
-    except Exception:
+    except Exception as e:
+        logger.error(f"Error fetching documents: {e}")
         return jsonify({"detail": "Could not load documents."}), 500
 
 @ingest.route("/documents/<document_id>", methods=["DELETE"])

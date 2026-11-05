@@ -124,6 +124,7 @@ class DenseIngestion(BaseIngestion):
         context_meta_data_generator=None,
         subject_id: str | None = None,
         batch_ids: list[str] | None = None,
+        batch_id: str | None = None,
         extension: str = "",
         filename: str = "",
         s3_key: str = "",
@@ -189,10 +190,19 @@ class DenseIngestion(BaseIngestion):
         if subject_id is not None:
             document_data_to_insert["subject_id"] = subject_id
 
+        resolved_batch_id = batch_id
+        if not resolved_batch_id and batch_ids:
+            resolved_batch_id = batch_ids[0] if isinstance(batch_ids, list) else str(batch_ids)
+
+        if resolved_batch_id:
+            document_data_to_insert["batch_id"] = str(resolved_batch_id)
+
         document_id = self._insert_document(document_data_to_insert)
 
         if batch_ids:
             self._upload_doc_id_per_batches(document_id, batch_ids)
+        elif resolved_batch_id:
+            self._upload_doc_id_per_batches(document_id, [str(resolved_batch_id)])
 
         chunk_count = self._ingest_bytes(file_bytes, filename, s3_key, document_id)
 

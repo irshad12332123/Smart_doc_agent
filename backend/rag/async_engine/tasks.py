@@ -42,6 +42,7 @@ def process_ingestion_job(
     batch_ids: Optional[list[str]] = None,
     filename: Optional[str] = None,
     uploaded_by: Optional[str] = None,
+    batch_id: Optional[str] = None,
 ) -> dict[str, Any]:
     """
     Asynchronously processes a document ingestion job:
@@ -98,6 +99,7 @@ def process_ingestion_job(
         dense_result = dense_ingester.ingest(
             subject_id=subject_id,
             batch_ids=batch_ids or [],
+            batch_id=batch_id,
             extension=extension,
             filename=resolved_filename,
             s3_key=s3_key,
