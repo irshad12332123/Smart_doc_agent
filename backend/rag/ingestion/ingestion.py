@@ -1,4 +1,4 @@
-from measure_time_taken import time_taken
+
 import hashlib
 import json
 import logging
@@ -12,12 +12,7 @@ from flask import Blueprint, Response, g, jsonify, request, stream_with_context
 from werkzeug.utils import secure_filename
 
 from modules.auth.middleware import require_auth
-try:
-    from language_models.services import CallLLM
-    from language_models.sml import load_slm
-except ImportError:
-    from rag.language_models.services import CallLLM
-    from rag.language_models.sml import load_slm
+from modules.auth.middleware import require_role
 from config.settings import (
     S3_BUCKET_NAME,
     S3_SIGNED_URL_TTL_SECONDS,
@@ -45,6 +40,7 @@ from ingestion.ingest_repository import (
     find_document_by_hash,
 )
 from async_engine.tasks import process_ingestion_job, sync_sparse_index_task
+from rag.modules.auth.constants import AuthorizedRolesToAcessUpload
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +67,7 @@ def _document_info(document: dict[str, Any], chunk_counts: Counter[str]) -> dict
     }
 
 @ingest.route("/ingest", methods=["POST"])
-@require_auth
+@require_role(*AuthorizedRolesToAcessUpload) # this internally handles the authorization
 def ingest_files():
     files = request.files.getlist("files")
     batch_ids = request.form.getlist("batch_ids")
