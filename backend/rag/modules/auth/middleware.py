@@ -6,7 +6,7 @@ from flask import g, request
 
 from lib.supabase import get_supabase_client
 
-from .constants import GlobalRole
+from .constants import GlobalRole, StudentRole
 from .errors import AuthError
 
 
@@ -42,7 +42,7 @@ def require_auth(view: Callable[..., Any]) -> Callable[..., Any]:
     return wrapped
 
 
-def require_role(*roles: GlobalRole) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+def require_role(*roles: GlobalRole | StudentRole) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     def decorator(view: Callable[..., Any]) -> Callable[..., Any]:
         @require_auth
         @wraps(view)

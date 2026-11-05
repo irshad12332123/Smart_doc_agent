@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Any
 import uuid
 from flask import Blueprint, Response, g, jsonify, request, stream_with_context
-from groq import Groq
 from werkzeug.utils import secure_filename
 
 from modules.auth.middleware import require_auth
