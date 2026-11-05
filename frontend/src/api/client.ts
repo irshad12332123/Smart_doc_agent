@@ -121,10 +121,16 @@ export const authApi = {
 };
 
 export const documentApi = {
-  list: () =>
-    fetch(`${BASE_URL}/api/documents`, { headers: authHeaders() }).then(
+  list: (batchId?: string) => {
+    const params = new URLSearchParams();
+    if (batchId) {
+      params.append("batch_id", batchId);
+    }
+    const query = params.toString() ? `?${params.toString()}` : "";
+    return fetch(`${BASE_URL}/api/documents${query}`, { headers: authHeaders() }).then(
       bodyOrError,
-    ) as Promise<DocumentInfo[]>,
+    ) as Promise<DocumentInfo[]>;
+  },
 
   upload: (
     files: File[],
