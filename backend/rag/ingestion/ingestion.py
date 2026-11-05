@@ -20,7 +20,6 @@ except ImportError:
     from rag.language_models.sml import load_slm
 from config.settings import (
     S3_BUCKET_NAME,
-    GROQ_MODEL,
     S3_SIGNED_URL_TTL_SECONDS,
     MAX_UPLOAD_BYTES,
 )
@@ -28,10 +27,7 @@ from config.settings import (
 from utils.get_file_type import get_file_type
 from lib.aws_s3 import aws_s3_client
 from lib.supabase import get_supabase_client
-from query_engine.rewrite_query import rewrite_query
-from query_engine.router import DocumentRouter
 from s3.service import S3Service
-from services.ingestion.dense import DenseIngestion
 from services.ingestion.sparse import SparseIngestion
 from services.retriever.sparse import SparseRetriever
 from services.retriever.hybrid import HybridRetriever
