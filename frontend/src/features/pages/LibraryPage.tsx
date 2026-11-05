@@ -19,7 +19,7 @@ export function LibraryPage({
 }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-
+    console.log("Documents",documents);
   const rows = useMemo(
     () =>
       documents.filter((d) => {
