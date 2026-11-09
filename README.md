@@ -1,4 +1,4 @@
-# Smart Doc Agent (CampusHub / BatchOS)
+# Smart Doc Agent
 
 
 #INGESTION PIPELINE
