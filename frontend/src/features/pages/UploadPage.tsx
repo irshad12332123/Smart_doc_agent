@@ -86,7 +86,9 @@ export function UploadPage({
     setMessage("Uploading document to queue…");
     try {
       await documentApi.upload(files, payload);
-      setDocuments(await documentApi.list());
+      const studentBatchId =
+        profile.role === "student" ? profile.student_data?.batch_id : undefined;
+      setDocuments(await documentApi.list(studentBatchId));
       setFiles([]);
       setMessage("Accepted. Document queued for processing ✓");
     } catch (e: unknown) {

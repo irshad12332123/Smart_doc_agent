@@ -517,6 +517,40 @@ class TestDeterministicLookup(unittest.TestCase):
             self.assertEqual(insert_payload["subject_id"], "uuid-dbms-1")
             self.assertEqual(insert_payload["title"], "unit_2_notes.pdf")
 
+    # 17b. Dense Ingestion pushes batch_id metadata to Supabase documents table
+    @patch("services.ingestion.dense.PdfReader")
+    def test_dense_ingestion_pushes_batch_id_to_documents_table(self, mock_pdf):
+        from services.ingestion.dense import DenseIngestion
+        from services.ingestion.constants import DocumentMetaData
+
+        mock_client = MagicMock()
+        dense = DenseIngestion(client=mock_client)
+
+        meta = DocumentMetaData(
+            description="Batch Notes",
+            document_type="notes",
+            deadline=None,
+        )
+
+        with patch.object(dense, "_get_file_context_meta_data_from_slm", return_value=meta), \
+             patch.object(dense, "_insert_document", return_value="doc-batch-1") as mock_insert, \
+             patch.object(dense, "_upload_doc_id_per_batches"), \
+             patch.object(dense, "_ingest_bytes", return_value=5):
+
+            res = dense.ingest(
+                context_meta_data_generator=MagicMock(),
+                subject_id="uuid-dbms-1",
+                batch_ids=["batch-uuid-123"],
+                filename="batch_notes.pdf",
+                file_bytes=b"%PDF-1.4 mock content",
+                s3_key="notes/batch_notes.pdf",
+            )
+
+            self.assertEqual(res["doc_id"], "doc-batch-1")
+            mock_insert.assert_called_once()
+            insert_payload = mock_insert.call_args[0][0]
+            self.assertEqual(insert_payload["batch_id"], "batch-uuid-123")
+
     # 18. SLM extracts unit metadata from user query without search_query FTS term
     def test_slm_extracts_unit_metadata_without_search_query(self):
         mock_client = MagicMock()
@@ -709,6 +743,78 @@ class TestDeterministicLookup(unittest.TestCase):
         )
         formatted = router._format_document_list([], intent, subject_name="DBMS")
         self.assertEqual(formatted, "I couldn't find any notes for **DBMS** (Unit 5) in your records.")
+
+    # 25. Unit metadata extraction handles letters (a, b, c) and Roman numerals (i, ii, iv)
+    def test_unit_extraction_letters_and_roman_numerals(self):
+        from services.ingestion.constants import DocumentMetaData
+
+        # Letters
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit A").unit, 1)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit B").unit, 2)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit C").unit, 3)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="b").unit, 2)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="B").unit, 2)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="c").unit, 3)
+
+        # Roman numerals
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit I").unit, 1)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit II").unit, 2)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit III").unit, 3)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit IV").unit, 4)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="iv").unit, 4)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="IV").unit, 4)
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit V").unit, 5)
+
+        # Words
+        self.assertEqual(DocumentMetaData(description="Desc", document_type="notes", unit="Unit two").unit, 2)
+
+    # 26. IntentExtractor handles letter and Roman numeral unit search queries
+    def test_intent_extractor_normalizes_letter_and_roman_unit_query(self):
+        extractor = IntentExtractor()
+
+        # "unit b" in search_query
+        res1 = extractor.validate_and_sanitize(
+            raw_intent={
+                "intent": "document_listing",
+                "document_type": "notes",
+                "subject_id": "uuid-dbms-1",
+                "unit": None,
+                "search_query": "unit b",
+            },
+            valid_subject_ids=self.valid_subject_ids,
+            reference_time=self.ref_time,
+        )
+        self.assertEqual(res1.unit, 2)
+        self.assertIsNone(res1.search_query)
+
+        # "unit II" in search_query
+        res2 = extractor.validate_and_sanitize(
+            raw_intent={
+                "intent": "document_listing",
+                "document_type": "notes",
+                "subject_id": "uuid-dbms-1",
+                "unit": None,
+                "search_query": "unit II",
+            },
+            valid_subject_ids=self.valid_subject_ids,
+            reference_time=self.ref_time,
+        )
+        self.assertEqual(res2.unit, 2)
+        self.assertIsNone(res2.search_query)
+
+        # "unit": "B" in raw_intent
+        res3 = extractor.validate_and_sanitize(
+            raw_intent={
+                "intent": "document_listing",
+                "document_type": "notes",
+                "subject_id": "uuid-dbms-1",
+                "unit": "B",
+                "search_query": None,
+            },
+            valid_subject_ids=self.valid_subject_ids,
+            reference_time=self.ref_time,
+        )
+        self.assertEqual(res3.unit, 2)
 
 
 

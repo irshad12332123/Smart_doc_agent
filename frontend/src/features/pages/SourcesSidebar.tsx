@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import * as I from "lucide-react";
+import { documentApi } from "../../api/client";
 import type { ChatMessage, SourceChunk, DocumentInfo } from "../../types";
 import { getFileTypeTheme } from "../../components/ui/common";
 
@@ -289,8 +290,8 @@ export function SourcesSidebar({
                             </div>
                           )}
 
-                          {doc.file_url && (
-                            <div className="source-card-footer">
+                          <div className="source-card-footer">
+                            {doc.file_url ? (
                               <a
                                 href={doc.file_url}
                                 target="_blank"
@@ -300,8 +301,19 @@ export function SourcesSidebar({
                                 <I.Download />
                                 <span>Download Document</span>
                               </a>
-                            </div>
-                          )}
+                            ) : doc.doc_id ? (
+                              <button
+                                type="button"
+                                className="source-download-btn"
+                                onClick={() =>
+                                  documentApi.downloadDocument(doc.doc_id, doc.filename)
+                                }
+                              >
+                                <I.Download />
+                                <span>Download Document</span>
+                              </button>
+                            ) : null}
+                          </div>
                         </div>
                       );
                     })}

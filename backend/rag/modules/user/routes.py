@@ -24,7 +24,7 @@ def profile():
         user_role = g.current_profile.get("role")
 
         if user_role not in ["admin", "student", "faculty"]:
-            return jsonify({"message": "we don't except this role"}), 403
+            return jsonify({"message": "you are not authorized."}), 403
 
         if user_role == "student":
             student = Student(g.current_user.id, client=get_supabase_client())
