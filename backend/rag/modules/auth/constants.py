@@ -13,24 +13,25 @@ class GlobalRole(StrEnum):
 
 
 class StudentRole(StrEnum):
-    REGULAR="regular"
-    CLASS_REPRESENTATIVE="cr"
+    REGULAR = "regular"
+    CLASS_REPRESENTATIVE = "cr"
+
 
 AuthorizedRolesToAcessUpload = {
     StudentRole.CLASS_REPRESENTATIVE,
-    GlobalRole.FACULTY
+    GlobalRole.FACULTY,
 }
 
 
 REGISTRY_CONFIG = {
     RegistryType.STUDENT: {
         "table": "students",
-        "identifier_column": "student_id",
+        "email_columns": ["official_email", "registered_email"],
         "role": GlobalRole.STUDENT,
     },
     RegistryType.FACULTY: {
         "table": "faculty",
-        "identifier_column": "faculty_id",
+        "email_columns": ["registered_email", "official_email"],
         "role": GlobalRole.FACULTY,
     },
 }

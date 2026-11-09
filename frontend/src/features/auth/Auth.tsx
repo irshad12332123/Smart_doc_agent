@@ -6,49 +6,57 @@ import type { Session } from "../../types";
 
 type AuthMode = "register" | "login" | "admin";
 type RoleKind = "student" | "faculty";
-type RegStep = "verify" | "activate";
+type RegStep = "verify" | "activate" | "confirmed";
+type LoginStep = "email" | "password";
 
 export function Auth({ onSession }: { onSession: (value: Session) => void }) {
   const { theme, toggleTheme } = useTheme();
 
-  // Primary mode: 3 main buttons
+  // Primary mode: REGISTER, LOGIN, ADMIN
   const [mode, setMode] = useState<AuthMode>("login");
 
   // Role for Register and Login (faculty, student)
   const [role, setRole] = useState<RoleKind | null>(null);
 
-  // Register sub-step: verify ID -> activate (create password)
+  // Sub-steps
   const [regStep, setRegStep] = useState<RegStep>("verify");
+  const [loginStep, setLoginStep] = useState<LoginStep>("email");
 
   // Form fields
-  const [idNumber, setIdNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // Verification record result
+  // Verification record result for registration
   const [eligible, setEligible] = useState<{
     name: string;
     email: string;
     token: string;
   } | null>(null);
 
+  // Confirmation email sent tracking
+  const [confirmationEmail, setConfirmationEmail] = useState("");
+
+  // Name verified during login
+  const [loginVerifiedName, setLoginVerifiedName] = useState("");
+
   // Status & feedback
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [busy, setBusy] = useState(false);
+  const [resending, setResending] = useState(false);
 
   // Switch top-level mode
   const handleSelectMode = (nextMode: AuthMode) => {
     setMode(nextMode);
     setError("");
     setSuccessMsg("");
-    if (nextMode === "admin") {
-      setRole(null);
-    } else {
-      setRole(null);
-    }
+    setRole(null);
     setRegStep("verify");
+    setLoginStep("email");
+    setPassword("");
+    setConfirmPassword("");
   };
 
   // Switch role (faculty / student)
@@ -57,6 +65,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
     setError("");
     setSuccessMsg("");
     setRegStep("verify");
+    setLoginStep("email");
   };
 
   // Back button handler
@@ -64,71 +73,81 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
     setError("");
     setSuccessMsg("");
     if (mode === "register") {
-      if (regStep === "activate") {
+      if (regStep === "confirmed") {
+        setRegStep("verify");
+      } else if (regStep === "activate") {
         setRegStep("verify");
       } else {
         setRole(null);
       }
     } else if (mode === "login") {
-      if (role !== null) {
+      if (loginStep === "password") {
+        setLoginStep("email");
+        setPassword("");
+      } else if (role !== null) {
         setRole(null);
       }
     }
   };
 
-  // 1. Verification Step (Register Flow)
-  const submitVerify = async (e: React.FormEvent) => {
+  // =========================================================================
+  // REGISTER FLOW
+  // =========================================================================
+
+  // Step 1 (Register): Check email eligibility in DB
+  const submitVerifyEmailForRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!role || !idNumber.trim()) return;
+    if (!role || !email.trim()) return;
     setBusy(true);
     setError("");
     setSuccessMsg("");
 
     try {
-      const result = await authApi.check(role, idNumber.trim());
-      if (result.status === "registered") {
-        setSuccessMsg("");
-        setError("This ID is already registered. Please sign in with your password.");
-      } else if (
-        result.name &&
-        result.registered_email &&
-        result.registration_token
-      ) {
+      const result = await authApi.check(email.trim(), role, "register");
+      if (result.status === "eligible" && result.name && result.registration_token) {
         setEligible({
           name: result.name,
-          email: result.registered_email,
+          email: result.email || email.trim(),
           token: result.registration_token,
         });
         setRegStep("activate");
+      } else if (result.status === "already registered" || result.status === "registered") {
+        setError("Either user doesn't exist or already registered.");
       } else {
-        setError(result.message || "Record found but could not generate verification token.");
+        setError(result.message || "Either user doesn't exist or already registered.");
       }
     } catch (err: unknown) {
       setError(
         typeof err === "object" && err && "message" in err
-          ? String((err as { message?: unknown }).message ?? "Could not verify your university record.")
-          : "Could not verify your record. Please verify your ID with the registry.",
+          ? String((err as { message?: unknown }).message ?? "Either user doesn't exist or already registered.")
+          : "Either user doesn't exist or already registered.",
       );
     } finally {
       setBusy(false);
     }
   };
 
-  // 2. Account Activation Step (Register Flow)
+  // Step 2 (Register): Set password & initiate Supabase registration with confirmation mail
   const submitRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!eligible || !password) return;
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+    if (confirmPassword && password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
     setBusy(true);
     setError("");
     setSuccessMsg("");
 
     try {
-      await authApi.register(eligible.token, password);
-      // Pre-fill email and redirect to login
-      setEmail(eligible.email);
-      setPassword("");
-      setMode("login");
-      setSuccessMsg("Account activated successfully! Sign in with your new password.");
+      await authApi.register(eligible.token, password, eligible.email, role || undefined);
+      setConfirmationEmail(eligible.email);
+      setRegStep("confirmed");
+      setSuccessMsg("Registration initiated! A verification email has been sent by Supabase.");
     } catch (err: unknown) {
       setError(
         typeof err === "object" && err && "message" in err
@@ -140,7 +159,38 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
     }
   };
 
-  // 3. Login Step (Student, Faculty, or Admin)
+  // =========================================================================
+  // LOGIN FLOW
+  // =========================================================================
+
+  // Step 1 (Login): Verify email exists in DB and is already registered
+  const submitCheckEmailForLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!role || !email.trim()) return;
+    setBusy(true);
+    setError("");
+    setSuccessMsg("");
+
+    try {
+      const result = await authApi.check(email.trim(), role, "login");
+      if (result.status === "registered" || result.status === "already registered") {
+        setLoginVerifiedName(result.name || "");
+        setLoginStep("password");
+      } else {
+        setError("Account is not registered. Please register.");
+      }
+    } catch (err: unknown) {
+      setError(
+        typeof err === "object" && err && "message" in err
+          ? String((err as { message?: unknown }).message ?? "Account is not registered. Please register.")
+          : "Account is not registered. Please register.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // Step 2 (Login): Enter password and authenticate
   const submitLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password) return;
@@ -149,23 +199,42 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
     setSuccessMsg("");
 
     try {
-      const login = await authApi.login(email.trim(), password);
+      const login = await authApi.login(email.trim(), password, role || undefined);
       const me = await userApi.profile(login.access_token);
       onSession({ ...login, ...me });
     } catch (err: unknown) {
-      setError(
+      const msg =
         typeof err === "object" && err && "message" in err
           ? String((err as { message?: unknown }).message ?? "Invalid email or password.")
-          : "Invalid credentials. Please verify your email and password.",
-      );
+          : "Invalid credentials. Please verify your email and password.";
+      setError(msg);
     } finally {
       setBusy(false);
     }
   };
 
+  // Resend confirmation email helper
+  const handleResendConfirmation = async (emailToResend: string) => {
+    if (!emailToResend.trim()) return;
+    setResending(true);
+    try {
+      await authApi.resendConfirmation(emailToResend.trim());
+      setSuccessMsg("Confirmation email has been resent. Please check your inbox!");
+      setError("");
+    } catch (err: unknown) {
+      setError(
+        typeof err === "object" && err && "message" in err
+          ? String((err as { message?: unknown }).message ?? "Could not resend email.")
+          : "Could not resend confirmation email.",
+      );
+    } finally {
+      setResending(false);
+    }
+  };
+
   return (
     <div className="auth-page">
-      {/* Top right theme toggle with boxy aesthetic */}
+      {/* Top right theme toggle */}
       <div className="auth-top-actions">
         <button
           className="auth-theme-btn"
@@ -225,11 +294,10 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
               <p className="feature-box-desc">Exact slide, page, and chunk previews with SLM checks</p>
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* RIGHT: Boxy Interactive Auth Card (Single Page for Login & Register) */}
+      {/* RIGHT: Boxy Interactive Auth Card */}
       <section className="auth-card">
         <div className="auth-inner">
           {/* 3 Main Mode Buttons: REGISTER, LOGIN, ADMIN */}
@@ -268,7 +336,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
               <I.AlertCircle className="alert-icon" />
               <div className="alert-content">
                 <span>{error}</span>
-                {mode === "register" && error.includes("already registered") && (
+                {mode === "register" && (error.toLowerCase().includes("already registered") || error.toLowerCase().includes("either user")) && (
                   <button
                     type="button"
                     className="alert-link-btn"
@@ -278,6 +346,28 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                     }}
                   >
                     Switch to Login →
+                  </button>
+                )}
+                {mode === "login" && error.toLowerCase().includes("not registered") && (
+                  <button
+                    type="button"
+                    className="alert-link-btn"
+                    onClick={() => {
+                      setMode("register");
+                      setError("");
+                    }}
+                  >
+                    Switch to Register →
+                  </button>
+                )}
+                {error.toLowerCase().includes("confirm your email") && (
+                  <button
+                    type="button"
+                    className="alert-link-btn"
+                    disabled={resending}
+                    onClick={() => handleResendConfirmation(email)}
+                  >
+                    {resending ? "Resending…" : "Resend Confirmation Email →"}
                   </button>
                 )}
               </div>
@@ -293,8 +383,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
 
           {/* =============================================================
               MODE: REGISTER
-              Followed by: FACULTY, STUDENT
-              Register flow follows with the verification thing.
               ============================================================= */}
           {mode === "register" && (
             <div className="auth-flow-container">
@@ -305,7 +393,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                     <span className="boxy-eyebrow">STEP 1 OF 2</span>
                     <h2 className="pane-title">Select Affiliation</h2>
                     <p className="pane-subtitle">
-                      Choose whether you are enrolling as Faculty or Student.
+                      Choose whether you are registering as Faculty or Student.
                     </p>
                   </div>
 
@@ -330,7 +418,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                   </div>
 
                   <div className="auth-footer-prompt">
-                    <span>Already verified your record?</span>{" "}
+                    <span>Already have an account?</span>{" "}
                     <button
                       type="button"
                       className="boxy-inline-link"
@@ -342,7 +430,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                 </div>
               )}
 
-              {/* Step 2: Verification with University ID */}
+              {/* Step 2: Verification with Official Email */}
               {role !== null && regStep === "verify" && (
                 <div className="auth-step-pane">
                   <button type="button" className="auth-back-btn" onClick={handleBack}>
@@ -354,26 +442,25 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                     <span className="boxy-eyebrow">
                       {role.toUpperCase()} RECORD VERIFICATION
                     </span>
-                    <h2 className="pane-title">Verify University Record</h2>
+                    <h2 className="pane-title">Verify Official Email</h2>
                     <p className="pane-subtitle">
-                      Enter your official {role === "student" ? "student roll / registration number" : "faculty employee ID"} to verify eligibility.
+                      Enter your official university email to verify eligibility for registration.
                     </p>
                   </div>
 
-                  <form onSubmit={submitVerify} className="boxy-form">
+                  <form onSubmit={submitVerifyEmailForRegister} className="boxy-form">
                     <label className="boxy-field">
-                      <span className="field-label">
-                        {role === "student" ? "STUDENT ROLL / ENROLLMENT ID" : "FACULTY EMPLOYEE ID"}
-                      </span>
+                      <span className="field-label">OFFICIAL UNIVERSITY EMAIL</span>
                       <div className="input-wrap">
                         <input
                           autoFocus
-                          value={idNumber}
-                          onChange={(e) => setIdNumber(e.target.value)}
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                           placeholder={
                             role === "student"
-                              ? "e.g. 24031009031"
-                              : "e.g. FAC-2024-089"
+                              ? "e.g. 24031009001@rayatbahrauniversity.edu.in"
+                              : "e.g. faculty@rayatbahrauniversity.edu.in"
                           }
                           required
                           className="boxy-input"
@@ -389,20 +476,34 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                       {busy ? (
                         <>
                           <I.Loader2 className="spinning-loader" />
-                          <span>VERIFYING RECORD…</span>
+                          <span>CHECKING RECORD…</span>
                         </>
                       ) : (
                         <>
-                          <span>VERIFY RECORD</span>
+                          <span>VERIFY & PROCEED</span>
                           <I.ArrowRight />
                         </>
                       )}
                     </button>
                   </form>
+
+                  <div className="auth-footer-prompt">
+                    <span>Already registered?</span>{" "}
+                    <button
+                      type="button"
+                      className="boxy-inline-link"
+                      onClick={() => {
+                        setMode("login");
+                        setRole(role);
+                      }}
+                    >
+                      Sign In
+                    </button>
+                  </div>
                 </div>
               )}
 
-              {/* Step 3: Record Verified -> Create Password & Activate */}
+              {/* Step 3: Record Verified -> Create Password & Register */}
               {role !== null && regStep === "activate" && eligible && (
                 <div className="auth-step-pane">
                   <button type="button" className="auth-back-btn" onClick={handleBack}>
@@ -411,10 +512,10 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                   </button>
 
                   <div className="pane-header">
-                    <span className="boxy-eyebrow">STEP 2: ACCOUNT ACTIVATION</span>
+                    <span className="boxy-eyebrow">STEP 2: CREATE PASSWORD</span>
                     <h2 className="pane-title">Welcome, {eligible.name.split(" ")[0]}</h2>
                     <p className="pane-subtitle">
-                      Your university credentials have been verified. Set your portal password to activate your account.
+                      Your university record is verified. Set your password to complete registration.
                     </p>
                   </div>
 
@@ -454,6 +555,21 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                       </div>
                     </label>
 
+                    <label className="boxy-field">
+                      <span className="field-label">CONFIRM PASSWORD</span>
+                      <div className="input-wrap">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          minLength={8}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder="Re-enter your password"
+                          required
+                          className="boxy-input"
+                        />
+                      </div>
+                    </label>
+
                     <button
                       type="submit"
                       className="auth-action-btn primary-action full"
@@ -462,11 +578,11 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                       {busy ? (
                         <>
                           <I.Loader2 className="spinning-loader" />
-                          <span>ACTIVATING WORKSPACE…</span>
+                          <span>SENDING CONFIRMATION EMAIL…</span>
                         </>
                       ) : (
                         <>
-                          <span>ACTIVATE & ENTER WORKSPACE</span>
+                          <span>REGISTER & SEND CONFIRMATION EMAIL</span>
                           <I.ArrowRight />
                         </>
                       )}
@@ -474,12 +590,67 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                   </form>
                 </div>
               )}
+
+              {/* Step 4: Confirmation Email Dispatched Screen */}
+              {role !== null && regStep === "confirmed" && (
+                <div className="auth-step-pane">
+                  <div className="pane-header">
+                    <span className="boxy-eyebrow">STEP 3: EMAIL VERIFICATION</span>
+                    <h2 className="pane-title">Check Your Email</h2>
+                    <p className="pane-subtitle">
+                      A confirmation email has been sent through Supabase to{" "}
+                      <strong>{confirmationEmail}</strong>.
+                    </p>
+                  </div>
+
+                  <div className="boxy-verified-banner" style={{ borderLeftColor: "var(--accent)" }}>
+                    <div className="verified-badge-icon">
+                      <I.MailCheck />
+                    </div>
+                    <div className="verified-details">
+                      <span className="verified-label">CONFIRMATION LINK DISPATCHED</span>
+                      <strong className="verified-email">{confirmationEmail}</strong>
+                      <span className="verified-name">
+                        Please open the link sent to your email to confirm your account before logging in.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "16px" }}>
+                    <button
+                      type="button"
+                      className="auth-action-btn primary-action full"
+                      onClick={() => {
+                        setMode("login");
+                        setRole(role);
+                        setEmail(confirmationEmail);
+                        setPassword("");
+                        setLoginStep("password");
+                        setError("");
+                        setSuccessMsg("Please confirm your email first, then enter your password to sign in.");
+                      }}
+                    >
+                      <span>PROCEED TO SIGN IN</span>
+                      <I.ArrowRight />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="boxy-inline-link"
+                      style={{ textAlign: "center", marginTop: "8px" }}
+                      disabled={resending}
+                      onClick={() => handleResendConfirmation(confirmationEmail)}
+                    >
+                      {resending ? "Resending email…" : "Didn't receive email? Resend Confirmation Email"}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
           {/* =============================================================
               MODE: LOGIN
-              Followed by: FACULTY, STUDENT
               ============================================================= */}
           {mode === "login" && (
             <div className="auth-flow-container">
@@ -527,8 +698,8 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                 </div>
               )}
 
-              {/* Step 2: Login Form for Chosen Role */}
-              {role !== null && (
+              {/* Step 2: Email Entry & Verification */}
+              {role !== null && loginStep === "email" && (
                 <div className="auth-step-pane">
                   <button type="button" className="auth-back-btn" onClick={handleBack}>
                     <I.ArrowLeft />
@@ -539,13 +710,13 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                     <span className="boxy-eyebrow">
                       {role.toUpperCase()} WORKSPACE SIGN IN
                     </span>
-                    <h2 className="pane-title">Welcome Back</h2>
+                    <h2 className="pane-title">Enter Official Email</h2>
                     <p className="pane-subtitle">
-                      Sign in with your verified university credentials.
+                      Enter your verified university email to proceed to sign in.
                     </p>
                   </div>
 
-                  <form onSubmit={submitLogin} className="boxy-form">
+                  <form onSubmit={submitCheckEmailForLogin} className="boxy-form">
                     <label className="boxy-field">
                       <span className="field-label">OFFICIAL UNIVERSITY EMAIL</span>
                       <div className="input-wrap">
@@ -565,10 +736,67 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                       </div>
                     </label>
 
+                    <button
+                      type="submit"
+                      className="auth-action-btn primary-action full"
+                      disabled={busy}
+                    >
+                      {busy ? (
+                        <>
+                          <I.Loader2 className="spinning-loader" />
+                          <span>VERIFYING EMAIL…</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>CONTINUE</span>
+                          <I.ArrowRight />
+                        </>
+                      )}
+                    </button>
+                  </form>
+
+                  <div className="auth-footer-prompt">
+                    <span>Need to register your email first?</span>{" "}
+                    <button
+                      type="button"
+                      className="boxy-inline-link"
+                      onClick={() => {
+                        setMode("register");
+                        setRole(role);
+                      }}
+                    >
+                      Begin Registration
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Password Entry & Authentication */}
+              {role !== null && loginStep === "password" && (
+                <div className="auth-step-pane">
+                  <button type="button" className="auth-back-btn" onClick={handleBack}>
+                    <I.ArrowLeft />
+                    <span>CHANGE EMAIL</span>
+                  </button>
+
+                  <div className="pane-header">
+                    <span className="boxy-eyebrow">
+                      {role.toUpperCase()} SIGN IN
+                    </span>
+                    <h2 className="pane-title">
+                      Welcome Back{loginVerifiedName ? `, ${loginVerifiedName.split(" ")[0]}` : ""}
+                    </h2>
+                    <p className="pane-subtitle">
+                      Enter password for <strong>{email}</strong>.
+                    </p>
+                  </div>
+
+                  <form onSubmit={submitLogin} className="boxy-form">
                     <label className="boxy-field">
                       <span className="field-label">PASSWORD</span>
                       <div className="input-wrap has-action">
                         <input
+                          autoFocus
                           type={showPassword ? "text" : "password"}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
@@ -607,16 +835,14 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                   </form>
 
                   <div className="auth-footer-prompt">
-                    <span>Need to register your ID first?</span>{" "}
+                    <span>Didn't receive or confirm your email?</span>{" "}
                     <button
                       type="button"
                       className="boxy-inline-link"
-                      onClick={() => {
-                        setMode("register");
-                        setRole(role);
-                      }}
+                      disabled={resending}
+                      onClick={() => handleResendConfirmation(email)}
                     >
-                      Verify Record
+                      {resending ? "Resending…" : "Resend Confirmation Link"}
                     </button>
                   </div>
                 </div>
@@ -626,7 +852,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
 
           {/* =============================================================
               MODE: ADMIN
-              DIRECT LOGIN (no role selection, no need for register flow)
               ============================================================= */}
           {mode === "admin" && (
             <div className="auth-flow-container">

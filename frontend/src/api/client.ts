@@ -81,20 +81,35 @@ export const userApi = {
 };
 
 export const authApi = {
-  check: (kind: "student" | "faculty", id: string) =>
-    fetch(`${BASE_URL}/auth/check-${kind}`, {
+  check: (
+    email: string,
+    role?: "student" | "faculty" | null,
+    action?: "login" | "register",
+  ) =>
+    fetch(`${BASE_URL}/auth/check`, {
       method: "POST",
       headers: jsonHeaders,
-      body: JSON.stringify({ [`${kind}_id`]: id }),
+      body: JSON.stringify({
+        email: email.trim(),
+        role: role || undefined,
+        action: action || undefined,
+      }),
     }).then(bodyOrError) as Promise<{
-      status: "eligible" | "registered";
+      status: "eligible" | "registered" | "already registered";
       name?: string;
+      email?: string;
       registered_email?: string;
+      role?: string;
       registration_token?: string;
-      message: string;
+      message?: string;
     }>,
 
-  register: (registration_token: string, password: string) =>
+  register: (
+    registration_token: string,
+    password: string,
+    email?: string,
+    role?: string,
+  ) =>
     fetch(`${BASE_URL}/auth/register`, {
       method: "POST",
       headers: jsonHeaders,
@@ -102,20 +117,33 @@ export const authApi = {
         registration_token,
         password,
         confirm_password: password,
+        email,
+        role,
       }),
-    }).then(bodyOrError),
+    }).then(bodyOrError) as Promise<{
+      status: string;
+      message: string;
+      email: string;
+    }>,
 
-  login: (email: string, password: string) =>
+  login: (email: string, password: string, role?: string) =>
     fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
       headers: jsonHeaders,
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email: email.trim(), password, role }),
     }).then(bodyOrError) as Promise<{
       access_token: string;
       refresh_token?: string;
       expires_at?: number;
       user: { id: string; email: string };
     }>,
+
+  resendConfirmation: (email: string) =>
+    fetch(`${BASE_URL}/auth/resend-confirmation`, {
+      method: "POST",
+      headers: jsonHeaders,
+      body: JSON.stringify({ email: email.trim() }),
+    }).then(bodyOrError) as Promise<{ message: string }>,
 
   me: (token: string) => userApi.profile(token),
 };

@@ -15,8 +15,8 @@ def _serializer() -> URLSafeTimedSerializer:
     return URLSafeTimedSerializer(secret_key=secret, salt=_SALT)
 
 
-def create_registration_token(registry_type: str, registry_id: str) -> str:
-    return _serializer().dumps({"type": registry_type, "registry_id": registry_id})
+def create_registration_token(registry_type: str, email: str) -> str:
+    return _serializer().dumps({"type": registry_type, "email": email, "registry_id": email})
 
 
 def read_registration_token(token: str) -> dict[str, str]:
@@ -24,6 +24,9 @@ def read_registration_token(token: str) -> dict[str, str]:
         payload = _serializer().loads(token, max_age=AUTH_REGISTRATION_TOKEN_MAX_AGE_SECONDS)
     except BadData as error:
         raise AuthError("Registration session is invalid or expired", 401) from error
-    if not isinstance(payload, dict) or set(payload) != {"type", "registry_id"}:
+    if not isinstance(payload, dict) or not payload.get("type"):
         raise AuthError("Registration session is invalid", 401)
-    return payload
+    email = payload.get("email") or payload.get("registry_id")
+    if not email:
+        raise AuthError("Registration session is invalid", 401)
+    return {"type": payload["type"], "email": email, "registry_id": email}
