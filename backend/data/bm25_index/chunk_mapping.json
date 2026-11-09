@@ -1,5 +1,27 @@
 {
   "0": {
+    "id": "02551076-a4a0-4c4d-8c3a-5ebd06bdf8a8",
+    "chunk_id": "02551076-a4a0-4c4d-8c3a-5ebd06bdf8a8",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "51. Identify the local IP address. 52. Identify the subnet/prefix. 53. Identify the default gateway. 54. Explain the difference between host address and gateway. Practical 2 \u2013 DNS lookup \n55. Use nslookup or dig.",
+    "text": "51. Identify the local IP address. 52. Identify the subnet/prefix. 53. Identify the default gateway. 54. Explain the difference between host address and gateway. Practical 2 \u2013 DNS lookup \n55. Use nslookup or dig.",
+    "page_number": 15,
+    "chunk_index": 55,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "1": {
+    "id": "04fd2217-f856-4298-a00a-4cfea4b6c885",
+    "chunk_id": "04fd2217-f856-4298-a00a-4cfea4b6c885",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "A longer prefix allocates more bits to the network portion \nand fewer to host addressing. 18.2 /24 example \nFor 192.168.10.0/24, the first 24 bits form the network prefix and 8 bits remain for host addressing. The \nconventional network address is 192.168.10.0 and the conventional broadcast address is 192.168.10.255. 18.3 CIDR \nClassless Inter-Domain Routing expresses a network using a prefix length, such as 192.168.10.0/24. It allows \nflexible prefix sizes rather than old fixed address classes. 18.4 Prefix comparison \nPrefix \nGeneral meaning \n/8 \nLarge address block \n/16 \nMedium-sized block \n/24 \nCommon small LAN prefix \n/30 \nVery small IPv4 prefix",
+    "text": "A longer prefix allocates more bits to the network portion \nand fewer to host addressing. 18.2 /24 example \nFor 192.168.10.0/24, the first 24 bits form the network prefix and 8 bits remain for host addressing. The \nconventional network address is 192.168.10.0 and the conventional broadcast address is 192.168.10.255. 18.3 CIDR \nClassless Inter-Domain Routing expresses a network using a prefix length, such as 192.168.10.0/24. It allows \nflexible prefix sizes rather than old fixed address classes. 18.4 Prefix comparison \nPrefix \nGeneral meaning \n/8 \nLarge address block \n/16 \nMedium-sized block \n/24 \nCommon small LAN prefix \n/30 \nVery small IPv4 prefix",
+    "page_number": 12,
+    "chunk_index": 44,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "2": {
     "id": "0630cbfd-6f77-4b4e-9809-54410b487dd5",
     "chunk_id": "0630cbfd-6f77-4b4e-9809-54410b487dd5",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -10,7 +32,7 @@
     "chunk_index": 26,
     "title": "software_unit_2.pdf"
   },
-  "1": {
+  "3": {
     "id": "06a98c90-5a77-4827-8e9e-27370e8cf301",
     "chunk_id": "06a98c90-5a77-4827-8e9e-27370e8cf301",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -21,7 +43,18 @@
     "chunk_index": 17,
     "title": "software_unit_2.pdf"
   },
-  "2": {
+  "4": {
+    "id": "06cd4e3a-ea45-4c4f-972f-ad1e4af03398",
+    "chunk_id": "06cd4e3a-ea45-4c4f-972f-ad1e4af03398",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n11.2 Routing \nRouting is the process of determining paths through a network. Routing algorithms and protocols help create or \nupdate the information used for forwarding. Forwarding \nRouting \nLocal packet decision \nPath-selection process \nUses forwarding information \nProduces or updates route information \nQuestion: where next? Question: which path?",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n11.2 Routing \nRouting is the process of determining paths through a network. Routing algorithms and protocols help create or \nupdate the information used for forwarding. Forwarding \nRouting \nLocal packet decision \nPath-selection process \nUses forwarding information \nProduces or updates route information \nQuestion: where next? Question: which path?",
+    "page_number": 9,
+    "chunk_index": 31,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "5": {
     "id": "07f8078a-651c-46a3-83ce-93e0f695029e",
     "chunk_id": "07f8078a-651c-46a3-83ce-93e0f695029e",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -32,7 +65,29 @@
     "chunk_index": 2,
     "title": "software_unit_2.pdf"
   },
-  "3": {
+  "6": {
+    "id": "0a584b7b-fb26-4e74-b38d-beb7ca866a57",
+    "chunk_id": "0a584b7b-fb26-4e74-b38d-beb7ca866a57",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "56. Resolve a permitted hostname. 57. Record A/AAAA results when present. 58. Repeat and discuss caching.",
+    "text": "56. Resolve a permitted hostname. 57. Record A/AAAA results when present. 58. Repeat and discuss caching.",
+    "page_number": 15,
+    "chunk_index": 56,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "7": {
+    "id": "0caa0e19-26b5-4906-b3e8-45858eaa3f98",
+    "chunk_id": "0caa0e19-26b5-4906-b3e8-45858eaa3f98",
+    "document_id": "e2664951-ce59-4039-a22d-c6ace16d627c",
+    "doc_id": "e2664951-ce59-4039-a22d-c6ace16d627c",
+    "content": "How to Create an RHNID for Red Hat \nAcademy \nStep 1: Open the Red Hat Registration Page \nGo to: \n\ud83d\udc49 https://www.redhat.com/wapps/ugc/register.html?redirect=/academy/new_signup  \nOpen Source Reference :- How to Create RHNID on \nrol.redhat.com | Step-by-Step Guide \nStep 2: Select Account Type \nChoose: \n\u2705 Personal Account (recommended for students) [redhat.com], [access.redhat.com] \nStep 3: Create Your Login ID (RHNID) \n\u25cf \nEnter a unique Login ID. \u25cf \nThis Login ID becomes your RHNID.",
+    "text": "How to Create an RHNID for Red Hat \nAcademy \nStep 1: Open the Red Hat Registration Page \nGo to: \n\ud83d\udc49 https://www.redhat.com/wapps/ugc/register.html?redirect=/academy/new_signup  \nOpen Source Reference :- How to Create RHNID on \nrol.redhat.com | Step-by-Step Guide \nStep 2: Select Account Type \nChoose: \n\u2705 Personal Account (recommended for students) [redhat.com], [access.redhat.com] \nStep 3: Create Your Login ID (RHNID) \n\u25cf \nEnter a unique Login ID. \u25cf \nThis Login ID becomes your RHNID.",
+    "page_number": 1,
+    "chunk_index": 0,
+    "title": "How_to_create_RHNID_.pdf"
+  },
+  "8": {
     "id": "0d0d54bb-0631-4926-bef7-ecb9fd92533c",
     "chunk_id": "0d0d54bb-0631-4926-bef7-ecb9fd92533c",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -43,7 +98,18 @@
     "chunk_index": 37,
     "title": "software_unit_2.pdf"
   },
-  "4": {
+  "9": {
+    "id": "0ecf8530-d51b-458e-bf13-006157afb82c",
+    "chunk_id": "0ecf8530-d51b-458e-bf13-006157afb82c",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "MCQs \n1. Which protocol provides a reliable ordered byte stream?",
+    "text": "MCQs \n1. Which protocol provides a reliable ordered byte stream?",
+    "page_number": 18,
+    "chunk_index": 79,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "10": {
     "id": "120120d3-1970-450d-bfe1-b29a786b97d2",
     "chunk_id": "120120d3-1970-450d-bfe1-b29a786b97d2",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -54,7 +120,29 @@
     "chunk_index": 39,
     "title": "software_unit_2.pdf"
   },
-  "5": {
+  "11": {
+    "id": "1271fbf5-08df-4689-8249-fbfdb562e5d6",
+    "chunk_id": "1271fbf5-08df-4689-8249-fbfdb562e5d6",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "59. Explain how DNS output differs from a routing-table entry. Practical 3 \u2013 TCP socket programming \n60. Run the TCP server locally. 61. Run the TCP client. 62. Observe connection establishment. 63.",
+    "text": "59. Explain how DNS output differs from a routing-table entry. Practical 3 \u2013 TCP socket programming \n60. Run the TCP server locally. 61. Run the TCP client. 62. Observe connection establishment. 63.",
+    "page_number": 15,
+    "chunk_index": 57,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "12": {
+    "id": "13c18adf-9b88-43db-96ba-a1e42679e28a",
+    "chunk_id": "13c18adf-9b88-43db-96ba-a1e42679e28a",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n23. Practical Exercises \nPractical 1 \u2013 IP configuration \n50. Display interface information using ip addr or ipconfig.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n23. Practical Exercises \nPractical 1 \u2013 IP configuration \n50. Display interface information using ip addr or ipconfig.",
+    "page_number": 15,
+    "chunk_index": 54,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "13": {
     "id": "172ef542-ad2a-4747-b644-6b20458e4a86",
     "chunk_id": "172ef542-ad2a-4747-b644-6b20458e4a86",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -65,7 +153,29 @@
     "chunk_index": 21,
     "title": "IOT_lab_1-3.pdf"
   },
-  "6": {
+  "14": {
+    "id": "17801866-bf4c-40ca-8ec3-648230d17029",
+    "chunk_id": "17801866-bf4c-40ca-8ec3-648230d17029",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "\uf0b7 \nCan I distinguish forwarding from routing? \uf0b7 \nCan I explain link-state and Dijkstra? \uf0b7 \nCan I explain distance-vector and Bellman-Ford? \uf0b7 \nCan I interpret an IPv4 prefix such as /24? \uf0b7 \nCan I distinguish IPv4 and IPv6? \uf0b7 \nCan I explain DNS resolution? \uf0b7 \nCan I trace an IoT message from application through transport, IP, forwarding and routing to the destination?",
+    "text": "\uf0b7 \nCan I distinguish forwarding from routing? \uf0b7 \nCan I explain link-state and Dijkstra? \uf0b7 \nCan I explain distance-vector and Bellman-Ford? \uf0b7 \nCan I interpret an IPv4 prefix such as /24? \uf0b7 \nCan I distinguish IPv4 and IPv6? \uf0b7 \nCan I explain DNS resolution? \uf0b7 \nCan I trace an IoT message from application through transport, IP, forwarding and routing to the destination?",
+    "page_number": 20,
+    "chunk_index": 87,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "15": {
+    "id": "17b19460-31f3-4b9b-986f-f528a72c4a12",
+    "chunk_id": "17b19460-31f3-4b9b-986f-f528a72c4a12",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Case Studies \n25. Quick Revision \n26. Important Definitions \n27. Short Questions \n28. Long Questions \n29. MCQs \n30. Unit Summary \n31. Glossary",
+    "text": "Case Studies \n25. Quick Revision \n26. Important Definitions \n27. Short Questions \n28. Long Questions \n29. MCQs \n30. Unit Summary \n31. Glossary",
+    "page_number": 2,
+    "chunk_index": 4,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "16": {
     "id": "17b4ca2a-be6c-492b-a9da-cdebf347f8a7",
     "chunk_id": "17b4ca2a-be6c-492b-a9da-cdebf347f8a7",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -76,7 +186,18 @@
     "chunk_index": 33,
     "title": "software_unit_2.pdf"
   },
-  "7": {
+  "17": {
+    "id": "189776a1-0422-4cf3-9e96-a792eba37ff5",
+    "chunk_id": "189776a1-0422-4cf3-9e96-a792eba37ff5",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Application asks its resolver for a name.",
+    "text": "Application asks its resolver for a name.",
+    "page_number": 13,
+    "chunk_index": 48,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "18": {
     "id": "1b783732-27a2-48ab-8478-2409a072541b",
     "chunk_id": "1b783732-27a2-48ab-8478-2409a072541b",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -87,7 +208,18 @@
     "chunk_index": 43,
     "title": "software_unit_2.pdf"
   },
-  "8": {
+  "19": {
+    "id": "1c310cfb-b29b-4aed-90e7-67562d6d5d61",
+    "chunk_id": "1c310cfb-b29b-4aed-90e7-67562d6d5d61",
+    "document_id": "e2664951-ce59-4039-a22d-c6ace16d627c",
+    "doc_id": "e2664951-ce59-4039-a22d-c6ace16d627c",
+    "content": "\u25cf \nIt must be at least 5 characters long. \u25cf \nOnce created, it cannot be changed. [access.redhat.com] \nExample RHNIDs: \n\u25cf \njohn123 \n\u25cf \namit_rha \n\u25cf \nstudent2026 \nStep 4: Enter Email Address \nUse your:",
+    "text": "\u25cf \nIt must be at least 5 characters long. \u25cf \nOnce created, it cannot be changed. [access.redhat.com] \nExample RHNIDs: \n\u25cf \njohn123 \n\u25cf \namit_rha \n\u25cf \nstudent2026 \nStep 4: Enter Email Address \nUse your:",
+    "page_number": 1,
+    "chunk_index": 1,
+    "title": "How_to_create_RHNID_.pdf"
+  },
+  "20": {
     "id": "1c6f8fdf-7d14-4284-89d9-bd3b0c42e81b",
     "chunk_id": "1c6f8fdf-7d14-4284-89d9-bd3b0c42e81b",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -98,7 +230,7 @@
     "chunk_index": 22,
     "title": "software_unit_2.pdf"
   },
-  "9": {
+  "21": {
     "id": "1ce9b174-6f90-4704-bf66-33a33485ca2b",
     "chunk_id": "1ce9b174-6f90-4704-bf66-33a33485ca2b",
     "document_id": "52028bff-dc64-40f0-be30-4a30c92ab4eb",
@@ -109,7 +241,51 @@
     "chunk_index": 1,
     "title": "ASSIGNMENT2.pdf"
   },
-  "10": {
+  "22": {
+    "id": "1f9d5189-7577-442d-a3e5-91fb44322fd8",
+    "chunk_id": "1f9d5189-7577-442d-a3e5-91fb44322fd8",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "110. Explain UDP and compare it with TCP for IoT. 111. Explain socket programming and TCP client-server operations.",
+    "text": "110. Explain UDP and compare it with TCP for IoT. 111. Explain socket programming and TCP client-server operations.",
+    "page_number": 17,
+    "chunk_index": 75,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "23": {
+    "id": "2004d278-fb19-4714-8d19-c077c1b97e53",
+    "chunk_id": "2004d278-fb19-4714-8d19-c077c1b97e53",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Unit Overview \n3.",
+    "text": "Unit Overview \n3.",
+    "page_number": 2,
+    "chunk_index": 2,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "24": {
+    "id": "227a7da5-b3ea-48a2-96d3-057fd594de76",
+    "chunk_id": "227a7da5-b3ea-48a2-96d3-057fd594de76",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "\uf0b7 \nTransport requirements depend on whether data must be complete, ordered or simply current. \uf0b7 \nRouting must provide suitable paths. \uf0b7 \nDNS can support service naming.",
+    "text": "\uf0b7 \nTransport requirements depend on whether data must be complete, ordered or simply current. \uf0b7 \nRouting must provide suitable paths. \uf0b7 \nDNS can support service naming.",
+    "page_number": 16,
+    "chunk_index": 64,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "25": {
+    "id": "2381e1ec-ca3e-40ae-a00a-1a3adc32b281",
+    "chunk_id": "2381e1ec-ca3e-40ae-a00a-1a3adc32b281",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "\uf0b7 \nbind() establishes the server endpoint. \uf0b7 \nlisten() waits for connection requests. \uf0b7 \naccept() returns a connected client socket. \uf0b7 \nconnect() establishes the client-side TCP connection. \uf0b7 \nsendall() sends bytes. \uf0b7 \nrecv() receives bytes. \uf0b7 \n127.0.0.1 is the local loopback address. 9. UDP Socket Programming \n9.1 Python UDP server \nimport socket \n \nHOST = \"127.0.0.1\"",
+    "text": "\uf0b7 \nbind() establishes the server endpoint. \uf0b7 \nlisten() waits for connection requests. \uf0b7 \naccept() returns a connected client socket. \uf0b7 \nconnect() establishes the client-side TCP connection. \uf0b7 \nsendall() sends bytes. \uf0b7 \nrecv() receives bytes. \uf0b7 \n127.0.0.1 is the local loopback address. 9. UDP Socket Programming \n9.1 Python UDP server \nimport socket \n \nHOST = \"127.0.0.1\"",
+    "page_number": 7,
+    "chunk_index": 27,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "26": {
     "id": "23969089-6194-42ef-89af-db6a26ff3ddc",
     "chunk_id": "23969089-6194-42ef-89af-db6a26ff3ddc",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -120,7 +296,7 @@
     "chunk_index": 5,
     "title": "software_unit_2.pdf"
   },
-  "11": {
+  "27": {
     "id": "23fdc6ca-08be-4322-841b-20b8e945951e",
     "chunk_id": "23fdc6ca-08be-4322-841b-20b8e945951e",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -131,7 +307,51 @@
     "chunk_index": 36,
     "title": "software_unit_2.pdf"
   },
-  "12": {
+  "28": {
+    "id": "24f0b929-3e7f-4aea-8231-d3ac050f53d9",
+    "chunk_id": "24f0b929-3e7f-4aea-8231-d3ac050f53d9",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "35. Resolver checks local/cache information. 36. Recursive resolver obtains the answer if needed. 37. Root infrastructure directs toward the relevant TLD. 38. TLD infrastructure directs toward the authoritative server. 39. Authoritative server returns the record. 40. Resolver caches the result according to TTL. 41. Application uses the returned IP address. 21.1 DNS caching \nCaching improves efficiency by allowing resolvers to reuse recent answers. TTL influences how long a record may \nremain cached, so changes may not appear everywhere immediately.",
+    "text": "35. Resolver checks local/cache information. 36. Recursive resolver obtains the answer if needed. 37. Root infrastructure directs toward the relevant TLD. 38. TLD infrastructure directs toward the authoritative server. 39. Authoritative server returns the record. 40. Resolver caches the result according to TTL. 41. Application uses the returned IP address. 21.1 DNS caching \nCaching improves efficiency by allowing resolvers to reuse recent answers. TTL influences how long a record may \nremain cached, so changes may not appear everywhere immediately.",
+    "page_number": 13,
+    "chunk_index": 49,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "29": {
+    "id": "25fadd9c-ed0a-465d-9559-2ffc1070f6e8",
+    "chunk_id": "25fadd9c-ed0a-465d-9559-2ffc1070f6e8",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "12. Forwarding Fundamentals \n12.1 Example forwarding table \nDestination \nNext hop \nInterface \nMetric \n192.168.10.0/24 \n\u2014 \neth0 \n0 \n192.168.20.0/24 \n192.168.1.2 \neth1 \n10 \n0.0.0.0/0 \n192.168.1.1 \neth1 \n20 \n \nRouters compare destination addresses with route prefixes and select an applicable forwarding entry. When \nmultiple entries match, the most specific applicable prefix is normally preferred. 12.2 Forwarding factors \n\uf0b7 \nDestination IP address. \uf0b7 \nPrefix length. \uf0b7 \nNext-hop reachability. \uf0b7 \nOutgoing interface. \uf0b7 \nRouting policy. \uf0b7 \nRoute metric. 13. Routing Algorithms \n13.1 Purpose \nA routing algorithm provides a method for selecting paths through an interconnected network. This unit focuses on \nlink-state and distance-vector approaches. 13.2 Metrics \nMetric \nMeaning \nHop count \nNumber of links/routers traversed. Cost \nConfigured value representing path preference.",
+    "text": "12. Forwarding Fundamentals \n12.1 Example forwarding table \nDestination \nNext hop \nInterface \nMetric \n192.168.10.0/24 \n\u2014 \neth0 \n0 \n192.168.20.0/24 \n192.168.1.2 \neth1 \n10 \n0.0.0.0/0 \n192.168.1.1 \neth1 \n20 \n \nRouters compare destination addresses with route prefixes and select an applicable forwarding entry. When \nmultiple entries match, the most specific applicable prefix is normally preferred. 12.2 Forwarding factors \n\uf0b7 \nDestination IP address. \uf0b7 \nPrefix length. \uf0b7 \nNext-hop reachability. \uf0b7 \nOutgoing interface. \uf0b7 \nRouting policy. \uf0b7 \nRoute metric. 13. Routing Algorithms \n13.1 Purpose \nA routing algorithm provides a method for selecting paths through an interconnected network. This unit focuses on \nlink-state and distance-vector approaches. 13.2 Metrics \nMetric \nMeaning \nHop count \nNumber of links/routers traversed. Cost \nConfigured value representing path preference.",
+    "page_number": 9,
+    "chunk_index": 32,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "30": {
+    "id": "26b9f768-a5ce-4e59-b107-17170605f758",
+    "chunk_id": "26b9f768-a5ce-4e59-b107-17170605f758",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Send a short message. 64. Observe the response. 65. Modify the message and repeat. 66.",
+    "text": "Send a short message. 64. Observe the response. 65. Modify the message and repeat. 66.",
+    "page_number": 15,
+    "chunk_index": 58,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "31": {
+    "id": "27594aa0-d4ea-4e00-a681-0be927fd3aac",
+    "chunk_id": "27594aa0-d4ea-4e00-a681-0be927fd3aac",
+    "document_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "doc_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "content": "What is an IP address? Differentiate between IPv4 and IPv6 addressing. 13. Explain IPv4 address classes and subnetting with suitable examples. 14.",
+    "text": "What is an IP address? Differentiate between IPv4 and IPv6 addressing. 13. Explain IPv4 address classes and subnetting with suitable examples. 14.",
+    "page_number": 1,
+    "chunk_index": 3,
+    "title": "ASSIGNMENT_3.pdf"
+  },
+  "32": {
     "id": "278eb36e-c60e-4290-93ed-a737f7adae6a",
     "chunk_id": "278eb36e-c60e-4290-93ed-a737f7adae6a",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -142,7 +362,7 @@
     "chunk_index": 1,
     "title": "software_unit_2.pdf"
   },
-  "13": {
+  "33": {
     "id": "295b2b70-2612-4f02-889c-be14c818c541",
     "chunk_id": "295b2b70-2612-4f02-889c-be14c818c541",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -153,7 +373,29 @@
     "chunk_index": 3,
     "title": "software_unit_2.pdf"
   },
-  "14": {
+  "34": {
+    "id": "29f46a0d-9be2-4a60-84bd-0292852c992e",
+    "chunk_id": "29f46a0d-9be2-4a60-84bd-0292852c992e",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Glossary \nTerm \nMeaning \nACK \nTCP acknowledgement. SYN \nTCP synchronization control flag.",
+    "text": "Glossary \nTerm \nMeaning \nACK \nTCP acknowledgement. SYN \nTCP synchronization control flag.",
+    "page_number": 19,
+    "chunk_index": 84,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "35": {
+    "id": "2bb733d8-da88-47bb-954a-0de978981145",
+    "chunk_id": "2bb733d8-da88-47bb-954a-0de978981145",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "30. Exchange route-distance information with neighbors. 31. Calculate candidate paths through neighbors. 32. Select better routes according to the metric. 33. Continue exchanging information until convergence.",
+    "text": "30. Exchange route-distance information with neighbors. 31. Calculate candidate paths through neighbors. 32. Select better routes according to the metric. 33. Continue exchanging information until convergence.",
+    "page_number": 10,
+    "chunk_index": 38,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "36": {
     "id": "2dd17670-c15b-4b0b-a724-b5b18bfc77bd",
     "chunk_id": "2dd17670-c15b-4b0b-a724-b5b18bfc77bd",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -164,7 +406,7 @@
     "chunk_index": 50,
     "title": "software_unit_2.pdf"
   },
-  "15": {
+  "37": {
     "id": "367cfc0d-bd0b-4daf-ada4-781723c27cca",
     "chunk_id": "367cfc0d-bd0b-4daf-ada4-781723c27cca",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -175,7 +417,18 @@
     "chunk_index": 47,
     "title": "software_unit_2.pdf"
   },
-  "16": {
+  "38": {
+    "id": "37da207a-6749-42de-b525-1d055283dc7f",
+    "chunk_id": "37da207a-6749-42de-b525-1d055283dc7f",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "A) neighboring routers B) DNS servers C) applications D) sensors \nAnswer: A \n10. IPv4 has: \nA) 16 bits B) 32 bits C) 64 bits D) 128 bits",
+    "text": "A) neighboring routers B) DNS servers C) applications D) sensors \nAnswer: A \n10. IPv4 has: \nA) 16 bits B) 32 bits C) 64 bits D) 128 bits",
+    "page_number": 18,
+    "chunk_index": 81,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "39": {
     "id": "382764eb-292f-40e4-81a6-8d5423540cb3",
     "chunk_id": "382764eb-292f-40e4-81a6-8d5423540cb3",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -186,7 +439,40 @@
     "chunk_index": 10,
     "title": "software_unit_2.pdf"
   },
-  "17": {
+  "40": {
+    "id": "38798f93-ca36-4147-b692-277a6246dd76",
+    "chunk_id": "38798f93-ca36-4147-b692-277a6246dd76",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IPv6 \n128-bit Internet Protocol addressing system. DNS \nDistributed naming system for domain resource \nrecords. Resolver \nComponent that obtains DNS answers. Authoritative server \nDNS server that provides authoritative records for a \nzone. TTL \nTime-to-live associated with cached DNS information.",
+    "text": "IPv6 \n128-bit Internet Protocol addressing system. DNS \nDistributed naming system for domain resource \nrecords. Resolver \nComponent that obtains DNS answers. Authoritative server \nDNS server that provides authoritative records for a \nzone. TTL \nTime-to-live associated with cached DNS information.",
+    "page_number": 17,
+    "chunk_index": 69,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "41": {
+    "id": "3a004608-2f2b-43ab-a1a4-b22df0e7b54d",
+    "chunk_id": "3a004608-2f2b-43ab-a1a4-b22df0e7b54d",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Long Questions \n109. Explain TCP operation including connection establishment, reliable delivery and termination.",
+    "text": "Long Questions \n109. Explain TCP operation including connection establishment, reliable delivery and termination.",
+    "page_number": 17,
+    "chunk_index": 74,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "42": {
+    "id": "3a3f2981-265a-4fc2-9695-a8f66e057b5c",
+    "chunk_id": "3a3f2981-265a-4fc2-9695-a8f66e057b5c",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "22. End-to-End IoT Networking \nConsider a temperature sensor sending a reading to a backend service. The application identifies the service, DNS \nmay resolve the service name, a transport protocol carries the application data, IP addresses identify endpoints, \nand routers forward packets toward the destination.",
+    "text": "22. End-to-End IoT Networking \nConsider a temperature sensor sending a reading to a backend service. The application identifies the service, DNS \nmay resolve the service name, a transport protocol carries the application data, IP addresses identify endpoints, \nand routers forward packets toward the destination.",
+    "page_number": 14,
+    "chunk_index": 51,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "43": {
     "id": "3b2804eb-588b-4713-871e-185f0628496b",
     "chunk_id": "3b2804eb-588b-4713-871e-185f0628496b",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -197,7 +483,51 @@
     "chunk_index": 25,
     "title": "IOT_lab_1-3.pdf"
   },
-  "18": {
+  "44": {
+    "id": "3bc6740c-c6d6-453f-bc6b-3c79696f1ef2",
+    "chunk_id": "3bc6740c-c6d6-453f-bc6b-3c79696f1ef2",
+    "document_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "doc_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "content": "2. Compare TCP and UDP based on reliability, connection setup, ordering, speed, and \nsuitable IoT applications. 3. What is socket programming? Explain the role of sockets in communication between IoT \ndevices and servers. 4. Describe the steps involved in creating a TCP client-server socket program. 5. Explain the steps involved in creating a UDP client-server socket program. 6. Differentiate between stream sockets and datagram sockets with examples. 7. Explain how TCP establishes, maintains, and terminates a connection using the three-way \nhandshake. 8.",
+    "text": "2. Compare TCP and UDP based on reliability, connection setup, ordering, speed, and \nsuitable IoT applications. 3. What is socket programming? Explain the role of sockets in communication between IoT \ndevices and servers. 4. Describe the steps involved in creating a TCP client-server socket program. 5. Explain the steps involved in creating a UDP client-server socket program. 6. Differentiate between stream sockets and datagram sockets with examples. 7. Explain how TCP establishes, maintains, and terminates a connection using the three-way \nhandshake. 8.",
+    "page_number": 1,
+    "chunk_index": 1,
+    "title": "ASSIGNMENT_3.pdf"
+  },
+  "45": {
+    "id": "3e63425a-3028-467d-8963-5cd43166797f",
+    "chunk_id": "3e63425a-3028-467d-8963-5cd43166797f",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Relate TCP, UDP, IP, routing and DNS in an end-to-end IoT system. \uf0b7 \nPerform basic socket, IP, routing-table and DNS laboratory exercises. 2. Unit Overview \nIoT communication depends on several cooperating networking functions. Transport services provide application-\nto-application communication, IP provides network addressing, routers perform forwarding using routing \ninformation, and DNS provides a naming system that can map service names to network addresses.",
+    "text": "Relate TCP, UDP, IP, routing and DNS in an end-to-end IoT system. \uf0b7 \nPerform basic socket, IP, routing-table and DNS laboratory exercises. 2. Unit Overview \nIoT communication depends on several cooperating networking functions. Transport services provide application-\nto-application communication, IP provides network addressing, routers perform forwarding using routing \ninformation, and DNS provides a naming system that can map service names to network addresses.",
+    "page_number": 3,
+    "chunk_index": 6,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "46": {
+    "id": "3ec3b5b8-ce74-492a-b96a-988beb2bc7e3",
+    "chunk_id": "3ec3b5b8-ce74-492a-b96a-988beb2bc7e3",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n112. Write and explain a basic TCP client and server in Python.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n112. Write and explain a basic TCP client and server in Python.",
+    "page_number": 18,
+    "chunk_index": 76,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "47": {
+    "id": "3ec77a0d-9b3e-4cf9-b906-0567a45f1f28",
+    "chunk_id": "3ec77a0d-9b3e-4cf9-b906-0567a45f1f28",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "commonly written in dot-decimal notation. A prefix length identifies the network portion. Address \nInterpretation \n192.168.1.20/24 \nHost in 192.168.1.0/24 \n10.0.5.10/16 \nHost in a private IPv4 prefix \n172.16.2.5/16 \nPrivate-address example \n \n17.3 Private IPv4 ranges \nCommon private IPv4 ranges are 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16. They are intended for private \nnetwork use and are not globally unique.",
+    "text": "commonly written in dot-decimal notation. A prefix length identifies the network portion. Address \nInterpretation \n192.168.1.20/24 \nHost in 192.168.1.0/24 \n10.0.5.10/16 \nHost in a private IPv4 prefix \n172.16.2.5/16 \nPrivate-address example \n \n17.3 Private IPv4 ranges \nCommon private IPv4 ranges are 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16. They are intended for private \nnetwork use and are not globally unique.",
+    "page_number": 11,
+    "chunk_index": 42,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "48": {
     "id": "3ee9a5ae-9269-491e-9b0b-cb6f491ff16a",
     "chunk_id": "3ee9a5ae-9269-491e-9b0b-cb6f491ff16a",
     "document_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
@@ -208,7 +538,7 @@
     "chunk_index": 0,
     "title": "Assignment-1.pdf"
   },
-  "19": {
+  "49": {
     "id": "3eea7174-ff5a-46b8-b0b7-fcd879df63a8",
     "chunk_id": "3eea7174-ff5a-46b8-b0b7-fcd879df63a8",
     "document_id": "d901f517-7a86-4580-865f-59462937bb12",
@@ -219,7 +549,7 @@
     "chunk_index": 4,
     "title": "assignment_2_-_Machine_Learning_and_NLP_on_AWS_Cloud.pdf"
   },
-  "20": {
+  "50": {
     "id": "42cb0488-70bd-43b8-87a8-af740dfc8ccc",
     "chunk_id": "42cb0488-70bd-43b8-87a8-af740dfc8ccc",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -230,7 +560,7 @@
     "chunk_index": 10,
     "title": "IOT_lab_1-3.pdf"
   },
-  "21": {
+  "51": {
     "id": "462f3222-72da-40eb-a2b4-74f5a9785c26",
     "chunk_id": "462f3222-72da-40eb-a2b4-74f5a9785c26",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -241,7 +571,7 @@
     "chunk_index": 53,
     "title": "software_unit_2.pdf"
   },
-  "22": {
+  "52": {
     "id": "478500b1-980f-49b9-bda1-7d2c594eba63",
     "chunk_id": "478500b1-980f-49b9-bda1-7d2c594eba63",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -252,7 +582,7 @@
     "chunk_index": 6,
     "title": "IOT_lab_1-3.pdf"
   },
-  "23": {
+  "53": {
     "id": "47a89ef1-7901-47a7-8fdd-2980ab2a70af",
     "chunk_id": "47a89ef1-7901-47a7-8fdd-2980ab2a70af",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -263,7 +593,7 @@
     "chunk_index": 2,
     "title": "IOT_lab_1-3.pdf"
   },
-  "24": {
+  "54": {
     "id": "4a229e32-1145-462f-982c-8579934a222a",
     "chunk_id": "4a229e32-1145-462f-982c-8579934a222a",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -274,7 +604,7 @@
     "chunk_index": 21,
     "title": "software_unit_2.pdf"
   },
-  "25": {
+  "55": {
     "id": "4a33976a-dae3-45ec-bebe-382900af3a29",
     "chunk_id": "4a33976a-dae3-45ec-bebe-382900af3a29",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -285,7 +615,29 @@
     "chunk_index": 19,
     "title": "IOT_lab_1-3.pdf"
   },
-  "26": {
+  "56": {
+    "id": "4b58f0d9-b26b-4b07-98d9-a4d0bf0bf737",
+    "chunk_id": "4b58f0d9-b26b-4b07-98d9-a4d0bf0bf737",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "\uf0b7 \nIP addressing identifies interfaces. \uf0b7 \nDNS can provide stable service names. \uf0b7 \nRouting connects classroom and central networks. Case Study 3 \u2013 Industrial Monitoring \nSensors monitor machine conditions while an edge system performs local analysis and sends selected events to \ncentral infrastructure. \uf0b7 \nLocal processing can reduce latency.",
+    "text": "\uf0b7 \nIP addressing identifies interfaces. \uf0b7 \nDNS can provide stable service names. \uf0b7 \nRouting connects classroom and central networks. Case Study 3 \u2013 Industrial Monitoring \nSensors monitor machine conditions while an edge system performs local analysis and sends selected events to \ncentral infrastructure. \uf0b7 \nLocal processing can reduce latency.",
+    "page_number": 16,
+    "chunk_index": 63,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "57": {
+    "id": "4d11773e-98ab-4e76-b683-7455b5db3718",
+    "chunk_id": "4d11773e-98ab-4e76-b683-7455b5db3718",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nreceiver capacity. Congestion control \nAdjusts transmission under \ncongestion.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nreceiver capacity. Congestion control \nAdjusts transmission under \ncongestion.",
+    "page_number": 4,
+    "chunk_index": 11,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "58": {
     "id": "4d6176d3-569f-464f-8dc5-cfb514fe0526",
     "chunk_id": "4d6176d3-569f-464f-8dc5-cfb514fe0526",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -296,7 +648,7 @@
     "chunk_index": 16,
     "title": "IOT_lab_1-3.pdf"
   },
-  "27": {
+  "59": {
     "id": "4e8bb02b-894c-4737-950f-b910122262b5",
     "chunk_id": "4e8bb02b-894c-4737-950f-b910122262b5",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -307,7 +659,84 @@
     "chunk_index": 30,
     "title": "software_unit_2.pdf"
   },
-  "28": {
+  "60": {
+    "id": "4ed9304f-2e7c-451d-9ff1-92104e43c704",
+    "chunk_id": "4ed9304f-2e7c-451d-9ff1-92104e43c704",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Reliability \nMechanisms that help deliver data \ncorrectly. Useful for configuration and critical \ndata. Flow control \nControls sender rate relative to \nImportant for constrained devices.",
+    "text": "Reliability \nMechanisms that help deliver data \ncorrectly. Useful for configuration and critical \ndata. Flow control \nControls sender rate relative to \nImportant for constrained devices.",
+    "page_number": 3,
+    "chunk_index": 10,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "61": {
+    "id": "51191a4e-53e3-4575-9cf4-0eea3a664be3",
+    "chunk_id": "51191a4e-53e3-4575-9cf4-0eea3a664be3",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "23. Create link-state information. 24. Distribute link-state information. 25. Build a topology database. 26. Run shortest-path calculation. 27. Construct routing information. 28.",
+    "text": "23. Create link-state information. 24. Distribute link-state information. 25. Build a topology database. 26. Run shortest-path calculation. 27. Construct routing information. 28.",
+    "page_number": 10,
+    "chunk_index": 35,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "62": {
+    "id": "51b51bb7-24fb-461a-813a-9dcc9d518958",
+    "chunk_id": "51b51bb7-24fb-461a-813a-9dcc9d518958",
+    "document_id": "54a53221-2014-4301-aa29-e2caf8471af2",
+    "doc_id": "54a53221-2014-4301-aa29-e2caf8471af2",
+    "content": "UNIT B ASSIGNMENT\nAnswer all five questions. Each question carries 5 marks. Total: 25 marks.",
+    "text": "UNIT B ASSIGNMENT\nAnswer all five questions. Each question carries 5 marks. Total: 25 marks.",
+    "page_number": 1,
+    "chunk_index": 0,
+    "title": "Unit_B_Assignment.pdf"
+  },
+  "63": {
+    "id": "51c7ac25-ab8d-4cc3-a90d-13cdf0e991e3",
+    "chunk_id": "51c7ac25-ab8d-4cc3-a90d-13cdf0e991e3",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "4. Accept a client. 5. Receive and process data. 6. Send response if needed. 7. Close client connection. 8. Continue or shut down. 7.4 TCP client workflow \n9. Create socket. 10. Connect to server. 11. Send data. 12. Receive response. 13. Process response. 14.",
+    "text": "4. Accept a client. 5. Receive and process data. 6. Send response if needed. 7. Close client connection. 8. Continue or shut down. 7.4 TCP client workflow \n9. Create socket. 10. Connect to server. 11. Send data. 12. Receive response. 13. Process response. 14.",
+    "page_number": 6,
+    "chunk_index": 23,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "64": {
+    "id": "525a71ec-8fba-4ab0-bfe9-82cf5d36e8d0",
+    "chunk_id": "525a71ec-8fba-4ab0-bfe9-82cf5d36e8d0",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n14. Link-State Routing \n14.1 Basic idea \nIn link-state routing, routers distribute information about their local links. Routers use the resulting topology \ninformation to calculate shortest paths from themselves to destinations. Dijkstra\u2019s shortest-path algorithm is \ncommonly associated with this approach. 14.2 General steps \n22. Discover neighbors and local link information.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n14. Link-State Routing \n14.1 Basic idea \nIn link-state routing, routers distribute information about their local links. Routers use the resulting topology \ninformation to calculate shortest paths from themselves to destinations. Dijkstra\u2019s shortest-path algorithm is \ncommonly associated with this approach. 14.2 General steps \n22. Discover neighbors and local link information.",
+    "page_number": 10,
+    "chunk_index": 34,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "65": {
+    "id": "52ac503c-4b52-45ed-914d-ec1f8fd51e65",
+    "chunk_id": "52ac503c-4b52-45ed-914d-ec1f8fd51e65",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n19. IPv6 Overview \nIPv6 uses 128-bit addresses and hexadecimal notation. Example: 2001:db8::20. Its large address space supports \nlarge-scale deployments and hierarchical prefixing. Feature \nIPv4 \nIPv6 \nAddress length \n32 bits \n128 bits \nNotation \nDotted decimal \nHexadecimal groups \nExample \n192.168.1.20 \n2001:db8::20 \nPrefix \n/length \n/length \n \n20. DNS \u2013 Domain Name System \n20.1 Definition \nDNS is a distributed naming system that provides resource records for domain names. A common use is mapping \na hostname to an IP address so applications can use a stable name rather than a numeric address. 20.2 Components \nComponent \nRole \nStub resolver \nLocal application interface for name queries. Recursive resolver \nObtains answers for clients and can cache them. Root servers \nDirect queries toward top-level-domain infrastructure. TLD servers",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n19. IPv6 Overview \nIPv6 uses 128-bit addresses and hexadecimal notation. Example: 2001:db8::20. Its large address space supports \nlarge-scale deployments and hierarchical prefixing. Feature \nIPv4 \nIPv6 \nAddress length \n32 bits \n128 bits \nNotation \nDotted decimal \nHexadecimal groups \nExample \n192.168.1.20 \n2001:db8::20 \nPrefix \n/length \n/length \n \n20. DNS \u2013 Domain Name System \n20.1 Definition \nDNS is a distributed naming system that provides resource records for domain names. A common use is mapping \na hostname to an IP address so applications can use a stable name rather than a numeric address. 20.2 Components \nComponent \nRole \nStub resolver \nLocal application interface for name queries. Recursive resolver \nObtains answers for clients and can cache them. Root servers \nDirect queries toward top-level-domain infrastructure. TLD servers",
+    "page_number": 13,
+    "chunk_index": 45,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "66": {
+    "id": "55fcf185-5a1e-4ead-ac70-7d6d87e18b7d",
+    "chunk_id": "55fcf185-5a1e-4ead-ac70-7d6d87e18b7d",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Close sockets cleanly. Practical 4 \u2013 UDP socket programming \n67. Run UDP server. 68. Run UDP client. 69. Send a datagram. 70. Observe sender information. 71. Send a response. 72.",
+    "text": "Close sockets cleanly. Practical 4 \u2013 UDP socket programming \n67. Run UDP server. 68. Run UDP client. 69. Send a datagram. 70. Observe sender information. 71. Send a response. 72.",
+    "page_number": 15,
+    "chunk_index": 59,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "67": {
     "id": "57e70f94-64db-4541-b988-a89e83e16ab8",
     "chunk_id": "57e70f94-64db-4541-b988-a89e83e16ab8",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -318,7 +747,7 @@
     "chunk_index": 28,
     "title": "software_unit_2.pdf"
   },
-  "29": {
+  "68": {
     "id": "59efda77-62c4-49ab-8003-b9408e01e1dd",
     "chunk_id": "59efda77-62c4-49ab-8003-b9408e01e1dd",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -329,7 +758,29 @@
     "chunk_index": 7,
     "title": "software_unit_2.pdf"
   },
-  "30": {
+  "69": {
+    "id": "59f1022c-45b6-4ad9-87cd-bde745d2122e",
+    "chunk_id": "59f1022c-45b6-4ad9-87cd-bde745d2122e",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Listen.",
+    "text": "Listen.",
+    "page_number": 6,
+    "chunk_index": 22,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "70": {
+    "id": "5ae6cf20-4cb0-40ce-81f6-3d98fc343fc0",
+    "chunk_id": "5ae6cf20-4cb0-40ce-81f6-3d98fc343fc0",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Client \u2192 Server: ACK \nComplete establishment so data \ntransfer can proceed. 4.4 TCP data transfer \nAfter establishment, application data is carried in TCP segments. Sequence numbers support ordering, \nacknowledgements indicate received data, and retransmission can recover data believed to be lost. The receiving \napplication generally sees an ordered byte stream rather than individual network packets. 4.5 TCP termination \nTCP normally closes a connection using FIN and ACK exchanges. Each direction can be closed independently, so \nseveral control messages may occur during orderly termination. 4.6 Advantages and limitations \nAdvantages \nLimitations \nReliable and ordered delivery \nMore overhead than UDP \nFlow and congestion control \nConnection state is maintained \nSuitable for complete transfers \nRetransmission can add delay \nWidely supported \nMay be unnecessary for small loss-tolerant telemetry",
+    "text": "Client \u2192 Server: ACK \nComplete establishment so data \ntransfer can proceed. 4.4 TCP data transfer \nAfter establishment, application data is carried in TCP segments. Sequence numbers support ordering, \nacknowledgements indicate received data, and retransmission can recover data believed to be lost. The receiving \napplication generally sees an ordered byte stream rather than individual network packets. 4.5 TCP termination \nTCP normally closes a connection using FIN and ACK exchanges. Each direction can be closed independently, so \nseveral control messages may occur during orderly termination. 4.6 Advantages and limitations \nAdvantages \nLimitations \nReliable and ordered delivery \nMore overhead than UDP \nFlow and congestion control \nConnection state is maintained \nSuitable for complete transfers \nRetransmission can add delay \nWidely supported \nMay be unnecessary for small loss-tolerant telemetry",
+    "page_number": 4,
+    "chunk_index": 15,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "71": {
     "id": "5c5a8bde-5d7e-46c6-a56e-73a0d7749a92",
     "chunk_id": "5c5a8bde-5d7e-46c6-a56e-73a0d7749a92",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -340,7 +791,7 @@
     "chunk_index": 11,
     "title": "software_unit_2.pdf"
   },
-  "31": {
+  "72": {
     "id": "5e19617b-4d18-4707-9850-cf1b23c40a54",
     "chunk_id": "5e19617b-4d18-4707-9850-cf1b23c40a54",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -351,7 +802,29 @@
     "chunk_index": 46,
     "title": "software_unit_2.pdf"
   },
-  "32": {
+  "73": {
+    "id": "6065659b-e95e-42e5-8d3c-50c6f839d7c9",
+    "chunk_id": "6065659b-e95e-42e5-8d3c-50c6f839d7c9",
+    "document_id": "54a53221-2014-4301-aa29-e2caf8471af2",
+    "doc_id": "54a53221-2014-4301-aa29-e2caf8471af2",
+    "content": "Q1. Explain Regular Expressions, Finite-State Automata, and Morphological Parsing. Give\nsuitable examples of each.",
+    "text": "Q1. Explain Regular Expressions, Finite-State Automata, and Morphological Parsing. Give\nsuitable examples of each.",
+    "page_number": 1,
+    "chunk_index": 1,
+    "title": "Unit_B_Assignment.pdf"
+  },
+  "74": {
+    "id": "64d6e510-6d3c-4b2e-bc75-e4be615f7bab",
+    "chunk_id": "64d6e510-6d3c-4b2e-bc75-e4be615f7bab",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n21.2 Troubleshooting DNS \n\uf0b7 \nA DNS failure can occur even when IP connectivity works. \uf0b7 \nTest name resolution separately from routing. \uf0b7 \nCompare a hostname lookup with direct IP connectivity where appropriate. \uf0b7 \nCheck resolver configuration and returned records.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n21.2 Troubleshooting DNS \n\uf0b7 \nA DNS failure can occur even when IP connectivity works. \uf0b7 \nTest name resolution separately from routing. \uf0b7 \nCompare a hostname lookup with direct IP connectivity where appropriate. \uf0b7 \nCheck resolver configuration and returned records.",
+    "page_number": 14,
+    "chunk_index": 50,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "75": {
     "id": "670da465-682b-4169-b795-a6d727e42619",
     "chunk_id": "670da465-682b-4169-b795-a6d727e42619",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -362,7 +835,18 @@
     "chunk_index": 15,
     "title": "IOT_lab_1-3.pdf"
   },
-  "33": {
+  "76": {
+    "id": "67c2d069-95ec-46de-bc4b-dfe16edc060d",
+    "chunk_id": "67c2d069-95ec-46de-bc4b-dfe16edc060d",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "A) Recursive resolver B) Router interface C) TCP socket D) Sensor \nAnswer: A \n30. Unit Summary \nThis unit connects transport services, socket programming, forwarding, routing, IP addressing and DNS into one \nIoT networking model. TCP and UDP provide different transport behavior; sockets provide application interfaces; \nforwarding moves packets locally; routing determines paths; IP addresses identify network interfaces; and DNS \nmaps service names to resource records. Understanding how these mechanisms cooperate is essential for \ndesigning, programming and troubleshooting IoT communication systems. 31.",
+    "text": "A) Recursive resolver B) Router interface C) TCP socket D) Sensor \nAnswer: A \n30. Unit Summary \nThis unit connects transport services, socket programming, forwarding, routing, IP addressing and DNS into one \nIoT networking model. TCP and UDP provide different transport behavior; sockets provide application interfaces; \nforwarding moves packets locally; routing determines paths; IP addresses identify network interfaces; and DNS \nmaps service names to resource records. Understanding how these mechanisms cooperate is essential for \ndesigning, programming and troubleshooting IoT communication systems. 31.",
+    "page_number": 19,
+    "chunk_index": 83,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "77": {
     "id": "699baaa9-cabc-40db-8480-4fe0c1bba979",
     "chunk_id": "699baaa9-cabc-40db-8480-4fe0c1bba979",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -373,7 +857,7 @@
     "chunk_index": 38,
     "title": "software_unit_2.pdf"
   },
-  "34": {
+  "78": {
     "id": "6a5466a6-dbca-45fa-9bd4-2780fabfd6f4",
     "chunk_id": "6a5466a6-dbca-45fa-9bd4-2780fabfd6f4",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -384,7 +868,18 @@
     "chunk_index": 13,
     "title": "software_unit_2.pdf"
   },
-  "35": {
+  "79": {
+    "id": "6a980634-9cf7-4d6d-bfc7-781ee3e740c8",
+    "chunk_id": "6a980634-9cf7-4d6d-bfc7-781ee3e740c8",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n15.3 Bellman-Ford concept \nA router can evaluate a destination through each neighbor and select the lowest-cost candidate: \nBestCost(destination) = minimum [cost to neighbor + neighbor\u2019s advertised cost to destination]. 15.4 Characteristics \n\uf0b7 \nNeighbor-based information exchange.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n15.3 Bellman-Ford concept \nA router can evaluate a destination through each neighbor and select the lowest-cost candidate: \nBestCost(destination) = minimum [cost to neighbor + neighbor\u2019s advertised cost to destination]. 15.4 Characteristics \n\uf0b7 \nNeighbor-based information exchange.",
+    "page_number": 11,
+    "chunk_index": 39,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "80": {
     "id": "6c22d4a0-497d-4365-b341-f6c193737cf4",
     "chunk_id": "6c22d4a0-497d-4365-b341-f6c193737cf4",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -395,7 +890,40 @@
     "chunk_index": 9,
     "title": "software_unit_2.pdf"
   },
-  "36": {
+  "81": {
+    "id": "6c801640-0e3a-412b-8755-6c2113abb3e0",
+    "chunk_id": "6c801640-0e3a-412b-8755-6c2113abb3e0",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Transport Services \n4. TCP \u2013 Transmission Control Protocol \n5. UDP \u2013 User Datagram Protocol \n6. TCP vs UDP \n7. Socket Programming \n8. TCP Socket Programming \n9. UDP Socket Programming \n10. IoT Applications of TCP, UDP and Sockets \n11. Forwarding and Routing \n12. Forwarding Fundamentals \n13. Routing Algorithms \n14. Link-State Routing \n15. Distance-Vector Routing \n16. Link-State vs Distance-Vector \n17. IP Addresses \n18. IPv4 Subnetting and CIDR \n19. IPv6 Overview \n20. DNS \u2013 Domain Name System \n21. DNS Resolution Process \n22. End-to-End IoT Networking \n23. Practical Exercises \n24.",
+    "text": "Transport Services \n4. TCP \u2013 Transmission Control Protocol \n5. UDP \u2013 User Datagram Protocol \n6. TCP vs UDP \n7. Socket Programming \n8. TCP Socket Programming \n9. UDP Socket Programming \n10. IoT Applications of TCP, UDP and Sockets \n11. Forwarding and Routing \n12. Forwarding Fundamentals \n13. Routing Algorithms \n14. Link-State Routing \n15. Distance-Vector Routing \n16. Link-State vs Distance-Vector \n17. IP Addresses \n18. IPv4 Subnetting and CIDR \n19. IPv6 Overview \n20. DNS \u2013 Domain Name System \n21. DNS Resolution Process \n22. End-to-End IoT Networking \n23. Practical Exercises \n24.",
+    "page_number": 2,
+    "chunk_index": 3,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "82": {
+    "id": "6d51cc45-6c4f-466c-be04-11e3fd674e84",
+    "chunk_id": "6d51cc45-6c4f-466c-be04-11e3fd674e84",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nAnswer: B \n11. IPv6 has: \nA) 32 bits B) 64 bits C) 96 bits D) 128 bits \nAnswer: D \n12. Which DNS record maps a hostname to IPv4? A) AAAA B) A C) MX D) NS \nAnswer: B \n13. Which DNS record maps a hostname to IPv6? A) A B) CNAME C) AAAA D) MX \nAnswer: C \n14. Which DNS component can cache answers for clients?",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nAnswer: B \n11. IPv6 has: \nA) 32 bits B) 64 bits C) 96 bits D) 128 bits \nAnswer: D \n12. Which DNS record maps a hostname to IPv4? A) AAAA B) A C) MX D) NS \nAnswer: B \n13. Which DNS record maps a hostname to IPv6? A) A B) CNAME C) AAAA D) MX \nAnswer: C \n14. Which DNS component can cache answers for clients?",
+    "page_number": 19,
+    "chunk_index": 82,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "83": {
+    "id": "6d9b5c41-819c-40e4-8254-e3be3c686b30",
+    "chunk_id": "6d9b5c41-819c-40e4-8254-e3be3c686b30",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Useful on shared networks. Connection \nLogical communication relationship. TCP maintains connection state. Datagram \nIndependent message unit.",
+    "text": "Useful on shared networks. Connection \nLogical communication relationship. TCP maintains connection state. Datagram \nIndependent message unit.",
+    "page_number": 4,
+    "chunk_index": 12,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "84": {
     "id": "6e658005-819a-4eca-afcc-49cd43ed8c6a",
     "chunk_id": "6e658005-819a-4eca-afcc-49cd43ed8c6a",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -406,7 +934,7 @@
     "chunk_index": 41,
     "title": "software_unit_2.pdf"
   },
-  "37": {
+  "85": {
     "id": "71c2d965-bd8e-429a-9616-bffc3f6bb652",
     "chunk_id": "71c2d965-bd8e-429a-9616-bffc3f6bb652",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -417,7 +945,7 @@
     "chunk_index": 45,
     "title": "software_unit_2.pdf"
   },
-  "38": {
+  "86": {
     "id": "7212513c-5fb7-4578-8769-1cc5a2d28a11",
     "chunk_id": "7212513c-5fb7-4578-8769-1cc5a2d28a11",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -428,7 +956,29 @@
     "chunk_index": 18,
     "title": "IOT_lab_1-3.pdf"
   },
-  "39": {
+  "87": {
+    "id": "76ec95ee-7ebb-46de-b7a9-7d3c5c45086c",
+    "chunk_id": "76ec95ee-7ebb-46de-b7a9-7d3c5c45086c",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "FIN \nTCP termination control flag. Datagram \nIndependent UDP message. Byte stream \nTCP application data model. Port \nApplication endpoint identifier. Forwarding table \nInformation used for packet forwarding. Routing table \nInformation representing routes. Next hop \nImmediate forwarding destination. Metric \nValue used to compare routes. Dijkstra \nShortest-path algorithm. Bellman-Ford \nShortest-path recurrence associated with distance-\nvector concepts. Subnet \nLogical division of an IP address space. CIDR \nClassless prefix notation. Resolver \nDNS component that obtains answers. A record \nDNS IPv4 address record. AAAA record \nDNS IPv6 address record. TTL \nTime-to-live controlling cache lifetime. Instructor / Student Quick Checklist \n\uf0b7 \nCan I explain TCP and UDP clearly? \uf0b7 \nCan I draw the TCP three-way handshake?",
+    "text": "FIN \nTCP termination control flag. Datagram \nIndependent UDP message. Byte stream \nTCP application data model. Port \nApplication endpoint identifier. Forwarding table \nInformation used for packet forwarding. Routing table \nInformation representing routes. Next hop \nImmediate forwarding destination. Metric \nValue used to compare routes. Dijkstra \nShortest-path algorithm. Bellman-Ford \nShortest-path recurrence associated with distance-\nvector concepts. Subnet \nLogical division of an IP address space. CIDR \nClassless prefix notation. Resolver \nDNS component that obtains answers. A record \nDNS IPv4 address record. AAAA record \nDNS IPv6 address record. TTL \nTime-to-live controlling cache lifetime. Instructor / Student Quick Checklist \n\uf0b7 \nCan I explain TCP and UDP clearly? \uf0b7 \nCan I draw the TCP three-way handshake?",
+    "page_number": 19,
+    "chunk_index": 85,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "88": {
+    "id": "77813edc-8c37-4853-bae4-e10e9c315f92",
+    "chunk_id": "77813edc-8c37-4853-bae4-e10e9c315f92",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n\uf0b7 \nRouting carries traffic between networks. Case Study 2 \u2013 Smart Classroom \nOccupancy, temperature and lighting sensors communicate with a local controller, which sends selected \ninformation to a central service. \uf0b7 \nTransport choice depends on reliability and timing requirements.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n\uf0b7 \nRouting carries traffic between networks. Case Study 2 \u2013 Smart Classroom \nOccupancy, temperature and lighting sensors communicate with a local controller, which sends selected \ninformation to a central service. \uf0b7 \nTransport choice depends on reliability and timing requirements.",
+    "page_number": 16,
+    "chunk_index": 62,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "89": {
     "id": "77c533ce-3388-4292-a50c-657de8252e46",
     "chunk_id": "77c533ce-3388-4292-a50c-657de8252e46",
     "document_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
@@ -439,7 +989,7 @@
     "chunk_index": 2,
     "title": "Assignment-1.pdf"
   },
-  "40": {
+  "90": {
     "id": "7a90dbbf-63ed-4afe-a1f5-334e48ac0f58",
     "chunk_id": "7a90dbbf-63ed-4afe-a1f5-334e48ac0f58",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -450,7 +1000,18 @@
     "chunk_index": 31,
     "title": "software_unit_2.pdf"
   },
-  "41": {
+  "91": {
+    "id": "7b1cf2f7-0416-4050-94fa-c17fc630523c",
+    "chunk_id": "7b1cf2f7-0416-4050-94fa-c17fc630523c",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "\uf0b7 \nIterative route calculation. \uf0b7 \nLess explicit topology information. \uf0b7 \nConvergence is important. \uf0b7 \nLoops and count-to-infinity can occur in some distance-vector designs. 15.5 Mitigation concepts \n\uf0b7 \nSplit horizon. \uf0b7 \nPoison reverse. \uf0b7 \nTriggered updates. \uf0b7 \nHold-down mechanisms in protocols that support them. 16.",
+    "text": "\uf0b7 \nIterative route calculation. \uf0b7 \nLess explicit topology information. \uf0b7 \nConvergence is important. \uf0b7 \nLoops and count-to-infinity can occur in some distance-vector designs. 15.5 Mitigation concepts \n\uf0b7 \nSplit horizon. \uf0b7 \nPoison reverse. \uf0b7 \nTriggered updates. \uf0b7 \nHold-down mechanisms in protocols that support them. 16.",
+    "page_number": 11,
+    "chunk_index": 40,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "92": {
     "id": "7cd4ef5c-f1c8-47e9-8005-f553b7d1a871",
     "chunk_id": "7cd4ef5c-f1c8-47e9-8005-f553b7d1a871",
     "document_id": "d901f517-7a86-4580-865f-59462937bb12",
@@ -461,7 +1022,18 @@
     "chunk_index": 0,
     "title": "assignment_2_-_Machine_Learning_and_NLP_on_AWS_Cloud.pdf"
   },
-  "42": {
+  "93": {
+    "id": "7f04c3ae-1f27-4c83-b228-a6f5fce6e09a",
+    "chunk_id": "7f04c3ae-1f27-4c83-b228-a6f5fce6e09a",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n \n17.4 Special examples \nType \nExample \nPurpose \nLoopback \n127.0.0.1 \nLocal host \nUnspecified \n0.0.0.0 \nUnspecified address in defined \ncontexts \nLimited broadcast \n255.255.255.255 \nLocal broadcast context \n \n18. IPv4 Subnetting and CIDR \n18.1 Subnetting \nSubnetting divides an address block into smaller prefixes.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n \n17.4 Special examples \nType \nExample \nPurpose \nLoopback \n127.0.0.1 \nLocal host \nUnspecified \n0.0.0.0 \nUnspecified address in defined \ncontexts \nLimited broadcast \n255.255.255.255 \nLocal broadcast context \n \n18. IPv4 Subnetting and CIDR \n18.1 Subnetting \nSubnetting divides an address block into smaller prefixes.",
+    "page_number": 12,
+    "chunk_index": 43,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "94": {
     "id": "7f5e3467-7657-4c5c-b88d-9b9194fcd41a",
     "chunk_id": "7f5e3467-7657-4c5c-b88d-9b9194fcd41a",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -472,7 +1044,29 @@
     "chunk_index": 22,
     "title": "IOT_lab_1-3.pdf"
   },
-  "43": {
+  "95": {
+    "id": "80ff6448-4c67-4511-bed2-e2c4aa96a9ee",
+    "chunk_id": "80ff6448-4c67-4511-bed2-e2c4aa96a9ee",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "close() \nRelease socket. 7.3 TCP server workflow \n1. Create socket.",
+    "text": "close() \nRelease socket. 7.3 TCP server workflow \n1. Create socket.",
+    "page_number": 6,
+    "chunk_index": 20,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "96": {
+    "id": "82629293-fb1e-4d7e-ab69-d50e6555280f",
+    "chunk_id": "82629293-fb1e-4d7e-ab69-d50e6555280f",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "It operates above IP and uses port numbers \nto distinguish application endpoints. Depending on the protocol, transport services may provide reliability, ordering, \nflow control, congestion control or low-overhead datagram delivery. 3.2 Transport concepts \nConcept \nMeaning \nIoT relevance \nPort \nLogical identifier for an application \nendpoint. Separates multiple services on a \ndevice.",
+    "text": "It operates above IP and uses port numbers \nto distinguish application endpoints. Depending on the protocol, transport services may provide reliability, ordering, \nflow control, congestion control or low-overhead datagram delivery. 3.2 Transport concepts \nConcept \nMeaning \nIoT relevance \nPort \nLogical identifier for an application \nendpoint. Separates multiple services on a \ndevice.",
+    "page_number": 3,
+    "chunk_index": 9,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "97": {
     "id": "83761069-5ec2-4337-a569-d8b7db23b468",
     "chunk_id": "83761069-5ec2-4337-a569-d8b7db23b468",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -483,7 +1077,7 @@
     "chunk_index": 55,
     "title": "software_unit_2.pdf"
   },
-  "44": {
+  "98": {
     "id": "83c1f843-16e7-4080-b07d-91fe1584555d",
     "chunk_id": "83c1f843-16e7-4080-b07d-91fe1584555d",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -494,7 +1088,7 @@
     "chunk_index": 11,
     "title": "IOT_lab_1-3.pdf"
   },
-  "45": {
+  "99": {
     "id": "859a1331-3fa0-444c-9ba0-6ef502980e43",
     "chunk_id": "859a1331-3fa0-444c-9ba0-6ef502980e43",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -505,7 +1099,18 @@
     "chunk_index": 6,
     "title": "software_unit_2.pdf"
   },
-  "46": {
+  "100": {
+    "id": "85bb06f0-ad7e-4f18-ac4f-7808bbb5860b",
+    "chunk_id": "85bb06f0-ad7e-4f18-ac4f-7808bbb5860b",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "\uf0b7 \nTime-sensitive data where stale retransmitted data may be less useful. \uf0b7 \nDiscovery/query-response patterns where application behavior can handle loss. \uf0b7 \nApplications implementing their own message-level reliability. 6. TCP vs UDP \nFeature \nTCP \nUDP \nModel \nConnection-oriented \nConnectionless \nReliability \nReliable delivery mechanisms \nNo TCP-style guarantee \nOrdering \nOrdered byte stream \nIndependent datagrams \nHandshake \nYes \nNo TCP-style handshake \nOverhead \nHigher \nLower \nFlow control \nYes \nNo TCP-style flow control \nCongestion control \nYes \nNo TCP-style congestion control \nData model \nByte stream \nDatagram/message \nIoT use \nComplete/reliable transfer \nLow overhead/application-managed \nbehavior",
+    "text": "\uf0b7 \nTime-sensitive data where stale retransmitted data may be less useful. \uf0b7 \nDiscovery/query-response patterns where application behavior can handle loss. \uf0b7 \nApplications implementing their own message-level reliability. 6. TCP vs UDP \nFeature \nTCP \nUDP \nModel \nConnection-oriented \nConnectionless \nReliability \nReliable delivery mechanisms \nNo TCP-style guarantee \nOrdering \nOrdered byte stream \nIndependent datagrams \nHandshake \nYes \nNo TCP-style handshake \nOverhead \nHigher \nLower \nFlow control \nYes \nNo TCP-style flow control \nCongestion control \nYes \nNo TCP-style congestion control \nData model \nByte stream \nDatagram/message \nIoT use \nComplete/reliable transfer \nLow overhead/application-managed \nbehavior",
+    "page_number": 5,
+    "chunk_index": 18,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "101": {
     "id": "86d8d9d5-3747-46fa-90b8-9bfcfe9d8e98",
     "chunk_id": "86d8d9d5-3747-46fa-90b8-9bfcfe9d8e98",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -516,7 +1121,7 @@
     "chunk_index": 15,
     "title": "software_unit_2.pdf"
   },
-  "47": {
+  "102": {
     "id": "8719abd4-7d51-41bd-b9db-fb17ec198ee5",
     "chunk_id": "8719abd4-7d51-41bd-b9db-fb17ec198ee5",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -527,7 +1132,7 @@
     "chunk_index": 16,
     "title": "software_unit_2.pdf"
   },
-  "48": {
+  "103": {
     "id": "8785b2ae-41a3-402e-aa82-47300c88f72d",
     "chunk_id": "8785b2ae-41a3-402e-aa82-47300c88f72d",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -538,7 +1143,7 @@
     "chunk_index": 14,
     "title": "software_unit_2.pdf"
   },
-  "49": {
+  "104": {
     "id": "88e8dcc8-d8ab-451a-af00-90a538c1399d",
     "chunk_id": "88e8dcc8-d8ab-451a-af00-90a538c1399d",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -549,7 +1154,95 @@
     "chunk_index": 28,
     "title": "IOT_lab_1-3.pdf"
   },
-  "50": {
+  "105": {
+    "id": "8934690c-7630-44f1-ac41-f4b4cd6d700c",
+    "chunk_id": "8934690c-7630-44f1-ac41-f4b4cd6d700c",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n\uf0b7 \nCan I explain socket(), bind(), listen(), accept() and connect()? \uf0b7 \nCan I write a basic TCP and UDP program?",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n\uf0b7 \nCan I explain socket(), bind(), listen(), accept() and connect()? \uf0b7 \nCan I write a basic TCP and UDP program?",
+    "page_number": 20,
+    "chunk_index": 86,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "106": {
+    "id": "893519fe-3822-40f9-b854-a9f951584e8a",
+    "chunk_id": "893519fe-3822-40f9-b854-a9f951584e8a",
+    "document_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "doc_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "content": "ASSIGNMENT 3 \n1. Explain transport layer services in IoT and differentiate between TCP and UDP.",
+    "text": "ASSIGNMENT 3 \n1. Explain transport layer services in IoT and differentiate between TCP and UDP.",
+    "page_number": 1,
+    "chunk_index": 0,
+    "title": "ASSIGNMENT_3.pdf"
+  },
+  "107": {
+    "id": "8a36b39a-b1ca-4a75-a213-3496310b9493",
+    "chunk_id": "8a36b39a-b1ca-4a75-a213-3496310b9493",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Used by UDP.",
+    "text": "Used by UDP.",
+    "page_number": 4,
+    "chunk_index": 13,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "108": {
+    "id": "8aeb038c-6f54-478d-ad16-9be41123b923",
+    "chunk_id": "8aeb038c-6f54-478d-ad16-9be41123b923",
+    "document_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "doc_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "content": "What is forwarding in a network? How does it differ from routing? 9. Explain the link-state routing algorithm and describe how it builds routing tables. 10. Explain the distance-vector routing algorithm and describe the count-to-infinity problem. 11. Compare link-state and distance-vector routing algorithms based on convergence, \noverhead, and scalability. 12.",
+    "text": "What is forwarding in a network? How does it differ from routing? 9. Explain the link-state routing algorithm and describe how it builds routing tables. 10. Explain the distance-vector routing algorithm and describe the count-to-infinity problem. 11. Compare link-state and distance-vector routing algorithms based on convergence, \noverhead, and scalability. 12.",
+    "page_number": 1,
+    "chunk_index": 2,
+    "title": "ASSIGNMENT_3.pdf"
+  },
+  "109": {
+    "id": "8e8d338e-c5ea-4021-900e-5164d77b4771",
+    "chunk_id": "8e8d338e-c5ea-4021-900e-5164d77b4771",
+    "document_id": "e2664951-ce59-4039-a22d-c6ace16d627c",
+    "doc_id": "e2664951-ce59-4039-a22d-c6ace16d627c",
+    "content": "\u2705 College/University email (preferred) \nor \n\u2705 Personal email address \nEnter a valid email address because Red Hat will send verification instructions to this address. [redhat.com] \nStep 5: Create a Password \nPassword requirements: \n\u25cf \nMinimum 14 characters \n\u25cf \nMust contain at least 3 of the following: \n\u25cb \nUppercase letters \n\u25cb \nLowercase letters \n\u25cb \nNumbers \n\u25cb \nSpecial characters [access.redhat.com] \nExample: \nPlain Text \n1 \nRedHat@Student2026 \nShow more lines \nStep 6: Fill Personal Information \nComplete the required fields: \n\u25cf \nFirst Name \n\u25cf \nLast Name \n\u25cf \nCountry \n\u25cf \nCity \n\u25cf \nPhone Number \n\u25cf \nInstitution/College Name [redhat.com] \nStep 7: Submit Registration \nClick:",
+    "text": "\u2705 College/University email (preferred) \nor \n\u2705 Personal email address \nEnter a valid email address because Red Hat will send verification instructions to this address. [redhat.com] \nStep 5: Create a Password \nPassword requirements: \n\u25cf \nMinimum 14 characters \n\u25cf \nMust contain at least 3 of the following: \n\u25cb \nUppercase letters \n\u25cb \nLowercase letters \n\u25cb \nNumbers \n\u25cb \nSpecial characters [access.redhat.com] \nExample: \nPlain Text \n1 \nRedHat@Student2026 \nShow more lines \nStep 6: Fill Personal Information \nComplete the required fields: \n\u25cf \nFirst Name \n\u25cf \nLast Name \n\u25cf \nCountry \n\u25cf \nCity \n\u25cf \nPhone Number \n\u25cf \nInstitution/College Name [redhat.com] \nStep 7: Submit Registration \nClick:",
+    "page_number": 2,
+    "chunk_index": 2,
+    "title": "How_to_create_RHNID_.pdf"
+  },
+  "110": {
+    "id": "8f80dcbc-ac3f-488b-9921-cd756d0d1501",
+    "chunk_id": "8f80dcbc-ac3f-488b-9921-cd756d0d1501",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Short Questions \n78. What is the role of the transport layer?",
+    "text": "Short Questions \n78. What is the role of the transport layer?",
+    "page_number": 17,
+    "chunk_index": 71,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "111": {
+    "id": "90342abd-eca4-4d29-a513-02834c037897",
+    "chunk_id": "90342abd-eca4-4d29-a513-02834c037897",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Compare with TCP. Practical 5 \u2013 Routing table \n73. Display the local routing table. 74. Identify connected routes. 75. Identify default route. 76. Identify next-hop gateway. 77. Explain how the OS selects an outgoing path. 24.",
+    "text": "Compare with TCP. Practical 5 \u2013 Routing table \n73. Display the local routing table. 74. Identify connected routes. 75. Identify default route. 76. Identify next-hop gateway. 77. Explain how the OS selects an outgoing path. 24.",
+    "page_number": 15,
+    "chunk_index": 60,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "112": {
+    "id": "9074516c-6166-4173-bba1-0abb24ccf8b8",
+    "chunk_id": "9074516c-6166-4173-bba1-0abb24ccf8b8",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Socket \nprogramming gives application developers an interface to these communication services. Topic \nMain question \nKey concepts \nTransport \nHow do applications exchange \ndata? TCP, UDP, ports, reliability, flow \ncontrol \nSockets \nHow does software use \nnetworking? socket, bind, listen, accept, \nconnect, send, receive \nForwarding \nHow does a router move a packet? destination, table, next hop, \ninterface \nRouting \nHow are paths selected? link-state, distance-vector, metrics \nIP addressing \nHow are interfaces addressed? IPv4, prefixes, subnetting, IPv6 \nDNS \nHow are names mapped?",
+    "text": "Socket \nprogramming gives application developers an interface to these communication services. Topic \nMain question \nKey concepts \nTransport \nHow do applications exchange \ndata? TCP, UDP, ports, reliability, flow \ncontrol \nSockets \nHow does software use \nnetworking? socket, bind, listen, accept, \nconnect, send, receive \nForwarding \nHow does a router move a packet? destination, table, next hop, \ninterface \nRouting \nHow are paths selected? link-state, distance-vector, metrics \nIP addressing \nHow are interfaces addressed? IPv4, prefixes, subnetting, IPv6 \nDNS \nHow are names mapped?",
+    "page_number": 3,
+    "chunk_index": 7,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "113": {
     "id": "91b69073-d8ba-49a4-ba9e-7d6bfcfee895",
     "chunk_id": "91b69073-d8ba-49a4-ba9e-7d6bfcfee895",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -560,7 +1253,18 @@
     "chunk_index": 8,
     "title": "IOT_lab_1-3.pdf"
   },
-  "51": {
+  "114": {
+    "id": "91f26ba5-a62a-47b6-bc76-b3154d92016a",
+    "chunk_id": "91f26ba5-a62a-47b6-bc76-b3154d92016a",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Cache \nStores answers for their permitted TTL. 20.3 Common records \nRecord \nPurpose \nA \nIPv4 address \nAAAA \nIPv6 address \nCNAME \nAlias for another name \nMX \nMail exchange server \nNS \nAuthoritative name server \nTXT \nText information used for several purposes \n \n21. DNS Resolution Process \n34.",
+    "text": "Cache \nStores answers for their permitted TTL. 20.3 Common records \nRecord \nPurpose \nA \nIPv4 address \nAAAA \nIPv6 address \nCNAME \nAlias for another name \nMX \nMail exchange server \nNS \nAuthoritative name server \nTXT \nText information used for several purposes \n \n21. DNS Resolution Process \n34.",
+    "page_number": 13,
+    "chunk_index": 47,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "115": {
     "id": "92c80dfc-1212-4aa6-a303-c491394672ce",
     "chunk_id": "92c80dfc-1212-4aa6-a303-c491394672ce",
     "document_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
@@ -571,7 +1275,7 @@
     "chunk_index": 1,
     "title": "Assignment-1.pdf"
   },
-  "52": {
+  "116": {
     "id": "93652bd2-d959-4939-8a49-e793508107e7",
     "chunk_id": "93652bd2-d959-4939-8a49-e793508107e7",
     "document_id": "d901f517-7a86-4580-865f-59462937bb12",
@@ -582,7 +1286,7 @@
     "chunk_index": 3,
     "title": "assignment_2_-_Machine_Learning_and_NLP_on_AWS_Cloud.pdf"
   },
-  "53": {
+  "117": {
     "id": "949a6f5d-d766-4823-910e-d6659e9d4db0",
     "chunk_id": "949a6f5d-d766-4823-910e-d6659e9d4db0",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -593,7 +1297,7 @@
     "chunk_index": 1,
     "title": "IOT_lab_1-3.pdf"
   },
-  "54": {
+  "118": {
     "id": "9890b329-901f-4d5c-b5dd-cf83d770e57a",
     "chunk_id": "9890b329-901f-4d5c-b5dd-cf83d770e57a",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -604,7 +1308,29 @@
     "chunk_index": 0,
     "title": "IOT_lab_1-3.pdf"
   },
-  "55": {
+  "119": {
+    "id": "99deeebf-3c97-40ea-88a4-dcda9a4c54f8",
+    "chunk_id": "99deeebf-3c97-40ea-88a4-dcda9a4c54f8",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n5. UDP \u2013 User Datagram Protocol \n5.1 Introduction \nUDP is a connectionless transport protocol that sends independent datagrams. It does not establish a TCP-style \nconnection and does not itself guarantee delivery, ordering or duplicate suppression. Applications can implement \nadditional reliability if their requirements need it. 5.2 Characteristics \n\uf0b7 \nConnectionless communication. \uf0b7 \nLow transport overhead. \uf0b7 \nIndependent datagrams. \uf0b7 \nNo TCP-style reliability or ordering guarantee. \uf0b7 \nNo TCP-style connection establishment. \uf0b7 \nApplication can implement acknowledgements, sequence numbers and retries if required. 5.3 UDP header concepts \nField \nPurpose \nSource Port \nSending application endpoint. Destination Port \nReceiving application endpoint. Length \nUDP datagram length.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n5. UDP \u2013 User Datagram Protocol \n5.1 Introduction \nUDP is a connectionless transport protocol that sends independent datagrams. It does not establish a TCP-style \nconnection and does not itself guarantee delivery, ordering or duplicate suppression. Applications can implement \nadditional reliability if their requirements need it. 5.2 Characteristics \n\uf0b7 \nConnectionless communication. \uf0b7 \nLow transport overhead. \uf0b7 \nIndependent datagrams. \uf0b7 \nNo TCP-style reliability or ordering guarantee. \uf0b7 \nNo TCP-style connection establishment. \uf0b7 \nApplication can implement acknowledgements, sequence numbers and retries if required. 5.3 UDP header concepts \nField \nPurpose \nSource Port \nSending application endpoint. Destination Port \nReceiving application endpoint. Length \nUDP datagram length.",
+    "page_number": 5,
+    "chunk_index": 16,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "120": {
+    "id": "9cd03998-ad57-40ab-83a1-28ba92577a65",
+    "chunk_id": "9cd03998-ad57-40ab-83a1-28ba92577a65",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "42.",
+    "text": "42.",
+    "page_number": 14,
+    "chunk_index": 52,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "121": {
     "id": "9d275ca2-a201-486c-adc2-993c94399183",
     "chunk_id": "9d275ca2-a201-486c-adc2-993c94399183",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -615,7 +1341,18 @@
     "chunk_index": 14,
     "title": "IOT_lab_1-3.pdf"
   },
-  "56": {
+  "122": {
+    "id": "9d88731c-a37b-4b68-8f6f-4640778d587e",
+    "chunk_id": "9d88731c-a37b-4b68-8f6f-4640778d587e",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Use routes for forwarding. 14.3 Example \nLink \nCost \nA\u2013B \n2 \nA\u2013C \n5 \nB\u2013C \n1 \nB\u2013D \n4 \nC\u2013D \n1 \n \nFrom A, A\u2192B costs 2. A\u2192B\u2192C costs 3, lower than direct A\u2192C at 5. A\u2192B\u2192C\u2192D costs 4, lower than A\u2192B\u2192D at \n6. The example illustrates why a multi-hop path can be preferred. 14.4 Characteristics \n\uf0b7 \nDetailed topology knowledge. \uf0b7 \nShortest-path calculation. \uf0b7 \nTopology database. \uf0b7 \nProcessing and memory requirements. \uf0b7 \nUpdates and recalculation after topology changes.",
+    "text": "Use routes for forwarding. 14.3 Example \nLink \nCost \nA\u2013B \n2 \nA\u2013C \n5 \nB\u2013C \n1 \nB\u2013D \n4 \nC\u2013D \n1 \n \nFrom A, A\u2192B costs 2. A\u2192B\u2192C costs 3, lower than direct A\u2192C at 5. A\u2192B\u2192C\u2192D costs 4, lower than A\u2192B\u2192D at \n6. The example illustrates why a multi-hop path can be preferred. 14.4 Characteristics \n\uf0b7 \nDetailed topology knowledge. \uf0b7 \nShortest-path calculation. \uf0b7 \nTopology database. \uf0b7 \nProcessing and memory requirements. \uf0b7 \nUpdates and recalculation after topology changes.",
+    "page_number": 10,
+    "chunk_index": 36,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "123": {
     "id": "9ed23067-969d-4f18-a380-832dc3cb8f91",
     "chunk_id": "9ed23067-969d-4f18-a380-832dc3cb8f91",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -626,7 +1363,7 @@
     "chunk_index": 26,
     "title": "IOT_lab_1-3.pdf"
   },
-  "57": {
+  "124": {
     "id": "a205b127-58fc-4e2c-9f32-53cbf240c0d1",
     "chunk_id": "a205b127-58fc-4e2c-9f32-53cbf240c0d1",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -637,7 +1374,18 @@
     "chunk_index": 8,
     "title": "software_unit_2.pdf"
   },
-  "58": {
+  "125": {
+    "id": "a29a2d75-8374-4271-8f9a-0b0092918614",
+    "chunk_id": "a29a2d75-8374-4271-8f9a-0b0092918614",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Direct queries toward top-level-domain infrastructure. TLD servers \nDirect queries toward authoritative domain servers. Authoritative server \nProvides authoritative records for a zone.",
+    "text": "Direct queries toward top-level-domain infrastructure. TLD servers \nDirect queries toward authoritative domain servers. Authoritative server \nProvides authoritative records for a zone.",
+    "page_number": 13,
+    "chunk_index": 46,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "126": {
     "id": "a3b30ee1-3787-4d3a-9bb8-7cc93f1f4aa4",
     "chunk_id": "a3b30ee1-3787-4d3a-9bb8-7cc93f1f4aa4",
     "document_id": "d901f517-7a86-4580-865f-59462937bb12",
@@ -648,7 +1396,29 @@
     "chunk_index": 1,
     "title": "assignment_2_-_Machine_Learning_and_NLP_on_AWS_Cloud.pdf"
   },
-  "59": {
+  "127": {
+    "id": "a73c57df-7f4a-4001-8fb5-e458c37a5375",
+    "chunk_id": "a73c57df-7f4a-4001-8fb5-e458c37a5375",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nContents \n1. Learning Outcomes \n2.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nContents \n1. Learning Outcomes \n2.",
+    "page_number": 2,
+    "chunk_index": 1,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "128": {
+    "id": "a9d192e9-eab3-47f4-895e-ed44a22102cd",
+    "chunk_id": "a9d192e9-eab3-47f4-895e-ed44a22102cd",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "29.",
+    "text": "29.",
+    "page_number": 18,
+    "chunk_index": 78,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "129": {
     "id": "a9daab62-5f29-4e59-aca5-8fa33d89f8f2",
     "chunk_id": "a9daab62-5f29-4e59-aca5-8fa33d89f8f2",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -659,7 +1429,29 @@
     "chunk_index": 51,
     "title": "software_unit_2.pdf"
   },
-  "60": {
+  "130": {
+    "id": "ae993ee9-7db8-4884-9c53-3d45e8de7004",
+    "chunk_id": "ae993ee9-7db8-4884-9c53-3d45e8de7004",
+    "document_id": "54a53221-2014-4301-aa29-e2caf8471af2",
+    "doc_id": "54a53221-2014-4301-aa29-e2caf8471af2",
+    "content": "Q2. What is spelling error detection and correction? Explain how Edit Distance is used to\nidentify and correct spelling errors. Also explain Parts of Speech (POS) tagging and different\nword classes with examples. Q3. Define Context-Free Grammar (CFG) and explain constituency and parsing. Using the\nfollowing grammar rules, draw a parse tree for the sentence \u201cThe boy eats an apple.\u201d\nS \u2192 NP VP\nNP \u2192 Det N\nVP \u2192 V NP\nQ4. What is Probabilistic Parsing? Explain Probabilistic Context-Free Grammar (PCFG) and\nhow the probability of a grammar rule is calculated. If a rule S \u2192 NP VP occurs 60 times out of\n100 expansions of S, calculate its probability. Also differentiate between machine-readable\ndictionaries and lexical databases, and explain WordNet and synsets. Q5. Explain Transition Networks and Recursive Transition Networks (RTN) with a suitable\nexample. What is an Augmented Transition Network (ATN)? Explain the role of tests,\nregisters, and actions in an ATN. Differentiate between RTN and ATN.",
+    "text": "Q2. What is spelling error detection and correction? Explain how Edit Distance is used to\nidentify and correct spelling errors. Also explain Parts of Speech (POS) tagging and different\nword classes with examples. Q3. Define Context-Free Grammar (CFG) and explain constituency and parsing. Using the\nfollowing grammar rules, draw a parse tree for the sentence \u201cThe boy eats an apple.\u201d\nS \u2192 NP VP\nNP \u2192 Det N\nVP \u2192 V NP\nQ4. What is Probabilistic Parsing? Explain Probabilistic Context-Free Grammar (PCFG) and\nhow the probability of a grammar rule is calculated. If a rule S \u2192 NP VP occurs 60 times out of\n100 expansions of S, calculate its probability. Also differentiate between machine-readable\ndictionaries and lexical databases, and explain WordNet and synsets. Q5. Explain Transition Networks and Recursive Transition Networks (RTN) with a suitable\nexample. What is an Augmented Transition Network (ATN)? Explain the role of tests,\nregisters, and actions in an ATN. Differentiate between RTN and ATN.",
+    "page_number": 1,
+    "chunk_index": 2,
+    "title": "Unit_B_Assignment.pdf"
+  },
+  "131": {
+    "id": "aef07cce-2ca5-4fab-9fda-7046c4a25def",
+    "chunk_id": "aef07cce-2ca5-4fab-9fda-7046c4a25def",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Checksum \nError detection support. 5.4 IoT uses \n\uf0b7 \nSmall telemetry where occasional loss is acceptable. \uf0b7 \nLow-overhead message exchange.",
+    "text": "Checksum \nError detection support. 5.4 IoT uses \n\uf0b7 \nSmall telemetry where occasional loss is acceptable. \uf0b7 \nLow-overhead message exchange.",
+    "page_number": 5,
+    "chunk_index": 17,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "132": {
     "id": "afd31864-7b9a-41fa-892b-3d17108399b1",
     "chunk_id": "afd31864-7b9a-41fa-892b-3d17108399b1",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -670,7 +1462,18 @@
     "chunk_index": 20,
     "title": "IOT_lab_1-3.pdf"
   },
-  "61": {
+  "133": {
+    "id": "b05589ea-5d43-4d0b-87a3-b9fef37b396d",
+    "chunk_id": "b05589ea-5d43-4d0b-87a3-b9fef37b396d",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "What is forwarding? 90. What is routing? 91. What is a next hop? 92. What is a routing metric? 93. Define link-state routing. 94. Define distance-vector routing. 95. What is Dijkstra used for? 96. What is the Bellman-Ford relationship to distance-vector routing? 97. What is an IPv4 address? 98. What is subnetting? 99. What is CIDR? 100. What is IPv6? 101. What is DNS? 102. What is a recursive resolver? 103. What is an authoritative DNS server? 104. What are A and AAAA records? 105. What is DNS caching? 106. How do DNS and routing differ? 107. Give two IoT uses for TCP. 108. Give two IoT uses for UDP. 28.",
+    "text": "What is forwarding? 90. What is routing? 91. What is a next hop? 92. What is a routing metric? 93. Define link-state routing. 94. Define distance-vector routing. 95. What is Dijkstra used for? 96. What is the Bellman-Ford relationship to distance-vector routing? 97. What is an IPv4 address? 98. What is subnetting? 99. What is CIDR? 100. What is IPv6? 101. What is DNS? 102. What is a recursive resolver? 103. What is an authoritative DNS server? 104. What are A and AAAA records? 105. What is DNS caching? 106. How do DNS and routing differ? 107. Give two IoT uses for TCP. 108. Give two IoT uses for UDP. 28.",
+    "page_number": 17,
+    "chunk_index": 73,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "134": {
     "id": "b07adbb8-826a-4864-8e1a-f3ef5d0dc725",
     "chunk_id": "b07adbb8-826a-4864-8e1a-f3ef5d0dc725",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -681,7 +1484,7 @@
     "chunk_index": 0,
     "title": "software_unit_2.pdf"
   },
-  "62": {
+  "135": {
     "id": "b0b67044-919f-435e-8bb9-f0560a715acb",
     "chunk_id": "b0b67044-919f-435e-8bb9-f0560a715acb",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -692,7 +1495,29 @@
     "chunk_index": 18,
     "title": "software_unit_2.pdf"
   },
-  "63": {
+  "136": {
+    "id": "b0c153fb-533b-4803-b9ae-fdf4541e9d8f",
+    "chunk_id": "b0c153fb-533b-4803-b9ae-fdf4541e9d8f",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n1. Learning Outcomes \nAfter completing this unit, students should be able to: \n\uf0b7 \nExplain the role of transport services in IoT communication. \uf0b7 \nDescribe TCP and UDP characteristics, operation, advantages and limitations. \uf0b7 \nDifferentiate connection-oriented and connectionless communication. \uf0b7 \nExplain ports, sockets and client-server communication. \uf0b7 \nDescribe basic TCP and UDP socket-programming workflows. \uf0b7 \nSelect a transport service according to IoT application requirements. \uf0b7 \nExplain forwarding and routing and distinguish their roles. \uf0b7 \nDescribe link-state and distance-vector routing algorithms. \uf0b7 \nCompare link-state and distance-vector approaches. \uf0b7 \nExplain IPv4 addresses, prefixes, subnetting and private addressing. \uf0b7 \nDescribe the basic IPv6 addressing model. \uf0b7 \nExplain DNS and name-to-address resolution. \uf0b7 \nRelate TCP, UDP, IP, routing and DNS in an end-to-end IoT system. \uf0b7",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n1. Learning Outcomes \nAfter completing this unit, students should be able to: \n\uf0b7 \nExplain the role of transport services in IoT communication. \uf0b7 \nDescribe TCP and UDP characteristics, operation, advantages and limitations. \uf0b7 \nDifferentiate connection-oriented and connectionless communication. \uf0b7 \nExplain ports, sockets and client-server communication. \uf0b7 \nDescribe basic TCP and UDP socket-programming workflows. \uf0b7 \nSelect a transport service according to IoT application requirements. \uf0b7 \nExplain forwarding and routing and distinguish their roles. \uf0b7 \nDescribe link-state and distance-vector routing algorithms. \uf0b7 \nCompare link-state and distance-vector approaches. \uf0b7 \nExplain IPv4 addresses, prefixes, subnetting and private addressing. \uf0b7 \nDescribe the basic IPv6 addressing model. \uf0b7 \nExplain DNS and name-to-address resolution. \uf0b7 \nRelate TCP, UDP, IP, routing and DNS in an end-to-end IoT system. \uf0b7",
+    "page_number": 3,
+    "chunk_index": 5,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "137": {
+    "id": "b2bcb0ed-d949-4aaa-9a8b-8b2197abb88c",
+    "chunk_id": "b2bcb0ed-d949-4aaa-9a8b-8b2197abb88c",
+    "document_id": "e2664951-ce59-4039-a22d-c6ace16d627c",
+    "doc_id": "e2664951-ce59-4039-a22d-c6ace16d627c",
+    "content": "\u2705 Create Account / Register \nRed Hat will send an email verification link to your registered email address. [redhat.com] \nStep 8: Verify Your Email \n\u25cf \nOpen your email inbox. \u25cf \nClick the verification link sent by Red Hat. \u25cf \nYour account will be activated. Step 9: Find Your RHNID \nAfter logging in: \n\u25cf \nYour Login ID is your RHNID. \u25cf \nSave it for future use. \u25cf \nYou will need it for: \n\u25cb \nRed Hat Academy \n\u25cb \nLabs \n\u25cb \nCertification exams \n\u25cb \nRed Hat Learning Platform [redhat.com], [redhat.com] \nStep 10: Join Red Hat Academy \n1. Log in to Red Hat Academy.",
+    "text": "\u2705 Create Account / Register \nRed Hat will send an email verification link to your registered email address. [redhat.com] \nStep 8: Verify Your Email \n\u25cf \nOpen your email inbox. \u25cf \nClick the verification link sent by Red Hat. \u25cf \nYour account will be activated. Step 9: Find Your RHNID \nAfter logging in: \n\u25cf \nYour Login ID is your RHNID. \u25cf \nSave it for future use. \u25cf \nYou will need it for: \n\u25cb \nRed Hat Academy \n\u25cb \nLabs \n\u25cb \nCertification exams \n\u25cb \nRed Hat Learning Platform [redhat.com], [redhat.com] \nStep 10: Join Red Hat Academy \n1. Log in to Red Hat Academy.",
+    "page_number": 3,
+    "chunk_index": 3,
+    "title": "How_to_create_RHNID_.pdf"
+  },
+  "138": {
     "id": "b747507a-62c8-47bf-95fd-28668030896a",
     "chunk_id": "b747507a-62c8-47bf-95fd-28668030896a",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -703,7 +1528,7 @@
     "chunk_index": 42,
     "title": "software_unit_2.pdf"
   },
-  "64": {
+  "139": {
     "id": "b9440799-3759-4fc0-96b5-197954d30ca9",
     "chunk_id": "b9440799-3759-4fc0-96b5-197954d30ca9",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -714,7 +1539,7 @@
     "chunk_index": 34,
     "title": "software_unit_2.pdf"
   },
-  "65": {
+  "140": {
     "id": "b993323a-3b70-4fb1-a135-e75b745c5ff8",
     "chunk_id": "b993323a-3b70-4fb1-a135-e75b745c5ff8",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -725,7 +1550,7 @@
     "chunk_index": 44,
     "title": "software_unit_2.pdf"
   },
-  "66": {
+  "141": {
     "id": "ba3ddaa8-22d7-41d1-b5cc-11090a38f524",
     "chunk_id": "ba3ddaa8-22d7-41d1-b5cc-11090a38f524",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -736,7 +1561,7 @@
     "chunk_index": 24,
     "title": "software_unit_2.pdf"
   },
-  "67": {
+  "142": {
     "id": "bd2c4db4-f4d4-4e8a-9220-98fd91a0c341",
     "chunk_id": "bd2c4db4-f4d4-4e8a-9220-98fd91a0c341",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -747,7 +1572,18 @@
     "chunk_index": 20,
     "title": "software_unit_2.pdf"
   },
-  "68": {
+  "143": {
+    "id": "c0acd279-aebd-4a08-82e7-30de9cff2c63",
+    "chunk_id": "c0acd279-aebd-4a08-82e7-30de9cff2c63",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nIoT \u2013 Unit C \nSERVICES \n7.09 Transport Services: TCP, UDP, Socket Programming \n7.10 Forwarding & Routing Algorithms (Link-State, Distance-Vector), IP Addresses, DNS \nClassroom, Lecture and Examination Notes",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nIoT \u2013 Unit C \nSERVICES \n7.09 Transport Services: TCP, UDP, Socket Programming \n7.10 Forwarding & Routing Algorithms (Link-State, Distance-Vector), IP Addresses, DNS \nClassroom, Lecture and Examination Notes",
+    "page_number": 1,
+    "chunk_index": 0,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "144": {
     "id": "c10e84a6-d06f-4fd1-b0d5-901a4d253c13",
     "chunk_id": "c10e84a6-d06f-4fd1-b0d5-901a4d253c13",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -758,7 +1594,62 @@
     "chunk_index": 48,
     "title": "software_unit_2.pdf"
   },
-  "69": {
+  "145": {
+    "id": "c1b6af2e-3487-4cfc-8dc7-f1fa3135b973",
+    "chunk_id": "c1b6af2e-3487-4cfc-8dc7-f1fa3135b973",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "4. TCP \u2013 Transmission Control Protocol \n4.1 Introduction \nTCP is a connection-oriented transport protocol that provides a reliable, ordered byte stream between endpoints. It \nestablishes connection state before normal data transfer and uses acknowledgements, sequence numbers, \nretransmission, flow control and congestion-control mechanisms. 4.2 Characteristics \n\uf0b7 \nConnection-oriented communication. \uf0b7 \nReliable delivery mechanisms. \uf0b7 \nOrdered byte-stream delivery. \uf0b7 \nFlow control. \uf0b7 \nCongestion control. \uf0b7 \nFull-duplex communication after establishment. \uf0b7 \nPort-based application identification. 4.3 Three-way handshake \nStep \nExchange \nPurpose \n1 \nClient \u2192 Server: SYN \nRequest connection and \nsynchronize sequence information. 2 \nServer \u2192 Client: SYN-ACK \nAcknowledge request and \nsynchronize server information. 3 \nClient \u2192 Server: ACK \nComplete establishment so data \ntransfer can proceed. 4.4 TCP data transfer",
+    "text": "4. TCP \u2013 Transmission Control Protocol \n4.1 Introduction \nTCP is a connection-oriented transport protocol that provides a reliable, ordered byte stream between endpoints. It \nestablishes connection state before normal data transfer and uses acknowledgements, sequence numbers, \nretransmission, flow control and congestion-control mechanisms. 4.2 Characteristics \n\uf0b7 \nConnection-oriented communication. \uf0b7 \nReliable delivery mechanisms. \uf0b7 \nOrdered byte-stream delivery. \uf0b7 \nFlow control. \uf0b7 \nCongestion control. \uf0b7 \nFull-duplex communication after establishment. \uf0b7 \nPort-based application identification. 4.3 Three-way handshake \nStep \nExchange \nPurpose \n1 \nClient \u2192 Server: SYN \nRequest connection and \nsynchronize sequence information. 2 \nServer \u2192 Client: SYN-ACK \nAcknowledge request and \nsynchronize server information. 3 \nClient \u2192 Server: ACK \nComplete establishment so data \ntransfer can proceed. 4.4 TCP data transfer",
+    "page_number": 4,
+    "chunk_index": 14,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "146": {
+    "id": "c1ce6524-d244-4adc-a3c8-f17180495f7e",
+    "chunk_id": "c1ce6524-d244-4adc-a3c8-f17180495f7e",
+    "document_id": "e2664951-ce59-4039-a22d-c6ace16d627c",
+    "doc_id": "e2664951-ce59-4039-a22d-c6ace16d627c",
+    "content": "2. Use the invitation or enrollment instructions provided by your instructor. 3. Start accessing courses and labs.",
+    "text": "2. Use the invitation or enrollment instructions provided by your instructor. 3. Start accessing courses and labs.",
+    "page_number": 3,
+    "chunk_index": 4,
+    "title": "How_to_create_RHNID_.pdf"
+  },
+  "147": {
+    "id": "c1e0a5cf-a233-455f-8272-c4857b4cfc82",
+    "chunk_id": "c1e0a5cf-a233-455f-8272-c4857b4cfc82",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "2. Bind to local address and port. 3.",
+    "text": "2. Bind to local address and port. 3.",
+    "page_number": 6,
+    "chunk_index": 21,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "148": {
+    "id": "c1e784e5-8818-452c-860c-59ea4eeec0f3",
+    "chunk_id": "c1e784e5-8818-452c-860c-59ea4eeec0f3",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "25. Quick Revision \n\uf0b7 \nTCP = connection-oriented, reliable, ordered byte stream. \uf0b7 \nUDP = connectionless datagrams with low overhead. \uf0b7 \nSocket = software endpoint for application communication. \uf0b7 \nTCP server: socket \u2192 bind \u2192 listen \u2192 accept \u2192 send/receive \u2192 close. \uf0b7 \nTCP client: socket \u2192 connect \u2192 send/receive \u2192 close. \uf0b7 \nUDP commonly uses sendto() and recvfrom(). \uf0b7 \nForwarding = local packet-delivery action. \uf0b7 \nRouting = path-selection process. \uf0b7 \nLink-state = topology information + shortest path. \uf0b7 \nDistance-vector = neighbor distance exchange + iterative calculation. \uf0b7 \nDijkstra is associated with link-state shortest-path calculation. \uf0b7 \nBellman-Ford is associated with distance-vector calculation. \uf0b7 \nIPv4 = 32-bit; IPv6 = 128-bit. \uf0b7 \nDNS provides distributed naming and resource records. \uf0b7 \nA = IPv4 record; AAAA = IPv6 record.",
+    "text": "25. Quick Revision \n\uf0b7 \nTCP = connection-oriented, reliable, ordered byte stream. \uf0b7 \nUDP = connectionless datagrams with low overhead. \uf0b7 \nSocket = software endpoint for application communication. \uf0b7 \nTCP server: socket \u2192 bind \u2192 listen \u2192 accept \u2192 send/receive \u2192 close. \uf0b7 \nTCP client: socket \u2192 connect \u2192 send/receive \u2192 close. \uf0b7 \nUDP commonly uses sendto() and recvfrom(). \uf0b7 \nForwarding = local packet-delivery action. \uf0b7 \nRouting = path-selection process. \uf0b7 \nLink-state = topology information + shortest path. \uf0b7 \nDistance-vector = neighbor distance exchange + iterative calculation. \uf0b7 \nDijkstra is associated with link-state shortest-path calculation. \uf0b7 \nBellman-Ford is associated with distance-vector calculation. \uf0b7 \nIPv4 = 32-bit; IPv6 = 128-bit. \uf0b7 \nDNS provides distributed naming and resource records. \uf0b7 \nA = IPv4 record; AAAA = IPv6 record.",
+    "page_number": 16,
+    "chunk_index": 65,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "149": {
+    "id": "c3461494-97db-433f-838c-bfe24e004c6d",
+    "chunk_id": "c3461494-97db-433f-838c-bfe24e004c6d",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Case Studies \nCase Study 1 \u2013 Smart Agriculture Gateway \nField sensors send soil and environmental measurements to a gateway. The gateway aggregates readings and \nforwards selected data to a backend service. \uf0b7 \nUDP may be suitable for small telemetry when loss is acceptable or handled by the application. \uf0b7 \nTCP may be suitable for configuration and reliable transfers. \uf0b7 \nThe gateway can bridge local device communication and IP services. \uf0b7 \nDNS can provide a service name.",
+    "text": "Case Studies \nCase Study 1 \u2013 Smart Agriculture Gateway \nField sensors send soil and environmental measurements to a gateway. The gateway aggregates readings and \nforwards selected data to a backend service. \uf0b7 \nUDP may be suitable for small telemetry when loss is acceptable or handled by the application. \uf0b7 \nTCP may be suitable for configuration and reliable transfers. \uf0b7 \nThe gateway can bridge local device communication and IP services. \uf0b7 \nDNS can provide a service name.",
+    "page_number": 15,
+    "chunk_index": 61,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "150": {
     "id": "c4629359-e2f8-45a4-bbdc-854c34245799",
     "chunk_id": "c4629359-e2f8-45a4-bbdc-854c34245799",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -769,7 +1660,7 @@
     "chunk_index": 27,
     "title": "software_unit_2.pdf"
   },
-  "70": {
+  "151": {
     "id": "c60c75de-1154-4406-904c-81b1a13bd118",
     "chunk_id": "c60c75de-1154-4406-904c-81b1a13bd118",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -780,7 +1671,7 @@
     "chunk_index": 12,
     "title": "IOT_lab_1-3.pdf"
   },
-  "71": {
+  "152": {
     "id": "c6a65c7f-efda-4f83-9d48-a2bee72edaac",
     "chunk_id": "c6a65c7f-efda-4f83-9d48-a2bee72edaac",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -791,7 +1682,18 @@
     "chunk_index": 32,
     "title": "software_unit_2.pdf"
   },
-  "72": {
+  "153": {
+    "id": "c6b94e79-e029-4696-bd39-37acd52e9168",
+    "chunk_id": "c6b94e79-e029-4696-bd39-37acd52e9168",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nPORT = 5001 \n \nserver = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) \nserver.bind((HOST, PORT)) \ndata, addr = server.recvfrom(1024) \nprint(data.decode(), addr) \nserver.sendto(b\"UDP response\", addr) \nserver.close() \n9.2 Python UDP client \nimport socket \n \nSERVER = \"127.0.0.1\" \nPORT = 5001 \n \nclient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) \nclient.sendto(b\"Hello from UDP client\", (SERVER, PORT)) \ndata, addr = client.recvfrom(1024) \nprint(data.decode()) \nclient.close() \n9.3 TCP and UDP programming \nStep \nTCP \nUDP \nSocket type \nSOCK_STREAM \nSOCK_DGRAM \nServer setup \nbind \u2192 listen \u2192 accept \nbind \nClient setup \nconnect \nsendto \nReceive \nrecv \nrecvfrom \nConnection state \nMaintained \nNo TCP connection state \n \n10. IoT Applications of TCP, UDP and Sockets \nScenario \nPossible choice \nReason \nConfiguration transfer \nTCP \nComplete and reliable delivery is \nimportant. Periodic telemetry",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nPORT = 5001 \n \nserver = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) \nserver.bind((HOST, PORT)) \ndata, addr = server.recvfrom(1024) \nprint(data.decode(), addr) \nserver.sendto(b\"UDP response\", addr) \nserver.close() \n9.2 Python UDP client \nimport socket \n \nSERVER = \"127.0.0.1\" \nPORT = 5001 \n \nclient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) \nclient.sendto(b\"Hello from UDP client\", (SERVER, PORT)) \ndata, addr = client.recvfrom(1024) \nprint(data.decode()) \nclient.close() \n9.3 TCP and UDP programming \nStep \nTCP \nUDP \nSocket type \nSOCK_STREAM \nSOCK_DGRAM \nServer setup \nbind \u2192 listen \u2192 accept \nbind \nClient setup \nconnect \nsendto \nReceive \nrecv \nrecvfrom \nConnection state \nMaintained \nNo TCP connection state \n \n10. IoT Applications of TCP, UDP and Sockets \nScenario \nPossible choice \nReason \nConfiguration transfer \nTCP \nComplete and reliable delivery is \nimportant. Periodic telemetry",
+    "page_number": 8,
+    "chunk_index": 28,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "154": {
     "id": "c6ea22d3-d71b-40ca-b4a8-27205f0dd5d4",
     "chunk_id": "c6ea22d3-d71b-40ca-b4a8-27205f0dd5d4",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -802,7 +1704,18 @@
     "chunk_index": 9,
     "title": "IOT_lab_1-3.pdf"
   },
-  "73": {
+  "155": {
+    "id": "c803bbd2-a260-40ad-a0f4-6acb7b44bd2f",
+    "chunk_id": "c803bbd2-a260-40ad-a0f4-6acb7b44bd2f",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Obtain the destination service name or configured address. 43. Resolve the name through DNS if a hostname is used. 44. Create the application message. 45. Use TCP or UDP according to application requirements. 46. IP addresses identify source and destination interfaces. 47. Routers forward packets using forwarding information. 48. Routing information determines available paths. 49. The destination transport service delivers data to the application using the destination port. Function \nExample \nApplication \nSensor reading / IoT service protocol \nTransport \nTCP or UDP \nNetwork \nIPv4 or IPv6 \nForwarding \nRouter selects next hop \nNaming \nDNS maps service name to address \nLink \nWi-Fi, Ethernet, cellular or other access technology",
+    "text": "Obtain the destination service name or configured address. 43. Resolve the name through DNS if a hostname is used. 44. Create the application message. 45. Use TCP or UDP according to application requirements. 46. IP addresses identify source and destination interfaces. 47. Routers forward packets using forwarding information. 48. Routing information determines available paths. 49. The destination transport service delivers data to the application using the destination port. Function \nExample \nApplication \nSensor reading / IoT service protocol \nTransport \nTCP or UDP \nNetwork \nIPv4 or IPv6 \nForwarding \nRouter selects next hop \nNaming \nDNS maps service name to address \nLink \nWi-Fi, Ethernet, cellular or other access technology",
+    "page_number": 14,
+    "chunk_index": 53,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "156": {
     "id": "cb1f30cd-0ff3-4f63-b05e-26f3f424278e",
     "chunk_id": "cb1f30cd-0ff3-4f63-b05e-26f3f424278e",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -813,7 +1726,40 @@
     "chunk_index": 7,
     "title": "IOT_lab_1-3.pdf"
   },
-  "74": {
+  "157": {
+    "id": "cb6af97a-c7cf-4c99-ab24-c47ac0aa620d",
+    "chunk_id": "cb6af97a-c7cf-4c99-ab24-c47ac0aa620d",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n7. Socket Programming \n7.1 Definition \nA socket is a software endpoint used by an application to communicate over a network. In client-server \nprogramming, a server creates a socket, binds it to an address and port, listens for connections and exchanges \ndata; a client creates a socket and connects or sends data to the server. 7.2 Common operations \nOperation \nPurpose \nsocket() \nCreate socket endpoint. bind() \nAssociate server socket with local address and port. listen() \nPlace TCP server in listening state. accept() \nAccept incoming TCP connection. connect() \nRequest TCP connection. send()/sendall() \nTransmit data. recv() \nReceive TCP data. sendto() \nSend UDP datagram. recvfrom() \nReceive UDP datagram and sender information.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n7. Socket Programming \n7.1 Definition \nA socket is a software endpoint used by an application to communicate over a network. In client-server \nprogramming, a server creates a socket, binds it to an address and port, listens for connections and exchanges \ndata; a client creates a socket and connects or sends data to the server. 7.2 Common operations \nOperation \nPurpose \nsocket() \nCreate socket endpoint. bind() \nAssociate server socket with local address and port. listen() \nPlace TCP server in listening state. accept() \nAccept incoming TCP connection. connect() \nRequest TCP connection. send()/sendall() \nTransmit data. recv() \nReceive TCP data. sendto() \nSend UDP datagram. recvfrom() \nReceive UDP datagram and sender information.",
+    "page_number": 6,
+    "chunk_index": 19,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "158": {
+    "id": "cd47448d-30b6-4e74-a147-553edfe62fe5",
+    "chunk_id": "cd47448d-30b6-4e74-a147-553edfe62fe5",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "113. Write and explain a basic UDP client and server in Python. 114. Discuss factors for selecting TCP or UDP in IoT. 115. Explain forwarding and routing and distinguish them. 116. Explain link-state routing and Dijkstra. 117. Explain distance-vector routing and Bellman-Ford. 118. Compare link-state and distance-vector routing. 119. Explain IPv4 addressing, subnet masks, CIDR and subnetting. 120. Explain IPv6 addressing and its relevance to IoT. 121. Explain DNS architecture and resolution. 122. Explain A, AAAA, CNAME, MX, NS and TXT records. 123. Describe an end-to-end IoT communication path involving DNS, TCP/UDP, IP and routing.",
+    "text": "113. Write and explain a basic UDP client and server in Python. 114. Discuss factors for selecting TCP or UDP in IoT. 115. Explain forwarding and routing and distinguish them. 116. Explain link-state routing and Dijkstra. 117. Explain distance-vector routing and Bellman-Ford. 118. Compare link-state and distance-vector routing. 119. Explain IPv4 addressing, subnet masks, CIDR and subnetting. 120. Explain IPv6 addressing and its relevance to IoT. 121. Explain DNS architecture and resolution. 122. Explain A, AAAA, CNAME, MX, NS and TXT records. 123. Describe an end-to-end IoT communication path involving DNS, TCP/UDP, IP and routing.",
+    "page_number": 18,
+    "chunk_index": 77,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "159": {
+    "id": "cdf30430-191d-4149-9acf-5f2647694602",
+    "chunk_id": "cdf30430-191d-4149-9acf-5f2647694602",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Close socket. 7.5 UDP workflow \n15. Create UDP socket.",
+    "text": "Close socket. 7.5 UDP workflow \n15. Create UDP socket.",
+    "page_number": 6,
+    "chunk_index": 24,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "160": {
     "id": "ceaec289-885d-4d47-bede-3a18eb7c8489",
     "chunk_id": "ceaec289-885d-4d47-bede-3a18eb7c8489",
     "document_id": "e57803db-a773-46d4-a4e9-0aaa802dc509",
@@ -824,7 +1770,7 @@
     "chunk_index": 3,
     "title": "Assignment-1.pdf"
   },
-  "75": {
+  "161": {
     "id": "d0552f9d-402c-48e8-8b09-0015850377ae",
     "chunk_id": "d0552f9d-402c-48e8-8b09-0015850377ae",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -835,7 +1781,18 @@
     "chunk_index": 40,
     "title": "software_unit_2.pdf"
   },
-  "76": {
+  "162": {
+    "id": "d088c57c-4056-4cc3-a9b5-8056306d8cec",
+    "chunk_id": "d088c57c-4056-4cc3-a9b5-8056306d8cec",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nDistance-vector \nRouting approach using destination-distance \ninformation exchanged with neighbors. IP address \nNetwork-layer address associated with an interface.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \nDistance-vector \nRouting approach using destination-distance \ninformation exchanged with neighbors. IP address \nNetwork-layer address associated with an interface.",
+    "page_number": 17,
+    "chunk_index": 67,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "163": {
     "id": "d13516e0-e8e1-49d5-8788-6c9ce29d7bfb",
     "chunk_id": "d13516e0-e8e1-49d5-8788-6c9ce29d7bfb",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -846,7 +1803,7 @@
     "chunk_index": 27,
     "title": "IOT_lab_1-3.pdf"
   },
-  "77": {
+  "164": {
     "id": "d1503215-e6eb-4861-a82c-4579abe58a91",
     "chunk_id": "d1503215-e6eb-4861-a82c-4579abe58a91",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -857,7 +1814,18 @@
     "chunk_index": 25,
     "title": "software_unit_2.pdf"
   },
-  "78": {
+  "165": {
+    "id": "d36580a2-2834-4624-b673-126237eb3511",
+    "chunk_id": "d36580a2-2834-4624-b673-126237eb3511",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "11. Forwarding and Routing \n11.1 Forwarding \nForwarding is the local action a router performs when it receives a packet. It examines the destination IP address, \nconsults forwarding information, selects an outgoing interface or next hop, and sends the packet onward.",
+    "text": "11. Forwarding and Routing \n11.1 Forwarding \nForwarding is the local action a router performs when it receives a packet. It examines the destination IP address, \nconsults forwarding information, selects an outgoing interface or next hop, and sends the packet onward.",
+    "page_number": 8,
+    "chunk_index": 30,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "166": {
     "id": "d3914504-5248-4fbf-9250-d23d9a3c18c0",
     "chunk_id": "d3914504-5248-4fbf-9250-d23d9a3c18c0",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -868,7 +1836,7 @@
     "chunk_index": 4,
     "title": "software_unit_2.pdf"
   },
-  "79": {
+  "167": {
     "id": "d4d057d2-c212-4999-978e-137825913e9a",
     "chunk_id": "d4d057d2-c212-4999-978e-137825913e9a",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -879,7 +1847,7 @@
     "chunk_index": 17,
     "title": "IOT_lab_1-3.pdf"
   },
-  "80": {
+  "168": {
     "id": "d6fd8320-0a50-498b-bdc4-a5d0b999682f",
     "chunk_id": "d6fd8320-0a50-498b-bdc4-a5d0b999682f",
     "document_id": "d901f517-7a86-4580-865f-59462937bb12",
@@ -890,7 +1858,7 @@
     "chunk_index": 2,
     "title": "assignment_2_-_Machine_Learning_and_NLP_on_AWS_Cloud.pdf"
   },
-  "81": {
+  "169": {
     "id": "d909223b-5026-46e7-bc4e-f8af9c3192a6",
     "chunk_id": "d909223b-5026-46e7-bc4e-f8af9c3192a6",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -901,7 +1869,18 @@
     "chunk_index": 35,
     "title": "software_unit_2.pdf"
   },
-  "82": {
+  "170": {
+    "id": "daaab36f-e41c-4175-a511-3bc481965d5f",
+    "chunk_id": "daaab36f-e41c-4175-a511-3bc481965d5f",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "79. Define TCP. 80. List four TCP characteristics. 81. Define UDP. 82. List four differences between TCP and UDP. 83. What is a port? 84. What is a socket? 85. What does bind() do? 86. What does listen() do? 87. What does accept() do? 88. What does connect() do? 89.",
+    "text": "79. Define TCP. 80. List four TCP characteristics. 81. Define UDP. 82. List four differences between TCP and UDP. 83. What is a port? 84. What is a socket? 85. What does bind() do? 86. What does listen() do? 87. What does accept() do? 88. What does connect() do? 89.",
+    "page_number": 17,
+    "chunk_index": 72,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "171": {
     "id": "dae2ffa7-577b-4f3b-a4fe-b1731e4d686c",
     "chunk_id": "dae2ffa7-577b-4f3b-a4fe-b1731e4d686c",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -912,7 +1891,7 @@
     "chunk_index": 4,
     "title": "IOT_lab_1-3.pdf"
   },
-  "83": {
+  "172": {
     "id": "db50690b-3785-4540-9125-2fa996d0ef34",
     "chunk_id": "db50690b-3785-4540-9125-2fa996d0ef34",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -923,7 +1902,7 @@
     "chunk_index": 52,
     "title": "software_unit_2.pdf"
   },
-  "84": {
+  "173": {
     "id": "dbcf246f-a5c7-4d8d-9e77-0ed9f1528b47",
     "chunk_id": "dbcf246f-a5c7-4d8d-9e77-0ed9f1528b47",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -934,7 +1913,7 @@
     "chunk_index": 23,
     "title": "IOT_lab_1-3.pdf"
   },
-  "85": {
+  "174": {
     "id": "dc607280-19b6-44a8-a909-576d1379c54f",
     "chunk_id": "dc607280-19b6-44a8-a909-576d1379c54f",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -945,7 +1924,7 @@
     "chunk_index": 29,
     "title": "software_unit_2.pdf"
   },
-  "86": {
+  "175": {
     "id": "dd9a36fc-1a3b-4b0f-82f7-49ef1c62d752",
     "chunk_id": "dd9a36fc-1a3b-4b0f-82f7-49ef1c62d752",
     "document_id": "52028bff-dc64-40f0-be30-4a30c92ab4eb",
@@ -956,7 +1935,7 @@
     "chunk_index": 0,
     "title": "ASSIGNMENT2.pdf"
   },
-  "87": {
+  "176": {
     "id": "e06b3f66-3f7b-4912-9227-c1c32d2ef154",
     "chunk_id": "e06b3f66-3f7b-4912-9227-c1c32d2ef154",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -967,7 +1946,7 @@
     "chunk_index": 23,
     "title": "software_unit_2.pdf"
   },
-  "88": {
+  "177": {
     "id": "e0776905-921f-413f-99bd-71210f491967",
     "chunk_id": "e0776905-921f-413f-99bd-71210f491967",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -978,7 +1957,18 @@
     "chunk_index": 13,
     "title": "IOT_lab_1-3.pdf"
   },
-  "89": {
+  "178": {
+    "id": "e24fa36e-13f3-486f-85d0-117fbe72060d",
+    "chunk_id": "e24fa36e-13f3-486f-85d0-117fbe72060d",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "A) UDP B) TCP C) IP D) DNS \nAnswer: B \n2. Which Python socket type is commonly used for TCP? A) SOCK_DGRAM B) SOCK_STREAM C) SOCK_RAW D) SOCK_IP \nAnswer: B \n3. Which operation binds a server socket? A) bind() B) connect() C) recv() D) close() \nAnswer: A \n4. Which operation accepts a TCP connection? A) accept() B) sendto() C) recvfrom() D) close() \nAnswer: A \n5. UDP is: \nA) connectionless datagram transport B) reliable byte stream C) routing protocol D) naming protocol \nAnswer: A \n6. Forwarding mainly determines: \nA) next packet path/interface B) DNS record C) application code D) sensor type \nAnswer: A \n7. Which routing approach uses topology information? A) Link-state B) Distance-vector C) DNS D) ARP \nAnswer: A \n8. Which algorithm is associated with link-state shortest-path calculation? A) Dijkstra B) AES C) RSA D) CRC \nAnswer: A \n9. Distance-vector routers primarily exchange information with: \nA) neighboring routers B) DNS servers C) applications D) sensors \nAnswer: A \n10. IPv4 has:",
+    "text": "A) UDP B) TCP C) IP D) DNS \nAnswer: B \n2. Which Python socket type is commonly used for TCP? A) SOCK_DGRAM B) SOCK_STREAM C) SOCK_RAW D) SOCK_IP \nAnswer: B \n3. Which operation binds a server socket? A) bind() B) connect() C) recv() D) close() \nAnswer: A \n4. Which operation accepts a TCP connection? A) accept() B) sendto() C) recvfrom() D) close() \nAnswer: A \n5. UDP is: \nA) connectionless datagram transport B) reliable byte stream C) routing protocol D) naming protocol \nAnswer: A \n6. Forwarding mainly determines: \nA) next packet path/interface B) DNS record C) application code D) sensor type \nAnswer: A \n7. Which routing approach uses topology information? A) Link-state B) Distance-vector C) DNS D) ARP \nAnswer: A \n8. Which algorithm is associated with link-state shortest-path calculation? A) Dijkstra B) AES C) RSA D) CRC \nAnswer: A \n9. Distance-vector routers primarily exchange information with: \nA) neighboring routers B) DNS servers C) applications D) sensors \nAnswer: A \n10. IPv4 has:",
+    "page_number": 18,
+    "chunk_index": 80,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "179": {
     "id": "e2b7c073-e229-4332-968e-0860c0e5f54e",
     "chunk_id": "e2b7c073-e229-4332-968e-0860c0e5f54e",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -989,7 +1979,18 @@
     "chunk_index": 3,
     "title": "IOT_lab_1-3.pdf"
   },
-  "90": {
+  "180": {
+    "id": "e69eb214-036d-4414-8ecf-ec211b24ec1c",
+    "chunk_id": "e69eb214-036d-4414-8ecf-ec211b24ec1c",
+    "document_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "doc_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "content": "What is DNS? Explain how a domain name is resolved into an IP address. 17. Describe DNS record types such as A, AAAA, CNAME, MX, and PTR with examples. 18. Explain the role of DNS in IoT systems and the security risks associated with DNS. 19. A smart home system uses multiple IoT devices connected through a router. Explain how \nIP addressing, DNS, TCP/UDP, and routing enable communication among the devices and \ncloud services. 20. Design a socket-based IoT temperature-monitoring application. Specify whether TCP or \nUDP is more suitable, justify your choice, and describe the client-server communication \nprocess.",
+    "text": "What is DNS? Explain how a domain name is resolved into an IP address. 17. Describe DNS record types such as A, AAAA, CNAME, MX, and PTR with examples. 18. Explain the role of DNS in IoT systems and the security risks associated with DNS. 19. A smart home system uses multiple IoT devices connected through a router. Explain how \nIP addressing, DNS, TCP/UDP, and routing enable communication among the devices and \ncloud services. 20. Design a socket-based IoT temperature-monitoring application. Specify whether TCP or \nUDP is more suitable, justify your choice, and describe the client-server communication \nprocess.",
+    "page_number": 1,
+    "chunk_index": 5,
+    "title": "ASSIGNMENT_3.pdf"
+  },
+  "181": {
     "id": "e6cf4133-9483-414d-8702-19528a44ba44",
     "chunk_id": "e6cf4133-9483-414d-8702-19528a44ba44",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -1000,7 +2001,7 @@
     "chunk_index": 12,
     "title": "software_unit_2.pdf"
   },
-  "91": {
+  "182": {
     "id": "ecd86e9c-c97d-488c-bd01-57479906d470",
     "chunk_id": "ecd86e9c-c97d-488c-bd01-57479906d470",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -1011,7 +2012,51 @@
     "chunk_index": 29,
     "title": "IOT_lab_1-3.pdf"
   },
-  "92": {
+  "183": {
+    "id": "ee29fcbe-1783-4cc0-a405-755b9296093d",
+    "chunk_id": "ee29fcbe-1783-4cc0-a405-755b9296093d",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "resolver, records, authoritative \nserver, cache \n \n3. Transport Services \n3.1 Transport layer \nThe transport layer provides communication services to applications.",
+    "text": "resolver, records, authoritative \nserver, cache \n \n3. Transport Services \n3.1 Transport layer \nThe transport layer provides communication services to applications.",
+    "page_number": 3,
+    "chunk_index": 8,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "184": {
+    "id": "efe837c7-970a-4130-9a70-9b7121a9381d",
+    "chunk_id": "efe837c7-970a-4130-9a70-9b7121a9381d",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "26. Important Definitions \nTerm \nDefinition \nTCP \nConnection-oriented transport protocol providing \nreliable ordered byte-stream delivery. UDP \nConnectionless transport protocol using independent \ndatagrams. Socket \nSoftware endpoint used for network communication. Port \nTransport-layer identifier for an application endpoint. Forwarding \nLocal process of sending a packet toward its \ndestination. Routing \nProcess of selecting paths through a network. Link-state \nRouting approach using distributed link information \nand topology calculation.",
+    "text": "26. Important Definitions \nTerm \nDefinition \nTCP \nConnection-oriented transport protocol providing \nreliable ordered byte-stream delivery. UDP \nConnectionless transport protocol using independent \ndatagrams. Socket \nSoftware endpoint used for network communication. Port \nTransport-layer identifier for an application endpoint. Forwarding \nLocal process of sending a packet toward its \ndestination. Routing \nProcess of selecting paths through a network. Link-state \nRouting approach using distributed link information \nand topology calculation.",
+    "page_number": 16,
+    "chunk_index": 66,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "185": {
+    "id": "f0a1dd24-2f55-4d45-bd41-6c869974738b",
+    "chunk_id": "f0a1dd24-2f55-4d45-bd41-6c869974738b",
+    "document_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "doc_id": "98a19b1d-a03b-4db5-aac7-e099f38a27a1",
+    "content": "What is NAT? Explain its role in IoT networks and its limitations. 15. Explain the structure of an IPv6 address and its advantages for IoT deployment. 16.",
+    "text": "What is NAT? Explain its role in IoT networks and its limitations. 15. Explain the structure of an IPv6 address and its advantages for IoT deployment. 16.",
+    "page_number": 1,
+    "chunk_index": 4,
+    "title": "ASSIGNMENT_3.pdf"
+  },
+  "186": {
+    "id": "f0ca6d9f-fc9a-4c0c-9138-1f18b0881824",
+    "chunk_id": "f0ca6d9f-fc9a-4c0c-9138-1f18b0881824",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Delay \nTime associated with traversal. Bandwidth-related value \nMay influence path preference. Composite metric \nCombines properties according to protocol design.",
+    "text": "Delay \nTime associated with traversal. Bandwidth-related value \nMay influence path preference. Composite metric \nCombines properties according to protocol design.",
+    "page_number": 9,
+    "chunk_index": 33,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "187": {
     "id": "f341e23e-9cac-4ba8-8c91-8d5af56de6ab",
     "chunk_id": "f341e23e-9cac-4ba8-8c91-8d5af56de6ab",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -1022,7 +2067,7 @@
     "chunk_index": 54,
     "title": "software_unit_2.pdf"
   },
-  "93": {
+  "188": {
     "id": "f38b62c0-0a2d-4248-ae0a-c8aa92666343",
     "chunk_id": "f38b62c0-0a2d-4248-ae0a-c8aa92666343",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -1033,7 +2078,29 @@
     "chunk_index": 5,
     "title": "IOT_lab_1-3.pdf"
   },
-  "94": {
+  "189": {
+    "id": "f3a23e33-50bc-45df-8807-a997fb19cc58",
+    "chunk_id": "f3a23e33-50bc-45df-8807-a997fb19cc58",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IPv4 \n32-bit Internet Protocol addressing system.",
+    "text": "IPv4 \n32-bit Internet Protocol addressing system.",
+    "page_number": 17,
+    "chunk_index": 68,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "190": {
+    "id": "f5a87e92-b7e7-4cfb-9d91-77ba1c438667",
+    "chunk_id": "f5a87e92-b7e7-4cfb-9d91-77ba1c438667",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n8. TCP Socket Programming \n8.1 Python TCP server \nEducational example for a local lab: \nimport socket \n \nHOST = \"127.0.0.1\" \nPORT = 5000 \n \nserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM) \nserver.bind((HOST, PORT)) \nserver.listen(1) \n \nconn, addr = server.accept() \ndata = conn.recv(1024) \nprint(data.decode()) \nconn.sendall(b\"Hello from server\") \nconn.close() \nserver.close() \n8.2 Python TCP client \nimport socket \n \nHOST = \"127.0.0.1\" \nPORT = 5000 \n \nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM) \nclient.connect((HOST, PORT)) \nclient.sendall(b\"Hello from client\") \ndata = client.recv(1024) \nprint(data.decode()) \nclient.close() \n8.3 Explanation \n\uf0b7 \nAF_INET selects IPv4 addressing. \uf0b7 \nSOCK_STREAM selects TCP.",
+    "text": "IoT \u2013 Unit C: Services \n7.09 Transport Services | 7.10 Forwarding & Routing, IP Addresses, DNS \n8. TCP Socket Programming \n8.1 Python TCP server \nEducational example for a local lab: \nimport socket \n \nHOST = \"127.0.0.1\" \nPORT = 5000 \n \nserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM) \nserver.bind((HOST, PORT)) \nserver.listen(1) \n \nconn, addr = server.accept() \ndata = conn.recv(1024) \nprint(data.decode()) \nconn.sendall(b\"Hello from server\") \nconn.close() \nserver.close() \n8.2 Python TCP client \nimport socket \n \nHOST = \"127.0.0.1\" \nPORT = 5000 \n \nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM) \nclient.connect((HOST, PORT)) \nclient.sendall(b\"Hello from client\") \ndata = client.recv(1024) \nprint(data.decode()) \nclient.close() \n8.3 Explanation \n\uf0b7 \nAF_INET selects IPv4 addressing. \uf0b7 \nSOCK_STREAM selects TCP.",
+    "page_number": 7,
+    "chunk_index": 26,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "191": {
     "id": "f648a29b-d229-4ef7-868c-0fe434199e49",
     "chunk_id": "f648a29b-d229-4ef7-868c-0fe434199e49",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -1044,7 +2111,40 @@
     "chunk_index": 19,
     "title": "software_unit_2.pdf"
   },
-  "95": {
+  "192": {
+    "id": "f8195406-fe0b-4a04-978a-8f6ae58975ce",
+    "chunk_id": "f8195406-fe0b-4a04-978a-8f6ae58975ce",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Configuration transfer \nTCP \nComplete and reliable delivery is \nimportant. Periodic telemetry \nUDP may be suitable \nLow overhead may be useful if loss \nis tolerable. Firmware transfer \nReliable transport \nMissing data cannot be ignored. Real-time update \nUDP may be considered \nFresh data can be more useful than \ndelayed retransmission. Gateway service \nSockets \nApplication software needs a \nnetwork interface.",
+    "text": "Configuration transfer \nTCP \nComplete and reliable delivery is \nimportant. Periodic telemetry \nUDP may be suitable \nLow overhead may be useful if loss \nis tolerable. Firmware transfer \nReliable transport \nMissing data cannot be ignored. Real-time update \nUDP may be considered \nFresh data can be more useful than \ndelayed retransmission. Gateway service \nSockets \nApplication software needs a \nnetwork interface.",
+    "page_number": 8,
+    "chunk_index": 29,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "193": {
+    "id": "f8e1444d-5348-4170-a85b-9169134ef171",
+    "chunk_id": "f8e1444d-5348-4170-a85b-9169134ef171",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "15. Distance-Vector Routing \n15.1 Basic idea \nIn distance-vector routing, a router maintains distance or cost information to destinations and exchanges route \ninformation with neighboring routers. It does not need the same complete topology database used by a link-state \napproach. 15.2 General process \n29. Initialize direct routes.",
+    "text": "15. Distance-Vector Routing \n15.1 Basic idea \nIn distance-vector routing, a router maintains distance or cost information to destinations and exchanges route \ninformation with neighboring routers. It does not need the same complete topology database used by a link-state \napproach. 15.2 General process \n29. Initialize direct routes.",
+    "page_number": 10,
+    "chunk_index": 37,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "194": {
+    "id": "f928656b-9e97-4e67-a5c6-2ae27300f23a",
+    "chunk_id": "f928656b-9e97-4e67-a5c6-2ae27300f23a",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "Link-State vs Distance-Vector \nFeature \nLink-State \nDistance-Vector \nKnowledge \nTopology/link information \nNeighbor route-distance \ninformation \nCalculation \nShortest-path \nIterative distance calculation \nConceptual algorithm \nDijkstra \nBellman-Ford \nExchange \nLink information \nDistance vectors \nResource use \nTopology database + calculation \nRepeated route calculations \nConcern \nDatabase/calculation overhead \nLoops/convergence issues in some \ndesigns \n \n17. IP Addresses \nAn Internet Protocol (IP) address is a unique numerical label assigned to every device connected to a computer \nnetwork to identify it and enable data communication. 17.1 Purpose \nAn IP address identifies a network-layer interface and enables packets to be addressed across interconnected IP \nnetworks. IP addresses are different from DNS names and transport ports. 17.2 IPv4 \nIPv4 addresses contain 32 bits and are commonly written as four decimal octets, such as 192.168.1.20, most",
+    "text": "Link-State vs Distance-Vector \nFeature \nLink-State \nDistance-Vector \nKnowledge \nTopology/link information \nNeighbor route-distance \ninformation \nCalculation \nShortest-path \nIterative distance calculation \nConceptual algorithm \nDijkstra \nBellman-Ford \nExchange \nLink information \nDistance vectors \nResource use \nTopology database + calculation \nRepeated route calculations \nConcern \nDatabase/calculation overhead \nLoops/convergence issues in some \ndesigns \n \n17. IP Addresses \nAn Internet Protocol (IP) address is a unique numerical label assigned to every device connected to a computer \nnetwork to identify it and enable data communication. 17.1 Purpose \nAn IP address identifies a network-layer interface and enables packets to be addressed across interconnected IP \nnetworks. IP addresses are different from DNS names and transport ports. 17.2 IPv4 \nIPv4 addresses contain 32 bits and are commonly written as four decimal octets, such as 192.168.1.20, most",
+    "page_number": 11,
+    "chunk_index": 41,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "195": {
     "id": "fa2c5586-f785-492c-978a-842ca223ad26",
     "chunk_id": "fa2c5586-f785-492c-978a-842ca223ad26",
     "document_id": "1c256762-b78e-4145-ba89-520b74b15675",
@@ -1055,7 +2155,7 @@
     "chunk_index": 24,
     "title": "IOT_lab_1-3.pdf"
   },
-  "96": {
+  "196": {
     "id": "fa830daa-595d-41a7-b563-d8c8d5a9437d",
     "chunk_id": "fa830daa-595d-41a7-b563-d8c8d5a9437d",
     "document_id": "f4d77627-afd3-4982-b5a0-f18981534c41",
@@ -1065,5 +2165,27 @@
     "page_number": 23,
     "chunk_index": 49,
     "title": "software_unit_2.pdf"
+  },
+  "197": {
+    "id": "fbf23615-a8d8-43ec-8230-30898acaa4dc",
+    "chunk_id": "fbf23615-a8d8-43ec-8230-30898acaa4dc",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "27.",
+    "text": "27.",
+    "page_number": 17,
+    "chunk_index": 70,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
+  },
+  "198": {
+    "id": "ff31e0d4-50d3-477e-9ef3-beb0ffb9c056",
+    "chunk_id": "ff31e0d4-50d3-477e-9ef3-beb0ffb9c056",
+    "document_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "doc_id": "19f441c7-4050-4887-afe0-4bea6d859897",
+    "content": "16. Server binds to address and port. 17. Client sends datagram. 18. Server receives datagram and sender information. 19. Server responds if required. 20. Client receives response. 21. Close socket.",
+    "text": "16. Server binds to address and port. 17. Client sends datagram. 18. Server receives datagram and sender information. 19. Server responds if required. 20. Client receives response. 21. Close socket.",
+    "page_number": 6,
+    "chunk_index": 25,
+    "title": "IoT_Unit_C_Services_TCP_UDP_Socket_Routing_DNS_Notes.pdf"
   }
 }
