@@ -64,6 +64,9 @@ def _document_info(document: dict[str, Any], chunk_counts: Counter[str]) -> dict
         "filetype": Path(title).suffix.lower().lstrip("."),
         "num_chunks": chunk_counts[document_id],
         "uploaded_at": document.get("created_at") or "",
+        "description": document.get("description") or "",
+        "document_type": document.get("document_type") or "",
+        "unit": document.get("unit"),
     }
 
 @ingest.route("/ingest", methods=["POST"])
@@ -335,17 +338,23 @@ def list_documents():
             if batch_doc_ids:
                 documents = _data(
                     client.table("documents")
-                    .select("id,title,s3_key,created_at")
+                    .select("id,title,s3_key,created_at,description,document_type,unit")
                     .or_(f"batch_id.eq.{user_batch_id},id.in.({','.join(batch_doc_ids)})")
                     .execute()
                 )
             else:
                 documents = _data(
                     client.table("documents")
-                    .select("id,title,s3_key,created_at")
+                    .select("id,title,s3_key,created_at,description,document_type,unit")
                     .eq("batch_id", user_batch_id)
                     .execute()
                 )
+        else:
+            documents = _data(
+                client.table("documents")
+                .select("id,title,s3_key,created_at,description,document_type,unit")
+                .execute()
+            )
 
         print(f"Documents Gathered: {len(documents)}")
         chunks = _data(client.table("document_chunks").select("document_id").execute())
@@ -374,8 +383,9 @@ def delete_document(document_id: str):
         return jsonify({"detail": "Could not delete document."}), 500
 
 @ingest.route("/documents/<document_id>/file", methods=["GET"])
+@require_auth
 def get_document_file(document_id: str):
-    """Generate a presigned download URL for a document's S3 object."""
+    """Generate a presigned download/view URL for a document's S3 object."""
     try:
         client = get_supabase_client()
         res = client.table("documents").select("id, title, s3_key").eq("id", document_id).execute()
@@ -384,15 +394,22 @@ def get_document_file(document_id: str):
             return jsonify({"detail": "Document not found or has no file attached"}), 404
 
         doc = rows[0]
+        filename = doc.get("title") or "document"
+        download_requested = request.args.get("download", "").lower() in ("true", "1", "yes")
+
         s3_service = S3Service()
-        presigned_url = s3_service.generate_presigned_url(doc["s3_key"])
+        presigned_url = s3_service.generate_presigned_url(
+            doc["s3_key"],
+            filename=filename,
+            download=download_requested,
+        )
         if not presigned_url:
             return jsonify({"detail": "Unable to generate file download URL"}), 500
 
         return jsonify({
             "url": presigned_url,
             "expires_in": S3_SIGNED_URL_TTL_SECONDS,
-            "filename": doc.get("title") or "document",
+            "filename": filename,
         }), 200
     except Exception as e:
         return jsonify({"detail": f"Failed to retrieve file URL: {e}"}), 500

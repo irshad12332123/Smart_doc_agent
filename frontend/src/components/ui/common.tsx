@@ -1,5 +1,6 @@
+import { useState, type ElementType } from "react";
 import * as I from "lucide-react";
-import type { ElementType } from "react";
+import { documentApi } from "../../api/client";
 import type { DocumentInfo } from "../../types";
 
 export function Error({ text }: { text: string }) {
@@ -138,7 +139,19 @@ export function getFileTypeTheme(filetype: string) {
   };
 }
 
-export function DocumentCard({ document }: { document: DocumentInfo }) {
+export function DocumentCard({
+  document,
+  onOpen,
+  onDownload,
+}: {
+  document: DocumentInfo;
+  onOpen?: (doc: DocumentInfo) => void;
+  onDownload?: (doc: DocumentInfo) => void;
+}) {
+  const [opening, setOpening] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [actionError, setActionError] = useState("");
+
   const fileTheme = getFileTypeTheme(document.filetype);
   const Icon = fileTheme.icon;
 
@@ -150,8 +163,60 @@ export function DocumentCard({ document }: { document: DocumentInfo }) {
       })
     : "Recently uploaded";
 
+  const handleOpen = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (opening || downloading) return;
+    setActionError("");
+    setOpening(true);
+    try {
+      if (onOpen) {
+        await onOpen(document);
+      } else {
+        await documentApi.openDocument(document.doc_id);
+      }
+    } catch (err: unknown) {
+      console.error("Failed to view document:", err);
+      setActionError("Failed to open");
+      setTimeout(() => setActionError(""), 3500);
+    } finally {
+      setOpening(false);
+    }
+  };
+
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (downloading || opening) return;
+    setActionError("");
+    setDownloading(true);
+    try {
+      if (onDownload) {
+        await onDownload(document);
+      } else {
+        await documentApi.downloadDocument(document.doc_id, document.filename);
+      }
+    } catch (err: unknown) {
+      console.error("Failed to download document:", err);
+      setActionError("Failed to download");
+      setTimeout(() => setActionError(""), 3500);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
-    <article className="doc-card" tabIndex={0}>
+    <article
+      className="doc-card"
+      tabIndex={0}
+      role="button"
+      onClick={handleOpen}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleOpen();
+        }
+      }}
+      title={`Click to view ${document.filename}`}
+    >
       <div className={`doc-art ${fileTheme.className}`}>
         <div className="doc-art-bg-glow" />
         <div className="doc-art-icon-circle">
@@ -180,8 +245,11 @@ export function DocumentCard({ document }: { document: DocumentInfo }) {
 
         <div className="doc-tags">
           <span className="tag tag-primary">
-            <I.Bookmark /> Material
+            <I.Bookmark /> {document.document_type ? document.document_type.toUpperCase() : "MATERIAL"}
           </span>
+          {document.unit != null && (
+            <span className="tag tag-primary">Unit {document.unit}</span>
+          )}
           <span className="tag tag-muted">{fileTheme.type}</span>
         </div>
 
@@ -189,13 +257,31 @@ export function DocumentCard({ document }: { document: DocumentInfo }) {
           <span className="doc-date">
             <I.Calendar /> {formattedDate}
           </span>
-          <div className="doc-actions">
+          <div className="doc-actions" onClick={(e) => e.stopPropagation()}>
+            {actionError && (
+              <span className="doc-action-error" title={actionError}>
+                {actionError}
+              </span>
+            )}
             <button
+              type="button"
               className="card-icon-btn"
-              title="Academic document indexed for AI retrieval"
-              aria-label="Document options"
+              onClick={handleOpen}
+              disabled={opening}
+              title="View document in new tab"
+              aria-label={`View ${document.filename}`}
             >
-              <I.Sparkles />
+              {opening ? <I.Loader2 className="spinning-loader" /> : <I.ExternalLink />}
+            </button>
+            <button
+              type="button"
+              className="card-icon-btn card-icon-btn-download"
+              onClick={handleDownload}
+              disabled={downloading}
+              title="Download document file"
+              aria-label={`Download ${document.filename}`}
+            >
+              {downloading ? <I.Loader2 className="spinning-loader" /> : <I.Download />}
             </button>
           </div>
         </footer>

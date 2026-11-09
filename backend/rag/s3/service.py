@@ -29,6 +29,8 @@ class S3Service:
         self,
         s3_key: Optional[str],
         expires_in: Optional[int] = None,
+        filename: Optional[str] = None,
+        download: bool = False,
     ) -> Optional[str]:
         """
         Generates a secure, temporary presigned GET URL for a given document's S3 key.
@@ -43,12 +45,17 @@ class S3Service:
 
         ttl = expires_in or self._default_ttl
         try:
+            params: dict[str, Any] = {
+                "Bucket": self._bucket_name,
+                "Key": s3_key.strip(),
+            }
+            if download and filename:
+                safe_name = filename.replace('"', '\\"').replace("\n", "").replace("\r", "")
+                params["ResponseContentDisposition"] = f'attachment; filename="{safe_name}"'
+
             url = self._client.generate_presigned_url(
                 ClientMethod="get_object",
-                Params={
-                    "Bucket": self._bucket_name,
-                    "Key": s3_key.strip(),
-                },
+                Params=params,
                 ExpiresIn=ttl,
             )
             return url

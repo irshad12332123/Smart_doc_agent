@@ -160,14 +160,57 @@ export const documentApi = {
       if (!res.ok) throw new Error("Could not delete document");
     }),
 
-  fileUrl: (id: string) =>
-    fetch(`${BASE_URL}/api/documents/${id}/file`, {
+  fileUrl: (id: string, download: boolean = false) => {
+    const query = download ? "?download=true" : "";
+    return fetch(`${BASE_URL}/api/documents/${id}/file${query}`, {
       headers: authHeaders(),
     }).then(bodyOrError) as Promise<{
       url: string;
       expires_in: number;
       filename: string;
-    }>,
+    }>;
+  },
+
+  openDocument: async (id: string) => {
+    const data = await documentApi.fileUrl(id, false);
+    if (!data?.url) {
+      throw new Error("File URL is not available.");
+    }
+    window.open(data.url, "_blank", "noopener,noreferrer");
+    return data;
+  },
+
+  downloadDocument: async (id: string, preferredFilename?: string) => {
+    const data = await documentApi.fileUrl(id, true);
+    if (!data?.url) {
+      throw new Error("File URL is not available.");
+    }
+    const finalFilename = preferredFilename || data.filename || "document";
+
+    try {
+      const res = await fetch(data.url);
+      if (!res.ok) throw new Error("Failed to fetch file content");
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = finalFilename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch {
+      // Direct navigation fallback if blob fetch is blocked by CORS
+      const a = document.createElement("a");
+      a.href = data.url;
+      a.download = finalFilename;
+      a.target = "_blank";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+    return data;
+  },
 };
 
 export async function streamChat(
