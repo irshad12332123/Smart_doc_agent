@@ -60,7 +60,11 @@ class Student(User):
         self.profile_data = {}
         try:
 
-            student_record_data = _get_single_row_from_supabase_where(["id", "student_id", "registered_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
+            try:
+                student_record_data = _get_single_row_from_supabase_where(["id", "student_id", "official_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
+                student_record_data["registered_email"] = student_record_data.get("official_email", "")
+            except Exception:
+                student_record_data = _get_single_row_from_supabase_where(["id", "student_id", "registered_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
 
             batch_membership_record_data = _get_single_row_from_supabase_where(["id", "batch_id",], ["student_id", student_record_data["id"]], "batch_memberships", self._client)
 
