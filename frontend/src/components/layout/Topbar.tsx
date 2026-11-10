@@ -1,6 +1,6 @@
 import * as I from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
-import type { Session } from "../../types";
+import type { UserSummary } from "../../types";
 import type { Page } from "../../types/navigation";
 
 const initials = (name: string) =>
@@ -13,13 +13,13 @@ const initials = (name: string) =>
     .toUpperCase() || "SH";
 
 export function Topbar({
-  session,
+  summary,
   page,
   onPage,
   onToggleSidebar,
   sidebarOpen,
 }: {
-  session: Session;
+  summary: UserSummary;
   page?: Page;
   onPage: (p: Page) => void;
   onToggleSidebar?: () => void;
@@ -111,12 +111,12 @@ export function Topbar({
         {/* Profile Avatar Button */}
         <button
           className="avatar"
-          title={`Profile: ${session.profile.full_name}`}
+          title={`Profile: ${summary.full_name}`}
           onClick={() => onPage("profile")}
           aria-label="Open profile"
         >
           <span className="avatar-initials">
-            {initials(session.profile.full_name)}
+            {initials(summary.full_name)}
           </span>
           <span className="avatar-badge-dot" />
         </button>

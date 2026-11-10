@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as I from "lucide-react";
-import { documentApi, userApi } from "./api/client";
-import type { DocumentInfo, Session } from "./types";
+import { userApi } from "./api/client";
+import type { Profile, Session } from "./types";
 import type { Page } from "./types/navigation";
 import { Sidebar } from "./components/layout/Sidebar";
 import { Topbar } from "./components/layout/Topbar";
@@ -19,18 +19,33 @@ function App() {
   const [checking, setChecking] = useState(true);
   const [page, setPage] = useState<Page>("home");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [documents, setDocuments] = useState<DocumentInfo[]>([]);
-  const [docError, setDocError] = useState("");
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileRequested, setProfileRequested] = useState(false);
+  const [profileError, setProfileError] = useState("");
 
   useEffect(() => {
     const saved = localStorage.getItem("scholarhub-session");
     if (!saved) return setChecking(false);
 
     try {
-      const stored = JSON.parse(saved) as Session;
+      const stored = JSON.parse(saved) as Partial<Session> & {
+        access_token?: string;
+      };
+      if (!stored.access_token) throw new Error("Stored session is incomplete");
       userApi
-        .profile(stored.access_token)
-        .then(({ user, profile }) => setSession({ ...stored, user, profile }))
+        .summary(stored.access_token)
+        .then(({ user, summary }) => {
+          setProfile(null);
+          setProfileRequested(false);
+          setSession({
+            access_token: stored.access_token!,
+            refresh_token: stored.refresh_token,
+            expires_at: stored.expires_at,
+            user,
+            summary,
+          });
+        })
         .catch(() => localStorage.removeItem("scholarhub-session"))
         .finally(() => setChecking(false));
     } catch {
@@ -38,29 +53,59 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!session) return;
-    const batchId =
-      session.profile.role === "student"
-        ? session.profile.student_data?.batch_id
-        : undefined;
-    documentApi
-      .list(batchId)
-      .then(setDocuments)
-      .catch(() => setDocError("Documents could not be loaded."));
-  }, [session]);
-
   const signIn = (next: Session) => {
     localStorage.setItem("scholarhub-session", JSON.stringify(next));
+    setProfile(null);
+    setProfileRequested(false);
+    setProfileError("");
     setSession(next);
   };
 
+  const loadProfile = useCallback(async () => {
+    if (!session || profileRequested) return;
+
+    setProfileRequested(true);
+    setProfileError("");
+
+    const cacheKey = `scholarhub-profile-${session.summary.id}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        setProfile(JSON.parse(cached) as Profile);
+      } catch {
+        localStorage.removeItem(cacheKey);
+      }
+    }
+
+    setProfileLoading(true);
+    try {
+      const result = await userApi.profile(session.access_token);
+      setProfile(result.profile);
+      localStorage.setItem(cacheKey, JSON.stringify(result.profile));
+    } catch {
+      if (!cached) setProfileError("Profile data could not be loaded.");
+    } finally {
+      setProfileLoading(false);
+    }
+  }, [profileRequested, session]);
+
+  const profileRequired = ["ask", "subjects", "profile", "upload"].includes(page);
+
+  useEffect(() => {
+    if (session && profileRequired && !profile && !profileLoading) {
+      void loadProfile();
+    }
+  }, [loadProfile, page, profile, profileLoading, profileRequired, session]);
+
   const logout = () => {
-    if (session?.profile?.id) {
-      localStorage.removeItem(`scholarhub_chat_history_${session.profile.id}`);
+    if (session?.summary.id) {
+      localStorage.removeItem(`scholarhub_chat_history_${session.summary.id}`);
+      localStorage.removeItem(`scholarhub-profile-${session.summary.id}`);
     }
     localStorage.removeItem("scholarhub_chat_history");
     localStorage.removeItem("scholarhub-session");
+    setProfile(null);
+    setProfileRequested(false);
     setSession(null);
     setPage("home");
     setSidebarOpen(false);
@@ -87,10 +132,12 @@ function App() {
 
   if (!session) return <Auth onSession={signIn} />;
 
+  const profilePageLoading = profileRequired && !profile;
+
   return (
     <div className="shell">
       <Sidebar
-        session={session}
+        summary={session.summary}
         page={page}
         onPage={navigate}
         onLogout={logout}
@@ -106,21 +153,29 @@ function App() {
       )}
       <main className="main">
         <Topbar
-          session={session}
+          summary={session.summary}
           page={page}
           onPage={navigate}
           onToggleSidebar={() => setSidebarOpen((open) => !open)}
           sidebarOpen={sidebarOpen}
         />
         <div className={`content-area ${page === "ask" ? "content-area-chat" : ""}`}>
-          <PageView
-            page={page}
-            setPage={setPage}
-            session={session}
-            documents={documents}
-            setDocuments={setDocuments}
-            docError={docError}
-          />
+          {profilePageLoading ? (
+            <div className="page">
+              <div className="api-note">
+                {profileLoading
+                  ? "Loading workspace details…"
+                  : profileError || "Workspace details are unavailable."}
+              </div>
+            </div>
+          ) : (
+            <PageView
+              page={page}
+              setPage={setPage}
+              profile={profile}
+              email={session.user.email}
+            />
+          )}
         </div>
       </main>
     </div>
@@ -130,10 +185,8 @@ function App() {
 function PageView(props: {
   page: Page;
   setPage: (p: Page) => void;
-  session: Session;
-  documents: DocumentInfo[];
-  setDocuments: (d: DocumentInfo[]) => void;
-  docError: string;
+  profile: Profile | null;
+  email: string;
 }) {
   switch (props.page) {
     case "home":
@@ -141,28 +194,17 @@ function PageView(props: {
     case "ask":
       return (
         <AskPage
-          documents={props.documents}
-          profile={props.session.profile}
+          profile={props.profile || undefined}
         />
       );
     case "library":
-      return (
-        <LibraryPage documents={props.documents} docError={props.docError} />
-      );
+      return <LibraryPage />;
     case "subjects":
-      return (
-        <SubjectsPage profile={props.session.profile} setPage={props.setPage} />
-      );
+      return <SubjectsPage profile={props.profile!} setPage={props.setPage} />;
     case "profile":
-      return <ProfilePage session={props.session} />;
+      return <ProfilePage profile={props.profile!} email={props.email} />;
     case "upload":
-      return (
-        <UploadPage
-          profile={props.session.profile}
-          documents={props.documents}
-          setDocuments={props.setDocuments}
-        />
-      );
+      return <UploadPage profile={props.profile!} />;
     case "admin":
       return <AdminPage />;
   }

@@ -264,6 +264,7 @@ def sign_in(
     """Authenticate user with password after verifying registry presence and registration."""
     target_email = email.strip().lower()
     admin = get_supabase_admin_client()
+    profile_summary: dict[str, Any] | None = None
 
     record, matched_type = _find_in_registry(target_email, registry_type)
 
@@ -273,7 +274,7 @@ def sign_in(
         if auth_user:
             prof = (
                 admin.table("profiles")
-                .select("id, role")
+                .select("id, full_name, role")
                 .eq("id", auth_user.id)
                 .limit(1)
                 .execute()
@@ -281,6 +282,11 @@ def sign_in(
             rows = _rows(prof)
             if not rows or rows[0].get("role") != GlobalRole.ADMIN.value:
                 raise AuthError("Account is not registered. Please register.", 404)
+            profile_summary = {
+                "id": rows[0]["id"],
+                "full_name": rows[0].get("full_name") or "Administrator",
+                "role": rows[0]["role"],
+            }
         else:
             raise AuthError("Account is not registered. Please register.", 404)
     else:
@@ -289,6 +295,11 @@ def sign_in(
             auth_user = _get_auth_user_by_email(record["email"])
             if not auth_user:
                 raise AuthError("Account is not registered. Please register.", 400)
+        profile_summary = {
+            "id": record.get("profile_id") or "",
+            "full_name": record.get("name") or "",
+            "role": matched_type.value if matched_type else "",
+        }
 
     try:
         response = get_supabase_client().auth.sign_in_with_password(
@@ -327,11 +338,16 @@ def sign_in(
         except Exception:
             pass
 
+    if profile_summary is None:
+        raise AuthError("User profile is not configured", 401)
+    profile_summary["id"] = user.id
+
     return {
         "access_token": session.access_token,
         "refresh_token": session.refresh_token,
         "expires_at": session.expires_at,
         "user": {"id": user.id, "email": user.email},
+        "profile_summary": profile_summary,
     }
 
 

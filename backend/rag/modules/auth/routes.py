@@ -25,6 +25,10 @@ def _body() -> dict:
         raise AuthError("A JSON request body is required", 400)
     return payload
 
+@auth.post("/refresh")
+@require_auth
+def refresh():
+    return 
 
 @auth.post("/check")
 def check():

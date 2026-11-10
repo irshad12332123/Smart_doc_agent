@@ -1,26 +1,26 @@
 import * as I from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
-import type { Session } from "../../types";
+import type { UserSummary } from "../../types";
 import type { Page } from "../../types/navigation";
 import { nav } from "../../types/navigation";
 
 export function Sidebar({
-  session,
+  summary,
   page,
   onPage,
   onLogout,
   mobileOpen,
 }: {
-  session: Session;
+  summary: UserSummary;
   page: Page;
   onPage: (p: Page) => void;
   onLogout: () => void;
   mobileOpen?: boolean;
 }) {
   const { theme, toggleTheme } = useTheme();
-  const isFaculty = session.profile.role === "faculty";
-  const isAdmin = session.profile.role === "admin";
-  const isCr = session.profile.role === "student";
+  const isFaculty = summary.role === "faculty";
+  const isAdmin = summary.role === "admin";
+  const isCr = summary.role === "student";
 
   return (
     <aside className={`sidebar ${mobileOpen ? "mobile-open" : ""}`}>

@@ -1,10 +1,7 @@
 import { useState } from "react";
 import * as I from "lucide-react";
-import type { DocumentInfo } from "../../types";
 import type { Page } from "../../types/navigation";
 import {
-  DocumentCard,
-  Empty,
   SectionTitle,
   SubjectCard,
 } from "../../components/ui/common";
@@ -24,12 +21,8 @@ const subjects = [
 
 export function HomePage({
   setPage,
-  documents,
-  docError,
 }: {
   setPage: (p: Page) => void;
-  documents: DocumentInfo[];
-  docError: string;
 }) {
   const [query, setQuery] = useState("");
 
@@ -95,31 +88,6 @@ export function HomePage({
             );
           })}
         </div>
-      </section>
-
-      {/* Latest Documents Section */}
-      <section className="home-section">
-        <SectionTitle
-          icon={I.Clock}
-          title="Latest for your batch"
-          action="View library"
-          onAction={() => setPage("library")}
-        />
-        {docError ? (
-          <Empty message={docError} />
-        ) : documents.length === 0 ? (
-          <Empty
-            message="No documents have been uploaded for your batch yet."
-            actionLabel="Go to Upload"
-            onAction={() => setPage("upload")}
-          />
-        ) : (
-          <div className="latest-grid">
-            {documents.slice(0, 3).map((d) => (
-              <DocumentCard document={d} key={d.doc_id} />
-            ))}
-          </div>
-        )}
       </section>
 
       {/* Explore Subjects Section */}
