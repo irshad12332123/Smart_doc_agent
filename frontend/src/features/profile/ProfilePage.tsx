@@ -1,6 +1,6 @@
 import * as I from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
-import type { Session } from "../../types";
+import type { Profile } from "../../types";
 import { Empty, PanelTitle } from "../../components/ui/common";
 
 const initials = (name: string) =>
@@ -12,9 +12,15 @@ const initials = (name: string) =>
     .slice(0, 2)
     .toUpperCase() || "SH";
 
-export function ProfilePage({ session }: { session: Session }) {
+export function ProfilePage({
+  profile,
+  email,
+}: {
+  profile: Profile;
+  email: string;
+}) {
   const { theme, toggleTheme } = useTheme();
-  const p = session.profile;
+  const p = profile;
   const isStudent = p.role === "student";
   const studentMeta = isStudent ? p.student_data : undefined;
 
@@ -106,7 +112,7 @@ export function ProfilePage({ session }: { session: Session }) {
           <div className="details-vertical">
             <div className="detail-item">
               <span className="detail-label">PRIMARY EMAIL</span>
-              <strong className="detail-val">{session.user.email}</strong>
+              <strong className="detail-val">{email}</strong>
             </div>
             <div className="detail-item">
               <span className="detail-label">ACCOUNT ROLE</span>

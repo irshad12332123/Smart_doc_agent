@@ -1,10 +1,6 @@
-import type { DocumentInfo, Profile, SourceChunk } from "../types";
+import type { DocumentInfo, Profile, SourceChunk, UserSummary } from "../types";
 
-const BASE_URL = (
-  import.meta.env.BACKEND_API_URL ||
-  import.meta.env.BACKEND_API ||
-  "http://localhost:8000"
-).replace(/\/+$/, "");
+const BASE_URL = (import.meta.env.BACKEND_API_URL)
 
 const jsonHeaders = { "Content-Type": "application/json" };
 
@@ -27,11 +23,25 @@ async function bodyOrError(res: Response) {
 }
 
 export const userApi = {
+  summary: async (token: string) => {
+    const res = await fetch(`${BASE_URL}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(body.error || body.detail || body.message || "Could not restore session.");
+    }
+    return {
+      user: body.user as { id: string; email: string },
+      summary: body.profile as UserSummary,
+    };
+  },
+
   profile: async (token: string) => {
-    const endpoints = [`${BASE_URL}/u/profile`];
+    const endpoint = `${BASE_URL}/u/profile`;
+
     let lastError: unknown;
 
-    for (const endpoint of endpoints) {
       try {
         const res = await fetch(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
@@ -46,7 +56,7 @@ export const userApi = {
               body.message ||
               "Could not load profile.",
           );
-          continue;
+
         }
 
         const profile = body.data as Profile;
@@ -74,7 +84,7 @@ export const userApi = {
       } catch (error) {
         lastError = error;
       }
-    }
+
 
     throw lastError ?? new Error("Could not load profile.");
   },
@@ -136,6 +146,7 @@ export const authApi = {
       refresh_token?: string;
       expires_at?: number;
       user: { id: string; email: string };
+      profile_summary: UserSummary;
     }>,
 
   resendConfirmation: (email: string) =>
@@ -145,7 +156,6 @@ export const authApi = {
       body: JSON.stringify({ email: email.trim() }),
     }).then(bodyOrError) as Promise<{ message: string }>,
 
-  me: (token: string) => userApi.profile(token),
 };
 
 export const documentApi = {

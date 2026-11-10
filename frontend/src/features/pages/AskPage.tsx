@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as I from "lucide-react";
 import { streamChat } from "../../api/client";
-import type { ChatMessage, DocumentInfo, Profile } from "../../types";
+import type { ChatMessage, Profile } from "../../types";
 import { MarkdownView } from "../../components/ui/MarkdownView";
 import { SourcesSidebar } from "./SourcesSidebar";
 
@@ -16,10 +16,8 @@ const uid = () =>
   crypto.randomUUID?.() || Math.random().toString(36).slice(2);
 
 export function AskPage({
-  documents,
   profile,
 }: {
-  documents: DocumentInfo[];
   profile?: Profile;
 }) {
   const storageKey = useMemo(() => {
@@ -263,15 +261,6 @@ export function AskPage({
                   ))}
                 </div>
 
-                {documents.length === 0 && (
-                  <div className="api-note ask-note">
-                    <I.Info />
-                    <span>
-                      No documents are indexed yet. Documents uploaded by your faculty
-                      or CR will be searchable here.
-                    </span>
-                  </div>
-                )}
               </div>
             ) : (
               <div className="conversation-flow">

@@ -2,18 +2,21 @@
 
 Routes are mounted at `/auth`:
 
-- `POST /check` with `{ "email": "...", "role": "student" | "faculty", "action": "login" | "register" }`
-  Unified eligibility check.
-  - For `register`: checks email exists in DB and is not already registered.
-  - For `login`: checks email exists in DB and is already registered.
+- `POST /check` with `{ "email": "...", "role": "student" | "faculty", "action": "register" }`
+  Checks that an official email exists in the registry and is not already registered,
+  then returns a registration token. Login no longer calls this endpoint; `/login`
+  performs its own registry check before authenticating.
 - `POST /register` with `{ "registration_token": "...", "password": "...", "confirm_password": "..." }` or `{ "email": "...", "password": "..." }`
   Registers user via Supabase, sending a confirmation email. Accounts require email confirmation before sign-in.
 - `POST /login` with `{ "email": "...", "password": "..." }`
-  Authenticates registered and email-confirmed users.
+  Authenticates registered and email-confirmed users. Returns the token session and a
+  lightweight `profile_summary` containing only `id`, `full_name`, and `role`.
 - `POST /resend-confirmation` with `{ "email": "..." }`
   Resends Supabase confirmation email if needed.
 - `GET /me` with `Authorization: Bearer <access_token>`
-  Returns profile and current authenticated user.
+  Validates the token and returns the current user plus the lightweight profile
+  summary used to restore the application shell. Full student/faculty details remain
+  behind `GET /u/profile` and are loaded on demand.
 
 Compatibility endpoints:
 - `POST /check-student` with `{ "email": "..." }`

@@ -1,13 +1,12 @@
 import { useState } from "react";
 import * as I from "lucide-react";
-import { authApi, userApi } from "../../api/client";
+import { authApi } from "../../api/client";
 import { useTheme } from "../../context/ThemeContext";
 import type { Session } from "../../types";
 
 type AuthMode = "register" | "login" | "admin";
 type RoleKind = "student" | "faculty";
 type RegStep = "verify" | "activate" | "confirmed";
-type LoginStep = "email" | "password";
 
 export function Auth({ onSession }: { onSession: (value: Session) => void }) {
   const { theme, toggleTheme } = useTheme();
@@ -20,7 +19,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
 
   // Sub-steps
   const [regStep, setRegStep] = useState<RegStep>("verify");
-  const [loginStep, setLoginStep] = useState<LoginStep>("email");
 
   // Form fields
   const [email, setEmail] = useState("");
@@ -38,9 +36,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
   // Confirmation email sent tracking
   const [confirmationEmail, setConfirmationEmail] = useState("");
 
-  // Name verified during login
-  const [loginVerifiedName, setLoginVerifiedName] = useState("");
-
   // Status & feedback
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -54,7 +49,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
     setSuccessMsg("");
     setRole(null);
     setRegStep("verify");
-    setLoginStep("email");
     setPassword("");
     setConfirmPassword("");
   };
@@ -65,7 +59,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
     setError("");
     setSuccessMsg("");
     setRegStep("verify");
-    setLoginStep("email");
   };
 
   // Back button handler
@@ -81,10 +74,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
         setRole(null);
       }
     } else if (mode === "login") {
-      if (loginStep === "password") {
-        setLoginStep("email");
-        setPassword("");
-      } else if (role !== null) {
+      if (role !== null) {
         setRole(null);
       }
     }
@@ -163,34 +153,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
   // LOGIN FLOW
   // =========================================================================
 
-  // Step 1 (Login): Verify email exists in DB and is already registered
-  const submitCheckEmailForLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!role || !email.trim()) return;
-    setBusy(true);
-    setError("");
-    setSuccessMsg("");
-
-    try {
-      const result = await authApi.check(email.trim(), role, "login");
-      if (result.status === "registered" || result.status === "already registered") {
-        setLoginVerifiedName(result.name || "");
-        setLoginStep("password");
-      } else {
-        setError("Account is not registered. Please register.");
-      }
-    } catch (err: unknown) {
-      setError(
-        typeof err === "object" && err && "message" in err
-          ? String((err as { message?: unknown }).message ?? "Account is not registered. Please register.")
-          : "Account is not registered. Please register.",
-      );
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  // Step 2 (Login): Enter password and authenticate
+  // Login: authenticate directly; the backend performs registry validation.
   const submitLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password) return;
@@ -200,8 +163,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
 
     try {
       const login = await authApi.login(email.trim(), password, role || undefined);
-      const me = await userApi.profile(login.access_token);
-      onSession({ ...login, ...me });
+      onSession({ ...login, summary: login.profile_summary });
     } catch (err: unknown) {
       const msg =
         typeof err === "object" && err && "message" in err
@@ -625,7 +587,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                         setRole(role);
                         setEmail(confirmationEmail);
                         setPassword("");
-                        setLoginStep("password");
                         setError("");
                         setSuccessMsg("Please confirm your email first, then enter your password to sign in.");
                       }}
@@ -698,8 +659,8 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                 </div>
               )}
 
-              {/* Step 2: Email Entry & Verification */}
-              {role !== null && loginStep === "email" && (
+              {/* Step 2: Email and password authentication */}
+              {role !== null && (
                 <div className="auth-step-pane">
                   <button type="button" className="auth-back-btn" onClick={handleBack}>
                     <I.ArrowLeft />
@@ -710,13 +671,13 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                     <span className="boxy-eyebrow">
                       {role.toUpperCase()} WORKSPACE SIGN IN
                     </span>
-                    <h2 className="pane-title">Enter Official Email</h2>
+                    <h2 className="pane-title">Sign in to your workspace</h2>
                     <p className="pane-subtitle">
-                      Enter your verified university email to proceed to sign in.
+                      Enter your official university email and password.
                     </p>
                   </div>
 
-                  <form onSubmit={submitCheckEmailForLogin} className="boxy-form">
+                  <form onSubmit={submitLogin} className="boxy-form">
                     <label className="boxy-field">
                       <span className="field-label">OFFICIAL UNIVERSITY EMAIL</span>
                       <div className="input-wrap">
@@ -736,62 +697,6 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                       </div>
                     </label>
 
-                    <button
-                      type="submit"
-                      className="auth-action-btn primary-action full"
-                      disabled={busy}
-                    >
-                      {busy ? (
-                        <>
-                          <I.Loader2 className="spinning-loader" />
-                          <span>VERIFYING EMAIL…</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>CONTINUE</span>
-                          <I.ArrowRight />
-                        </>
-                      )}
-                    </button>
-                  </form>
-
-                  <div className="auth-footer-prompt">
-                    <span>Need to register your email first?</span>{" "}
-                    <button
-                      type="button"
-                      className="boxy-inline-link"
-                      onClick={() => {
-                        setMode("register");
-                        setRole(role);
-                      }}
-                    >
-                      Begin Registration
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 3: Password Entry & Authentication */}
-              {role !== null && loginStep === "password" && (
-                <div className="auth-step-pane">
-                  <button type="button" className="auth-back-btn" onClick={handleBack}>
-                    <I.ArrowLeft />
-                    <span>CHANGE EMAIL</span>
-                  </button>
-
-                  <div className="pane-header">
-                    <span className="boxy-eyebrow">
-                      {role.toUpperCase()} SIGN IN
-                    </span>
-                    <h2 className="pane-title">
-                      Welcome Back{loginVerifiedName ? `, ${loginVerifiedName.split(" ")[0]}` : ""}
-                    </h2>
-                    <p className="pane-subtitle">
-                      Enter password for <strong>{email}</strong>.
-                    </p>
-                  </div>
-
-                  <form onSubmit={submitLogin} className="boxy-form">
                     <label className="boxy-field">
                       <span className="field-label">PASSWORD</span>
                       <div className="input-wrap has-action">
@@ -827,7 +732,7 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
                         </>
                       ) : (
                         <>
-                          <span>SIGN IN AS {role.toUpperCase()}</span>
+                        <span>SIGN IN AS {role.toUpperCase()}</span>
                           <I.ArrowRight />
                         </>
                       )}

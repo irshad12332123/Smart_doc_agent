@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as I from "lucide-react";
 import type { DocumentInfo } from "../../types";
+import { documentApi } from "../../api/client";
 import { DocumentCard, Empty } from "../../components/ui/common";
 
 const filterOptions = [
@@ -10,16 +11,32 @@ const filterOptions = [
   { id: "PPTX", label: "Presentations" },
 ];
 
-export function LibraryPage({
-  documents,
-  docError,
-}: {
-  documents: DocumentInfo[];
-  docError: string;
-}) {
+export function LibraryPage() {
+  const [documents, setDocuments] = useState<DocumentInfo[]>([]);
+  const [docError, setDocError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    documentApi
+      .list()
+      .then((items) => {
+        if (active) setDocuments(items);
+      })
+      .catch(() => {
+        if (active) setDocError("Documents could not be loaded.");
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-    console.log("Documents",documents);
   const rows = useMemo(
     () =>
       documents.filter((d) => {
@@ -86,7 +103,9 @@ export function LibraryPage({
         </div>
       </div>
 
-      {docError ? (
+      {loading ? (
+        <Empty message="Loading documents…" />
+      ) : docError ? (
         <Empty message={docError} />
       ) : rows.length > 0 ? (
         <div className="library-grid">

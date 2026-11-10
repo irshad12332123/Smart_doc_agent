@@ -1,5 +1,11 @@
 export type Role = "student" | "faculty" | "admin";
 
+export interface UserSummary {
+  id: string;
+  full_name: string;
+  role: Role;
+}
+
 export interface BaseProfile {
   id: string;
   full_name: string;
@@ -77,7 +83,8 @@ export interface Session {
   refresh_token?: string;
   expires_at?: number;
   user: { id: string; email: string };
-  profile: Profile;
+  summary: UserSummary;
+  profile?: Profile;
 }
 
 export interface DocumentInfo {

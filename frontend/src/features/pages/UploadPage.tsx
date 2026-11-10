@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as I from "lucide-react";
 import { documentApi } from "../../api/client";
-import type { DocumentInfo, Profile, StudentSubject } from "../../types";
+import type { Profile, StudentSubject } from "../../types";
 
 const errorMessage = (value: unknown, fallback: string) =>
   typeof value === "object" && value !== null && "message" in value
@@ -10,12 +10,8 @@ const errorMessage = (value: unknown, fallback: string) =>
 
 export function UploadPage({
   profile,
-  documents,
-  setDocuments,
 }: {
   profile: Profile;
-  documents: DocumentInfo[];
-  setDocuments: (docs: DocumentInfo[]) => void;
 }) {
   const [files, setFiles] = useState<File[]>([]);
   const [subjectId, setSubjectId] = useState("");
@@ -86,9 +82,6 @@ export function UploadPage({
     setMessage("Uploading document to queue…");
     try {
       await documentApi.upload(files, payload);
-      const studentBatchId =
-        profile.role === "student" ? profile.student_data?.batch_id : undefined;
-      setDocuments(await documentApi.list(studentBatchId));
       setFiles([]);
       setMessage("Accepted. Document queued for processing ✓");
     } catch (e: unknown) {
