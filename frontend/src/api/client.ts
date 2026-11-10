@@ -1,10 +1,6 @@
 import type { DocumentInfo, Profile, SourceChunk } from "../types";
 
-const BASE_URL = (
-  import.meta.env.BACKEND_API_URL ||
-  import.meta.env.BACKEND_API ||
-  "http://localhost:8000"
-).replace(/\/+$/, "");
+const BASE_URL = (import.meta.env.BACKEND_API_URL)
 
 const jsonHeaders = { "Content-Type": "application/json" };
 
@@ -28,10 +24,10 @@ async function bodyOrError(res: Response) {
 
 export const userApi = {
   profile: async (token: string) => {
-    const endpoints = [`${BASE_URL}/u/profile`];
+    const endpoint = `${BASE_URL}/u/profile`;
+
     let lastError: unknown;
 
-    for (const endpoint of endpoints) {
       try {
         const res = await fetch(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
@@ -46,7 +42,7 @@ export const userApi = {
               body.message ||
               "Could not load profile.",
           );
-          continue;
+
         }
 
         const profile = body.data as Profile;
@@ -74,7 +70,7 @@ export const userApi = {
       } catch (error) {
         lastError = error;
       }
-    }
+
 
     throw lastError ?? new Error("Could not load profile.");
   },
