@@ -5,13 +5,6 @@ import type { ChatMessage, Profile } from "../../types";
 import { MarkdownView } from "../../components/ui/MarkdownView";
 import { SourcesSidebar } from "./SourcesSidebar";
 
-const suggestions = [
-  "Find my pending assignments",
-  "Show Machine Learning notes",
-  "Find Software Engineering PDFs",
-  "Explain the IoT lab experiments",
-];
-
 const uid = () =>
   crypto.randomUUID?.() || Math.random().toString(36).slice(2);
 
@@ -238,29 +231,7 @@ export function AskPage({
                 <div className="ask-empty-icon">
                   <I.Sparkles />
                 </div>
-                <h2>What would you like to know?</h2>
-                <p>
-                  I can summarize documents, locate syllabus points, clarify complex
-                  concepts, or find specific deadlines with cited sources.
-                </p>
-
-                <div className="ask-suggestions-grid">
-                  {suggestions.map((q) => (
-                    <button
-                      key={q}
-                      className="ask-suggestion-card"
-                      onClick={() => {
-                        setInput(q);
-                        inputRef.current?.focus();
-                      }}
-                    >
-                      <I.HelpCircle className="card-q-icon" />
-                      <span>{q}</span>
-                      <I.ArrowUpRight className="card-arrow-icon" />
-                    </button>
-                  ))}
-                </div>
-
+                <h2>How can I serve you today? ✨</h2>
               </div>
             ) : (
               <div className="conversation-flow">
