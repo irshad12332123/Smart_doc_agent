@@ -89,7 +89,7 @@ function App() {
     }
   }, [profileRequested, session]);
 
-  const profileRequired = ["ask", "subjects", "profile", "upload"].includes(page);
+  const profileRequired = ["subjects", "profile", "upload"].includes(page);
 
   useEffect(() => {
     if (session && profileRequired && !profile && !profileLoading) {
