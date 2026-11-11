@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from supabase import Client
 from typing import cast, Any
 
+from .respository import _get_single_row_from_supabase_where
 from .constants import StudentDataModel, FacultyDataModel, AdminDataModel
 
 @abstractmethod
@@ -15,56 +16,19 @@ class User(ABC):
     def get_user_details(self) -> StudentDataModel | FacultyDataModel | AdminDataModel:
         raise NotImplementedError("Subclasses must implement get_user_details")
 
-def _get_single_row_from_supabase_where(
-    select: list[str],
-    where: list[Any],
-    table: str,
-    client: Client
-):
-    try:
-        if not isinstance(select, list) or not isinstance(where, list):
-            raise ValueError(
-                "This helper expects lists for select and where."
-            )
-
-        if len(where) != 2:
-            raise ValueError(
-                "where must contain exactly [column, value]."
-            )
-
-        record = (
-            client
-            .table(table)
-            .select(*select)
-            .eq(*where)
-            .single()
-            .execute()
-        )
-
-        if record.data is None:
-            raise ValueError("Could not get record from Supabase")
-
-        return cast(dict[str, Any], record.data)
-
-    except Exception as e:
-        raise ValueError(
-            f"Failed to fetch record from Supabase: {str(e)}"
-        ) from e
 
 class Student(User):
 
     def __init__(self, user_id: str, client) -> None:
         super().__init__(user_id, client)
 
+
     def get_user_details(self) -> StudentDataModel:
         self.profile_data = {}
         try:
 
-            try:
-                student_record_data = _get_single_row_from_supabase_where(["id", "student_id", "official_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
-                student_record_data["registered_email"] = student_record_data.get("official_email", "")
-            except Exception:
-                student_record_data = _get_single_row_from_supabase_where(["id", "student_id", "registered_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
+            student_record_data = _get_single_row_from_supabase_where(["id", "student_id", "official_email", "name"], ["profile_id", str(self._user_id)], "students", self._client)
+            student_record_data["registered_email"] = student_record_data.get("official_email", "")
 
             batch_membership_record_data = _get_single_row_from_supabase_where(["id", "batch_id",], ["student_id", student_record_data["id"]], "batch_memberships", self._client)
 
@@ -107,7 +71,17 @@ class Student(User):
             raise ValueError(f"Couldn't get user details: {e}")
 
 
-def get_faculty_courses(supabase, faculty_id) -> FacultyDataModel:
+def get_subjects(supabase) -> list[dict[str, Any]]:
+    try:
+        response = supabase.rpc("get_my_current_subjects").execute()
+
+        return cast(list[dict[str, Any]], response.data)
+
+    except Exception as e:
+        raise ValueError(f"Couldn't get subjects: {e}")
+
+
+def get_faculty_courses(supabase: callable, faculty_id: str) -> FacultyDataModel:
     response = (
         supabase
         .table("faculty_assignments")

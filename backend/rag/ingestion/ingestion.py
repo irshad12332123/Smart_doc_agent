@@ -41,6 +41,7 @@ from ingestion.ingest_repository import (
 )
 from async_engine.tasks import process_ingestion_job, sync_sparse_index_task
 from rag.modules.auth.constants import AuthorizedRolesToAcessUpload
+from rag.modules.user.services import get_subjects
 
 logger = logging.getLogger(__name__)
 
@@ -485,8 +486,12 @@ def chat():
         return jsonify({"detail": "A non-empty message is required."}), 400
     if not isinstance(history, list):
         return jsonify({"detail": "History must be a list."}), 400
-
-    raw_subject_list = payload.get("subject_list") or payload.get("subjects") or []
+    raw_subject_list = []
+    try:
+        client = get_supabase_client()
+        raw_subject_list = get_subjects(client)  # Retrieve subjects for the current user
+    except Exception as e:
+        logger.warning(f"Could not retrieve subjects for chat: {e}")
 
     # Optional retrieval configuration from request body (with defaults)
     match_count = payload.get("match_count")
