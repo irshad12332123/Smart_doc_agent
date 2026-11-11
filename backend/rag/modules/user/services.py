@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from supabase import Client
 from typing import cast, Any
+
 from .respository import _get_single_row_from_supabase_where
 from .constants import StudentDataModel, FacultyDataModel, AdminDataModel
 
@@ -20,6 +21,7 @@ class Student(User):
 
     def __init__(self, user_id: str, client) -> None:
         super().__init__(user_id, client)
+
 
     def get_user_details(self) -> StudentDataModel:
         self.profile_data = {}
@@ -69,7 +71,17 @@ class Student(User):
             raise ValueError(f"Couldn't get user details: {e}")
 
 
-def get_faculty_courses(supabase, faculty_id) -> FacultyDataModel:
+def get_subjects(supabase) -> list[dict[str, Any]]:
+    try:
+        response = supabase.rpc("get_my_current_subjects").execute()
+
+        return cast(list[dict[str, Any]], response.data)
+
+    except Exception as e:
+        raise ValueError(f"Couldn't get subjects: {e}")
+
+
+def get_faculty_courses(supabase: callable, faculty_id: str) -> FacultyDataModel:
     response = (
         supabase
         .table("faculty_assignments")
