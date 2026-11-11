@@ -1,173 +1,278 @@
 # Smart Doc Agent
 
+Smart Doc Agent is an academic document intelligence platform for uploading, organizing, and querying course material. It combines scoped access control with asynchronous document ingestion, structured metadata extraction, hybrid retrieval, and evidence-aware answers.
 
-#INGESTION PIPELINE
-![Uploading smart_doc_ingesetion.png…]()
+The repository contains a React/TypeScript web application and a Python/Flask RAG backend. Documents are stored in Amazon S3, metadata and vector chunks are stored in Supabase/Postgres, and sparse retrieval is maintained locally with BM25S.
 
+## Features
 
-An intelligent document ingestion, metadata extraction, and contextual RAG (Retrieval-Augmented Generation) assistant designed for college campuses and academic cohorts.
+- Role-aware authentication for students, faculty, and administrators.
+- Academic scoping by course, semester, batch, subject, and unit.
+- Upload and deduplication of PDF, DOCX, TXT, and Markdown files.
+- Background ingestion through Celery and Redis.
+- Structured metadata extraction with Groq, including document type, summary, deadline, and unit.
+- Gemini-powered embeddings and answer generation.
+- Hybrid retrieval combining dense vector search and BM25 sparse search.
+- Reciprocal Rank Fusion with optional cross-encoder reranking.
+- Deterministic document lookup for metadata and filter-based queries.
+- Streaming chat responses with source and document references.
+- Supabase migrations for authentication, academic scope, document lookup, and ingestion jobs.
 
-Smart Doc Agent automates multi-format academic document ingestion, uses Small Language Models (SLMs) hosted on Groq for ultra-fast structured metadata extraction, indexes vectors in Supabase (pgvector), and delivers scoped access control across batches, courses, and subjects.
+## Architecture
 
----
-
-## 🌟 Key Features
-
-- **Blazing Fast Ingestion & SLM Metadata Extraction**: Offloads text classification and context summarization to Groq-hosted SLMs (`llama-3.3-70b-versatile` / `openai/gpt-oss-20b`), generating structured JSON schemas (type, title, summary, deadlines).
-- **Multi-Format Processing**: Full pipeline support for PDF, DOCX, PPTX, and image formats.
-- **Role-Based Document Scope & Security**:
-  - **Students**: Seamless access tied directly to their active `batch_id` and registered subjects.
-  - **Faculty**: Multi-batch course material management and cohort-specific document distribution.
-- **Robust Storage & Vector Store**: Hybrid architecture pairing AWS S3 bucket storage for raw documents with Supabase Postgres + `pgvector` for metadata and semantic chunk search.
-- **Modern Full-Stack Experience**: Clean, responsive frontend built with React, TypeScript, and Vite, backed by a modular Python / Flask service managed via `uv`.
-
----
-
-## 🏗️ Architecture & Tech Stack
-
+```text
+                           +----------------------+
+                           | React + TypeScript UI |
+                           |        Vite           |
+                           +----------+-----------+
+                                      |
+                                      | HTTP / SSE
+                                      v
+                           +----------+-----------+
+                           | Flask API + Query     |
+                           | orchestration graph   |
+                           +-----+------------+----+
+                                 |            |
+                    upload/jobs  |            | query/chat
+                                 v            v
+                         +-------+----+  +----+----------------+
+                         | Celery +   |  | Hybrid retrieval   |
+                         | Redis      |  | dense + BM25 + RRF |
+                         +-------+----+  +----+----------------+
+                                 |            |
+                                 v            v
+             +-------------------+--+   +----+----------------+
+             | S3 raw files         |   | Supabase/Postgres   |
+             |                      |   | metadata + vectors |
+             +----------------------+   +--------------------+
 ```
-Smart_doc_agent/
-├── frontend/                # React (TypeScript) + Vite + Lucide Icons
-│   ├── src/
-│   │   ├── api/             # API client services
-│   │   ├── features/        # Upload, Dashboard, Subject, & Profile Views
-│   │   └── types/           # Strict TypeScript contracts & schemas
-├── backend/                 # Python Flask + RAG Pipeline (managed via uv)
-│   ├── data/                # BM25 sparse index and document data
-│   │   └── bm25_index/
-│   ├── rag/                 # RAG pipeline and Flask application
-│   │   ├── ingestion/       # File ingestion, chunking, and parser logic
-│   │   ├── language_models/ # Groq & Gemini client integration
-│   │   ├── lib/             # AWS S3 & Supabase clients
-│   │   ├── modules/         # User, auth, and routing modules
-│   │   └── app.py           # Flask application entry point
-│   ├── supabase/            # PostgreSQL migrations
-│   ├── tests/               # Test suites
-│   ├── pyproject.toml       # Python configuration
-│   └── requirements.txt
+
+### Ingestion flow
+
+1. An authorized user uploads one or more files with academic scope metadata.
+2. The API hashes the file, rejects duplicates, uploads the original to S3, and creates an ingestion job.
+3. A Celery worker loads and chunks the document.
+4. Groq extracts structured document metadata and Gemini generates embeddings.
+5. Document metadata and chunks are written to Supabase. The local BM25S index is regenerated.
+6. The query graph can combine deterministic filters, dense retrieval, sparse retrieval, reranking, evidence evaluation, and answer generation.
+
+## Technology stack
+
+| Area | Technology |
+| --- | --- |
+| Frontend | React, TypeScript, Vite, React Markdown, Lucide React |
+| API | Python 3.12+, Flask |
+| RAG orchestration | LangChain/LangGraph components, hybrid retrieval, RRF |
+| Language models | Groq for metadata extraction; Gemini for embeddings and chat |
+| Database and authentication | Supabase/PostgreSQL with `pgvector` and Row Level Security |
+| Object storage | Amazon S3 with presigned URLs |
+| Background processing | Celery with Redis |
+| Sparse index | BM25S with PyStemmer |
+| Python environment | `uv` |
+
+## Repository layout
+
+```text
+.
+├── backend/
+│   ├── rag/                  # Flask application and RAG services
+│   │   ├── app.py            # Application entry point
+│   │   ├── ingestion/        # Upload and ingestion job routes
+│   │   ├── services/         # Ingestion, retrieval, fusion, and reranking
+│   │   ├── query_engine/     # Query routing and rewriting
+│   │   ├── modules/          # Authentication and user modules
+│   │   ├── loader/           # PDF, DOCX, text, and Markdown loading
+│   │   └── async_engine/     # Celery application and tasks
+│   ├── data/bm25_index/      # Persisted sparse index artifacts
+│   ├── supabase/migrations/  # Database migrations, in timestamp order
+│   ├── tests/                # Backend unit and integration tests
+│   ├── pyproject.toml        # Python project configuration
+│   └── .env.example          # Backend environment template
+├── frontend/
+│   ├── src/api/              # Backend API client and SSE handling
+│   ├── src/features/         # Auth, upload, library, subjects, chat, profile
+│   ├── src/components/       # Shared layout and UI components
+│   └── .env.example          # Frontend environment template
+└── README.md
 ```
 
-### Core Technologies
+## Prerequisites
 
-- **Frontend**: React 18, TypeScript, Vite, TailwindCSS / Custom CSS, Lucide React
-- **Backend / RAG Engine**: Python 3.12, Flask, Pydantic, `uv` package manager
-- **Language Models & Inference**: Groq Cloud SDK (LPU-accelerated structured inference)
-- **Database & Auth**: Supabase (PostgreSQL, Row-Level Security, pgvector)
-- **Cloud Storage**: AWS S3 (Presigned URLs & raw file persistence)
-- **Upcoming / Queue Infrastructure**: Celery + Redis for asynchronous background ingestion workers
+- Python 3.12 or newer
+- [`uv`](https://docs.astral.sh/uv/)
+- Node.js 18 or newer and npm
+- A Supabase project with the required extensions enabled
+- An Amazon S3 bucket and credentials with access to that bucket
+- A Groq API key
+- A Gemini API key
+- Redis, when using asynchronous ingestion
 
----
+## Local setup
 
-## 🚀 Getting Started
+### 1. Configure Supabase
 
-### Prerequisites
+Apply the SQL migrations in `backend/supabase/migrations/` in timestamp order. You can run them through the Supabase CLI or the Supabase SQL editor. The migrations create the authentication registry, academic scope, document lookup functions, and asynchronous ingestion job tables.
 
-- **Python 3.12+** (with [`uv`](https://docs.astral.sh/uv/) installed)
-- **Node.js 18+** & `npm` / `pnpm`
-- **Supabase Account** (PostgreSQL with `pgvector` enabled)
-- **Groq Cloud API Key**
-- **AWS S3 Bucket** & IAM credentials
+The authentication flow expects student and faculty registry records to exist before users can register. See [`backend/rag/modules/auth/README.md`](backend/rag/modules/auth/README.md) for the registration workflow.
 
----
+### 2. Configure and run the backend
 
-### 1. Backend Setup (`backend`)
+```bash
+cd backend
+uv sync
+cp .env.example .env
+```
 
-1. Navigate to the `backend` directory:
+Set the values in `backend/.env` before starting the API. At minimum, configure the following:
 
-   ```bash
-   cd backend
-   ```
+```dotenv
+GROQ_API_KEY=your-groq-api-key
+GEMINI_API_KEY=your-gemini-api-key
 
-2. Create and configure your environment variables:
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-supabase-anon-or-publishable-key
+SUPABASE_SERVICE_ROLE_KEY=your-server-only-service-role-key
 
-   ```bash
-   cp .env.example .env   # Or create .env manually
-   ```
+AWS_ACCESS_KEY=your-access-key
+AWS_SECRET_KEY=your-secret-key
+AWS_REGION=us-east-1
+S3_BUCKET_NAME=your-bucket-name
 
-   Add the following configuration:
+AUTH_REGISTRATION_TOKEN_SECRET=generate-a-long-random-secret
+PORT=8000
+```
 
-   ```env
-   # Groq API
-   GROQ_API_KEY="gsk_your_groq_api_key"
-   GROQ_MODEL="llama-3.3-70b-versatile"
+The backend client reads `SUPABASE_KEY` for ordinary requests. If you use the supplied `.env.example`, copy the value from `SUPABASE_ANON_KEY` into `SUPABASE_KEY` or rename that variable in your local `.env`.
 
-   # Supabase
-   SUPABASE_URL="https://your-project.supabase.co"
-   SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
-   SUPABASE_ANON_KEY="your-anon-key"
+Start the Flask API:
 
-   # AWS S3
-   AWS_ACCESS_KEY_ID="your_access_key"
-   AWS_SECRET_ACCESS_KEY="your_secret_key"
-   AWS_REGION="your_aws_region"
-   AWS_S3_BUCKET_NAME="your_bucket_name"
+```bash
+uv run python rag/app.py
+```
 
-   # Flask
-   FLASK_ENV="development"
-   PORT=5000
-   ```
+The API is available at `http://localhost:8000`. Verify the process is running with:
 
-3. Install dependencies and run the server using `uv`:
-   ```bash
-   uv run python rag/app.py
-   ```
+```bash
+curl http://localhost:8000/api/health
+```
 
-The backend server will run on `http://127.0.0.1:5000`.
+### 3. Start Redis and the Celery worker
 
----
+Redis must be reachable through `REDIS_URL`. The default used by the worker is `redis://localhost:6379/0` when no value is configured.
 
-### 2. Frontend Setup (`frontend`)
+Start Redis using your local installation or managed Redis provider, then run the worker from the `backend` directory:
 
-1. Navigate to the `frontend` directory:
+```bash
+cd backend
+PYTHONPATH=rag uv run celery -A async_engine.celery_app:celery worker --loglevel=info -Q ingestion
+```
 
-   ```bash
-   cd frontend
-   ```
+Without a running worker, upload requests can be accepted but remain queued or report an enqueue failure.
 
-2. Install dependencies:
+### 4. Configure and run the frontend
 
-   ```bash
-   npm install
-   ```
+In a second terminal:
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+```bash
+cd frontend
+npm install
+cp .env.example .env
+npm run dev
+```
 
-The web interface will launch on `http://localhost:5173`.
+The frontend environment should point to the backend:
 
----
+```dotenv
+BACKEND_API_URL=http://localhost:8000
+```
 
-## 📄 Ingestion & Metadata Pipeline
+The web application is available at `http://localhost:5173`.
 
-1. **File Upload**: Faculty or students upload academic material via the drag-and-drop web UI with targeted `batch_id` association.
-2. **Binary Storage**: Raw files are preserved in AWS S3 with deterministic object identifiers.
-3. **Groq SLM Extraction**: Document content is parsed, and a sample slice is dispatched to Groq's high-speed LPU inference using strict JSON schema enforcement:
-   ```json
-   {
-     "description": "50-100 word synthesized overview",
-     "document_type": "notice | assignment | syllabus | notes | time_table | others",
-     "deadline": "YYYY-MM-DD (or null)"
-   }
-   ```
-4. **Relational & Vector Indexing**: Structured fields and UUID mappings are committed to Supabase tables for scoped retrieval and query routing.
+## Configuration reference
 
----
+The most commonly used backend settings are:
 
-## 🗺️ Roadmap
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `PORT` | Flask port | `8000` |
+| `GROQ_MODEL` | Groq metadata extraction model | `openai/gpt-oss-20b` |
+| `GEMINI_MODEL_NAME` | Gemini chat model | `gemini-3.5-flash-lite` |
+| `EMBEDDING_MODEL_NAME` | Embedding model | `google-embedding-2` |
+| `EMBEDDING_DIMENSIONS` | Vector dimensions | `768` |
+| `MAX_UPLOAD_BYTES` | Maximum upload size | `25 MB` |
+| `S3_SIGNED_URL_TTL_SECONDS` | Presigned URL lifetime | `300` |
+| `REDIS_URL` | Celery broker/result backend | local Redis URL |
+| `BM25_INDEX_DIR` | Sparse index location | `backend/data/bm25_index` |
+| `AUTH_ALLOWED_ORIGINS` | Comma-separated CORS allowlist | local origins |
 
-- [x] S3 document upload and storage integration
-- [x] Groq SLM JSON structured metadata extraction
-- [x] Supabase UUID validation and batch mapping
-- [ ] End-to-end vector chunk retrieval testing & evaluation
-- [ ] Background worker integration (Celery + Redis Pub/Sub)
-- [ ] Interactive query agent with streaming conversational responses
+Do not expose `SUPABASE_SERVICE_ROLE_KEY`, AWS secret credentials, or `AUTH_REGISTRATION_TOKEN_SECRET` to the browser.
 
----
+## API overview
 
-## 🔒 Security Notice
+The Flask API is organized into authentication, user, document, ingestion, retrieval, and chat endpoints.
 
-Never commit `.env` files or secret keys to version control. Ensure all sensitive tokens (Groq API, Supabase service roles, AWS credentials) are stored solely in local environment files or your production secret management vault.
-README.md
-Displaying README.md.
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/health` | Report service, model, and sparse-index status |
+| `POST` | `/auth/check` | Check registration eligibility |
+| `POST` | `/auth/register` | Register an eligible user |
+| `POST` | `/auth/login` | Authenticate a user |
+| `GET` | `/auth/me` | Return the current authenticated user |
+| `GET` | `/u/profile` | Return the current academic profile |
+| `POST` | `/api/ingest` | Upload files and queue ingestion jobs |
+| `GET` | `/api/jobs/<job_id>` | Inspect an ingestion job |
+| `GET` | `/api/documents` | List accessible documents |
+| `GET` | `/api/documents/<id>/file` | Generate a presigned file URL |
+| `POST` | `/api/query` | Execute a non-streaming RAG query |
+| `POST` | `/api/chat` | Stream an answer using Server-Sent Events |
+| `POST` | `/api/retrieve/sparse` | Query the BM25 retriever |
+| `POST` | `/api/retrieve/hybrid` | Query dense+sparse retrieval with optional reranking |
+| `GET/POST` | `/api/evaluation/run` | Run the retrieval evaluation benchmark |
+
+Authenticated endpoints expect:
+
+```http
+Authorization: Bearer <supabase-access-token>
+```
+
+The `/api/chat` endpoint emits SSE events such as `documents`, `sources`, `token`, `done`, and `error`.
+
+## Testing and quality checks
+
+Run the backend test suite with:
+
+```bash
+cd backend
+uv run python -m unittest discover -s tests
+```
+
+Build and type-check the frontend with:
+
+```bash
+cd frontend
+npm run lint
+npm run build
+```
+
+## Security considerations
+
+- Keep all `.env` files and credentials out of version control.
+- Use the Supabase service-role key only on the backend for privileged operations.
+- Use presigned S3 URLs instead of exposing bucket credentials or public objects.
+- Keep `AUTH_REGISTRATION_TOKEN_SECRET` private and rotate it if compromised.
+- Review and restrict `AUTH_ALLOWED_ORIGINS` for deployed environments.
+- Apply Supabase Row Level Security policies from the migrations before exposing the application.
+
+## Contributing
+
+1. Create a focused branch from the current default branch.
+2. Make the smallest change that addresses the issue.
+3. Add or update backend tests for behavior changes.
+4. Run the backend tests and frontend lint/build checks locally.
+5. Open a pull request with a concise summary, validation steps, and any migration or environment changes.
+
+When changing database behavior, add a new timestamped migration rather than editing an already-applied migration.
+
+## License
+
+No license file is currently included in this repository. Add a license before distributing the project outside its intended development or evaluation environment.
