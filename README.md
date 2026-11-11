@@ -1,5 +1,17 @@
 # Smart Doc Agent
 
+[![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=20232A)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![Flask](https://img.shields.io/badge/Flask-3-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL%20%7C%20pgvector-3FCF8E?logo=supabase&logoColor=white)](https://supabase.com/)
+[![Amazon S3](https://img.shields.io/badge/Amazon%20S3-Object%20Storage-569A31?logo=amazons3&logoColor=white)](https://aws.amazon.com/s3/)
+[![Celery](https://img.shields.io/badge/Celery-Async%20Jobs-37814A?logo=celery&logoColor=white)](https://docs.celeryq.dev/)
+[![Redis](https://img.shields.io/badge/Redis-Job%20Broker-DC382D?logo=redis&logoColor=white)](https://redis.io/)
+[![RAG](https://img.shields.io/badge/RAG-Hybrid%20Retrieval-6E56CF)](#architecture)
+[![BM25](https://img.shields.io/badge/Search-BM25%20%2B%20Dense%20Vectors-0F766E)](#features)
+
 Smart Doc Agent is an academic document intelligence platform for uploading, organizing, and querying course material. It combines scoped access control with asynchronous document ingestion, structured metadata extraction, hybrid retrieval, and evidence-aware answers.
 
 The repository contains a React/TypeScript web application and a Python/Flask RAG backend. Documents are stored in Amazon S3, metadata and vector chunks are stored in Supabase/Postgres, and sparse retrieval is maintained locally with BM25S.
