@@ -9151,3 +9151,120 @@ select {
         font-size: 11px;
     }
 }
+
+/* Landing creator links use a real mobile menu instead of overflowing the
+   header row on narrow screens. */
+.landing-social-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    color: var(--landing-muted);
+    font-size: 12px;
+}
+
+.landing-social-nav p {
+    margin: 0 4px 0 0;
+}
+
+.landing-social-nav a {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border-radius: 7px;
+    color: var(--landing-muted);
+}
+
+.landing-social-nav a:hover {
+    background: var(--landing-high);
+    color: var(--landing-primary);
+}
+
+.landing-social-nav svg {
+    width: 16px;
+    height: 16px;
+}
+
+.landing-mobile-menu-button {
+    display: none;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border: 1px solid var(--landing-line);
+    border-radius: 8px;
+    background: var(--landing-high);
+    color: var(--landing-text);
+    cursor: pointer;
+}
+
+.landing-mobile-menu-button svg {
+    width: 17px;
+    height: 17px;
+}
+
+.landing-mobile-menu {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    .landing-header-inner {
+        gap: 8px;
+    }
+
+    .landing-social-nav {
+        display: none;
+    }
+
+    .landing-mobile-menu-button {
+        display: grid;
+        margin-left: auto;
+    }
+
+    .landing-header-actions {
+        margin-left: 0;
+    }
+
+    .landing-mobile-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 16px;
+        left: 16px;
+        flex-direction: column;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid var(--landing-line);
+        border-radius: 10px;
+        background: rgba(24, 28, 35, .98);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, .45);
+    }
+
+    .landing-header.is-menu-open .landing-mobile-menu {
+        display: flex;
+    }
+
+    .landing-mobile-menu p {
+        color: var(--landing-muted);
+        font-size: 12px;
+    }
+
+    .landing-mobile-menu p span {
+        color: #ff8ca8;
+    }
+
+    .landing-mobile-menu > div {
+        display: flex;
+        gap: 8px;
+    }
+
+    .landing-mobile-menu a {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border: 1px solid var(--landing-line-soft);
+        border-radius: 8px;
+        color: var(--landing-primary);
+    }
+}
