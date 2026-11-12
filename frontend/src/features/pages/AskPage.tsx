@@ -10,20 +10,62 @@ const uid = () =>
 
 export function AskPage({
   profile,
+  userName: userNameProp,
+  userId: userIdProp,
 }: {
   profile?: Profile;
+  userName?: string;
+  userId?: string;
 }) {
+  const resolvedUserName = useMemo(() => {
+    if (userNameProp?.trim()) return userNameProp.trim();
+    if (profile?.full_name?.trim()) return profile.full_name.trim();
+    try {
+      const raw = localStorage.getItem("scholarhub-session");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.summary?.full_name?.trim()) {
+          return parsed.summary.full_name.trim();
+        }
+        if (parsed.user?.full_name?.trim()) {
+          return parsed.user.full_name.trim();
+        }
+        if (parsed.user?.name?.trim()) {
+          return parsed.user.name.trim();
+        }
+        if (parsed.user?.email) {
+          const part = parsed.user.email.split("@")[0];
+          return part.charAt(0).toUpperCase() + part.slice(1);
+        }
+      }
+    } catch {}
+    return "User";
+  }, [userNameProp, profile?.full_name]);
+
+  const resolvedUserId = useMemo(() => {
+    if (userIdProp) return userIdProp;
+    if (profile?.id) return profile.id;
+    try {
+      const raw = localStorage.getItem("scholarhub-session");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return parsed.summary?.id || parsed.user?.id;
+      }
+    } catch {}
+    return undefined;
+  }, [userIdProp, profile?.id]);
+
   const storageKey = useMemo(() => {
-    return profile?.id
-      ? `scholarhub_chat_history_${profile.id}`
+    return resolvedUserId
+      ? `scholarhub_chat_history_${resolvedUserId}`
       : "scholarhub_chat_history";
-  }, [profile?.id]);
+  }, [resolvedUserId]);
 
   // Restore chat history from localStorage for this session
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     try {
-      const key = profile?.id
-        ? `scholarhub_chat_history_${profile.id}`
+      const key = resolvedUserId
+        ? `scholarhub_chat_history_${resolvedUserId}`
         : "scholarhub_chat_history";
       const saved = localStorage.getItem(key);
       if (saved) {
@@ -44,7 +86,26 @@ export function AskPage({
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const heroInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const askBodyRef = useRef<HTMLDivElement>(null);
+  const mainPaneRef = useRef<HTMLDivElement>(null);
+
+  // Allow scrolling the message history even when cursor is over header, composer dock, or side padding
+  useEffect(() => {
+    const pane = mainPaneRef.current;
+    if (!pane) return;
+
+    const onWheel = (e: WheelEvent) => {
+      const askBody = askBodyRef.current;
+      if (!askBody) return;
+      if (askBody.contains(e.target as Node)) return;
+      askBody.scrollTop += e.deltaY;
+    };
+
+    pane.addEventListener("wheel", onWheel, { passive: true });
+    return () => pane.removeEventListener("wheel", onWheel);
+  }, []);
 
   // Sync messages to localStorage whenever they change
   useEffect(() => {
@@ -86,8 +147,15 @@ export function AskPage({
     );
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+    if (askBodyRef.current) {
+      askBodyRef.current.scrollTo({
+        top: askBodyRef.current.scrollHeight,
+        behavior,
+      });
+    } else {
+      messagesEndRef.current?.scrollIntoView({ behavior });
+    }
   };
 
   useEffect(() => {
@@ -96,7 +164,7 @@ export function AskPage({
       sessionStorage.removeItem("scholarhub-query");
       setInput(saved);
       setTimeout(() => {
-        inputRef.current?.focus();
+        (heroInputRef.current || inputRef.current)?.focus();
       }, 50);
     }
   }, []);
@@ -176,62 +244,156 @@ export function AskPage({
     );
   };
 
+  const renderComposerForm = (isHero: boolean) => (
+    <form
+      className={`composer-bar ${isHero ? "composer-bar-hero" : ""}`}
+      onSubmit={send}
+    >
+      <button
+        type="button"
+        className="composer-icon-btn"
+        title="Attach file (available in upload tab)"
+        aria-label="Attach file"
+      >
+        <I.Paperclip />
+      </button>
+
+      <input
+        ref={isHero ? heroInputRef : inputRef}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder={
+          isHero
+            ? "Ask a question about your syllabus, lectures, or courses…"
+            : "Ask a question or request a summary…"
+        }
+        disabled={sending}
+        aria-label="Chat input"
+        autoFocus={isHero}
+      />
+
+      <button
+        type="submit"
+        className="composer-send-btn"
+        disabled={sending || !input.trim()}
+        title="Send message"
+        aria-label="Send message"
+      >
+        {sending ? <I.Loader2 className="spinning-loader" /> : <I.Send />}
+      </button>
+    </form>
+  );
+
   return (
     <div className={`ask-layout-container ${sourcesSidebarOpen ? "with-sidebar-open" : ""}`}>
-      <div className="ask-main-pane">
+      <div className="ask-main-pane" ref={mainPaneRef}>
         <div className="ask-pane-inner">
           <div className="ask-header">
-            <div className="ask-header-title">
-              <div className="brand-mark-ai">
-                <I.Sparkles />
+            <div className="ask-header-inner">
+              <div className="ask-header-title">
+                <div className="brand-mark-ai">
+                  <I.Sparkles />
+                </div>
+                <div>
+                  <h1>Academic AI Assistant</h1>
+                  <p>
+                    Ask any question across your uploaded syllabus, lectures, and course materials.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h1>Academic AI Assistant</h1>
-                <p>
-                  Ask any question across your uploaded syllabus, lectures, and course materials.
-                </p>
+
+              <div className="ask-header-actions">
+                {totalSourcesCount > 0 && (
+                  <button
+                    type="button"
+                    className={`outline-btn toggle-sources-header-btn ${sourcesSidebarOpen ? "active" : ""}`}
+                    onClick={() => setSourcesSidebarOpen((prev) => !prev)}
+                    title={sourcesSidebarOpen ? "Hide referenced sources" : "View referenced sources"}
+                  >
+                    {sourcesSidebarOpen ? (
+                      <I.PanelRightClose />
+                    ) : (
+                      <I.PanelRightOpen />
+                    )}
+                    <span>Sources ({totalSourcesCount})</span>
+                  </button>
+                )}
+
+                {messages.length > 0 && (
+                  <button
+                    type="button"
+                    className="outline-btn clear-chat-btn"
+                    onClick={handleClearChat}
+                    disabled={sending}
+                    title="Clear conversation history"
+                  >
+                    <I.RotateCcw /> New Chat
+                  </button>
+                )}
               </div>
-            </div>
-
-            <div className="ask-header-actions">
-              {totalSourcesCount > 0 && (
-                <button
-                  type="button"
-                  className={`outline-btn toggle-sources-header-btn ${sourcesSidebarOpen ? "active" : ""}`}
-                  onClick={() => setSourcesSidebarOpen((prev) => !prev)}
-                  title={sourcesSidebarOpen ? "Hide referenced sources" : "View referenced sources"}
-                >
-                  {sourcesSidebarOpen ? (
-                    <I.PanelRightClose />
-                  ) : (
-                    <I.PanelRightOpen />
-                  )}
-                  <span>Sources ({totalSourcesCount})</span>
-                </button>
-              )}
-
-              {messages.length > 0 && (
-                <button
-                  type="button"
-                  className="outline-btn clear-chat-btn"
-                  onClick={handleClearChat}
-                  disabled={sending}
-                  title="Clear conversation history"
-                >
-                  <I.RotateCcw /> New Chat
-                </button>
-              )}
             </div>
           </div>
 
-          <div className="ask-body">
+          <div className="ask-body" ref={askBodyRef}>
             {messages.length === 0 ? (
               <div className="ask-empty-state">
-                <div className="ask-empty-glow" />
                 <div className="ask-empty-icon">
                   <I.Sparkles />
                 </div>
-                <h2>How can I serve you today? ✨</h2>
+                <h2 className="ask-hero-greeting">Hello {resolvedUserName}</h2>
+                <p className="ask-hero-subtitle">
+                  Ask any question across your uploaded syllabus, lectures, and course materials.
+                </p>
+
+                <div className="ask-hero-input-wrapper">
+                  <div className="hero-glow-field" aria-hidden="true">
+                    <div className="glow-orb orb-left" />
+                    <div className="glow-orb orb-center" />
+                    <div className="glow-orb orb-right" />
+                    <div className="glow-flow-border" />
+                  </div>
+                  {renderComposerForm(true)}
+                </div>
+
+                <div className="ask-hero-suggestions">
+                  <button
+                    type="button"
+                    className="ask-hero-chip"
+                    onClick={() => {
+                      setInput("Summarize key concepts from current syllabus");
+                      heroInputRef.current?.focus();
+                    }}
+                  >
+                    <I.BookOpen className="chip-icon" />
+                    <span>Summarize syllabus</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="ask-hero-chip"
+                    onClick={() => {
+                      setInput("Explain difficult topics with practical examples");
+                      heroInputRef.current?.focus();
+                    }}
+                  >
+                    <I.Sparkles className="chip-icon" />
+                    <span>Explain with examples</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="ask-hero-chip"
+                    onClick={() => {
+                      setInput("Generate practice exam questions and answers");
+                      heroInputRef.current?.focus();
+                    }}
+                  >
+                    <I.GraduationCap className="chip-icon" />
+                    <span>Practice exam questions</span>
+                  </button>
+                </div>
+
+                <p className="hero-composer-footnote">
+                  ScholarHub AI generates responses based on verified batch materials and course syllabus.
+                </p>
               </div>
             ) : (
               <div className="conversation-flow">
@@ -309,40 +471,16 @@ export function AskPage({
             )}
           </div>
 
-          <div className="composer-dock">
-            <form className="composer-bar" onSubmit={send}>
-              <button
-                type="button"
-                className="composer-icon-btn"
-                title="Attach file (available in upload tab)"
-                aria-label="Attach file"
-              >
-                <I.Paperclip />
-              </button>
-
-              <input
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask a question or request a summary…"
-                disabled={sending}
-                aria-label="Chat input"
-              />
-
-              <button
-                type="submit"
-                className="composer-send-btn"
-                disabled={sending || !input.trim()}
-                title="Send message"
-                aria-label="Send message"
-              >
-                {sending ? <I.Loader2 className="spinning-loader" /> : <I.Send />}
-              </button>
-            </form>
-            <p className="composer-footnote">
-              ScholarHub AI generates responses based on verified batch materials and course syllabus.
-            </p>
-          </div>
+          {messages.length > 0 && (
+            <div className="composer-dock">
+              <div className="composer-dock-inner">
+                {renderComposerForm(false)}
+                <p className="composer-footnote">
+                  ScholarHub AI generates responses based on verified batch materials and course syllabus.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
