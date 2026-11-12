@@ -98,7 +98,13 @@ export function SourcesSidebar({
   if (!open) return null;
 
   return (
-    <aside className="sources-sidebar" aria-label="Referenced sources panel">
+    <>
+      <div
+        className="sources-sidebar-backdrop"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <aside className="sources-sidebar" aria-label="Referenced sources panel">
       <div className="sources-sidebar-header">
           <div className="sources-sidebar-title">
             <div className="sources-header-icon">
@@ -233,14 +239,6 @@ export function SourcesSidebar({
                           <div className="source-card-body">
                             <p className="source-card-snippet">{s.text}</p>
                           </div>
-
-                          {typeof s.score === "number" && s.score > 0 && (
-                            <div className="source-card-footer">
-                              <span className="source-score-badge">
-                                Relevance: {(s.score * 100).toFixed(0)}%
-                              </span>
-                            </div>
-                          )}
                         </div>
                       );
                     })}
@@ -324,5 +322,6 @@ export function SourcesSidebar({
           )}
       </div>
     </aside>
+    </>
   );
 }
