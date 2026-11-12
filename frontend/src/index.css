@@ -9073,3 +9073,81 @@ select {
         display: none;
     }
 }
+
+/* Final phone navigation pass: keep the action groups from shrinking the
+   search control into an unusable sliver. */
+@media (max-width: 768px) {
+    .topbar {
+        width: 100%;
+        min-width: 0;
+        gap: 8px;
+        padding: 8px 12px;
+    }
+
+    .mobile-menu-btn,
+    .topbar-actions .avatar {
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+    }
+
+    .top-search {
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        flex: 1 1 auto;
+        padding: 7px 10px;
+        gap: 8px;
+    }
+
+    .top-search .search-shortcut {
+        display: none;
+    }
+
+    .topbar-actions {
+        flex: 0 0 auto;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar {
+        gap: 6px;
+        padding: 7px 10px;
+    }
+
+    .mobile-menu-btn,
+    .topbar-actions .avatar {
+        width: 32px;
+        height: 32px;
+        flex-basis: 32px;
+    }
+
+    .top-search {
+        border-radius: 9px;
+        font-size: 12px;
+    }
+
+    .top-search .search-icon {
+        width: 15px;
+        height: 15px;
+    }
+
+    .landing-header-inner {
+        gap: 10px;
+    }
+
+    .landing-header-actions {
+        gap: 7px;
+    }
+
+    .landing-header-actions .landing-login-link {
+        display: none;
+    }
+
+    .landing-header-actions .landing-button-small {
+        min-height: 34px;
+        padding: 0 10px;
+        font-size: 11px;
+    }
+}
