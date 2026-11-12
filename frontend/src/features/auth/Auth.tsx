@@ -8,7 +8,7 @@ type AuthMode = "register" | "login" | "admin";
 type RoleKind = "student" | "faculty";
 type RegStep = "verify" | "activate" | "confirmed";
 
-export function Auth({ onSession }: { onSession: (value: Session) => void }) {
+export function Auth({ onSession, onBackToLanding }: { onSession: (value: Session) => void; onBackToLanding?: () => void }) {
   const { theme, toggleTheme } = useTheme();
 
   // Primary mode: REGISTER, LOGIN, ADMIN
@@ -198,6 +198,11 @@ export function Auth({ onSession }: { onSession: (value: Session) => void }) {
     <div className="auth-page">
       {/* Top right theme toggle */}
       <div className="auth-top-actions">
+        {onBackToLanding && (
+          <button className="auth-back-landing" type="button" onClick={onBackToLanding}>
+            <I.ArrowLeft /> Back to landing
+          </button>
+        )}
         <button
           className="auth-theme-btn"
           onClick={toggleTheme}
