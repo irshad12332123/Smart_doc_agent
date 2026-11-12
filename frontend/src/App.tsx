@@ -13,6 +13,7 @@ import { LibraryPage } from "./features/pages/LibraryPage";
 import { SubjectsPage } from "./features/pages/SubjectsPage";
 import { UploadPage } from "./features/pages/UploadPage";
 import { ProfilePage } from "./features/profile/ProfilePage";
+import { LandingPage } from "./features/landing/LandingPage";
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -23,6 +24,7 @@ function App() {
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileRequested, setProfileRequested] = useState(false);
   const [profileError, setProfileError] = useState("");
+  const [showAuth, setShowAuth] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("scholarhub-session");
@@ -107,6 +109,7 @@ function App() {
     setProfile(null);
     setProfileRequested(false);
     setSession(null);
+    setShowAuth(false);
     setPage("home");
     setSidebarOpen(false);
   };
@@ -130,12 +133,16 @@ function App() {
     );
   }
 
-  if (!session) return <Auth onSession={signIn} />;
+  if (!session && !showAuth) {
+    return <LandingPage onGetStarted={() => setShowAuth(true)} onLogin={() => setShowAuth(true)} />;
+  }
+
+  if (!session) return <Auth onSession={signIn} onBackToLanding={() => setShowAuth(false)} />;
 
   const profilePageLoading = profileRequired && !profile;
 
   return (
-    <div className="shell">
+    <div className={`shell ${page === "ask" ? "shell-chat" : ""}`}>
       <Sidebar
         summary={session.summary}
         page={page}
@@ -151,7 +158,7 @@ function App() {
           onClick={() => setSidebarOpen(false)}
         />
       )}
-      <main className="main">
+      <main className={`main ${page === "ask" ? "main-chat" : ""}`}>
         <Topbar
           summary={session.summary}
           page={page}
@@ -174,6 +181,8 @@ function App() {
               setPage={setPage}
               profile={profile}
               email={session.user.email}
+              userName={session.summary?.full_name}
+              userId={session.summary?.id || session.user?.id}
             />
           )}
         </div>
@@ -187,6 +196,8 @@ function PageView(props: {
   setPage: (p: Page) => void;
   profile: Profile | null;
   email: string;
+  userName?: string;
+  userId?: string;
 }) {
   switch (props.page) {
     case "home":
@@ -195,6 +206,8 @@ function PageView(props: {
       return (
         <AskPage
           profile={props.profile || undefined}
+          userName={props.userName}
+          userId={props.userId}
         />
       );
     case "library":
