@@ -99,5 +99,5 @@ class DocumentService:
 
             processed_docs.append(doc_dict)
 
-        logger.debug(f"processed_docs count: {len(processed_docs)}")
+        logger.warning(f"processed_docs count: {len(processed_docs)}")
         return processed_docs
