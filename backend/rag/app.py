@@ -67,8 +67,10 @@ from modules.auth.routes import auth
 _log_import_stage("Importing user routes...")
 from modules.user.routes import user
 
-_log_import_stage("Importing ingestion and retrieval routes...")
-from ingestion.ingestion import ingest
+_log_import_stage("Importing ingestion, document, and query routes...")
+from documents.routes import documents
+from ingestion.routes import ingest
+from query.routes import query
 
 _log_import_stage("All modules imported. Initializing Flask app...")
 
@@ -77,6 +79,8 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES
     app.register_blueprint(ingest)
+    app.register_blueprint(documents)
+    app.register_blueprint(query)
     app.register_blueprint(auth)
     app.register_blueprint(user)
     _LOCAL_ORIGIN_REGEX = re.compile(

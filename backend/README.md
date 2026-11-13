@@ -12,16 +12,17 @@ backend/
 │   ├── app.py         # Main Flask server entry point
 │   ├── chunker/       # Document chunking logic
 │   ├── config/        # Environment and retrieval configurations
-│   ├── documents/     # Document repository and services
+│   ├── documents/     # Document repository, services, and routes
 │   ├── embedder/      # Dense vector embedding models
 │   ├── evaluation/    # Evaluation metrics and datasets
-│   ├── ingestion/     # Parsing and ingestion pipeline
+│   ├── ingestion/     # Ingestion functions, job repository, and routes
 │   ├── intent/        # Small Language Model (SLM) intent extractor & schemas
 │   ├── language_models/ # SLM and LLM connectors (Groq, Gemini)
 │   ├── lib/           # Supabase and AWS S3 integrations
 │   ├── loader/        # File loaders (PDF, DOCX, etc.)
 │   ├── modules/       # Flask blueprints (auth, user)
 │   ├── query_engine/  # Router and query rewrite services
+│   ├── query/         # Retrieval, evaluation, and chat routes
 │   ├── s3/            # AWS S3 presigned URL and storage service
 │   ├── services/      # Dense/Sparse retrievers, fusion, and reranker
 │   └── utils/         # Helper utilities
