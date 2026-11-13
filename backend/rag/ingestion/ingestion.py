@@ -96,6 +96,7 @@ def ingest_files():
         for uploaded_file in files:
             filename = secure_filename(uploaded_file.filename or "")
             if not filename:
+                logger.warning(f"File '{uploaded_file.filename}' has an invalid name.")
                 continue
 
             file_bytes: bytes = uploaded_file.read()
@@ -111,7 +112,7 @@ def ingest_files():
             # 2. Check if hash already exists in documents table (hash_key column)
             existing_doc = find_document_by_hash(file_sha256)
             if existing_doc:
-                logger.info(f"File '{filename}' with hash {file_sha256} already exists in documents table.")
+                logger.warning(f"File '{filename}' with hash {file_sha256} already exists in documents table.")
                 skipped_files.append({
                     "filename": filename,
                     "file_sha256": file_sha256,
@@ -156,7 +157,7 @@ def ingest_files():
                     "doc_id": job_id,
                 })
             except Exception as celery_err:
-                logger.error(f"Failed to enqueue Celery task for job {job_id}: {celery_err}")
+                logger.warning(f"Failed to enqueue Celery task for job {job_id}: {celery_err}")
                 update_job(job_id, status="enqueue_failed", error=str(celery_err), error_type=type(celery_err).__name__)
                 queued_jobs.append({
                     "job_id": job_id,
@@ -172,7 +173,7 @@ def ingest_files():
     except (RuntimeError, ValueError) as error:
         return jsonify({"detail": str(error)}), 400
     except Exception as e:
-        logger.exception("Unexpected error during file ingestion enqueue:")
+        logger.warning("Unexpected error during file ingestion enqueue:")
         return jsonify({"detail": "Document ingestion failed. Check the server logs.", "error": str(e)}), 500
 
     if skipped_files and not queued_jobs:
@@ -418,64 +419,8 @@ def get_document_file(document_id: str):
 def _sse(payload: dict[str, Any]) -> str:
     return f"data: {json.dumps(payload)}\n\n"
 
-@ingest.route("/query", methods=["POST"])
-def query():
-    """
-    Orchestrated RAG query endpoint powered by LangGraph query_graph.invoke().
-    Executes conditional agentic decision support, exact metadata search,
-    hybrid retrieval, evidence evaluation, query rewriting loop, and answer generation.
-    """
-    payload = request.get_json(silent=True) or {}
-    query_text = payload.get("query") or payload.get("message")
-    history = payload.get("history", [])
-
-    if not isinstance(query_text, str) or not query_text.strip():
-        return jsonify({"detail": "A non-empty query string is required."}), 400
-    if not isinstance(history, list):
-        return jsonify({"detail": "History must be a list."}), 400
-
-    raw_subject_list = payload.get("subject_list") or payload.get("subjects") or []
-    match_count = payload.get("match_count")
-    rerank = payload.get("rerank", False)
-    dense_weight = payload.get("dense_weight", 1.5)
-    sparse_weight = payload.get("sparse_weight", 0.5)
-    document_ids = payload.get("document_ids")
-    max_attempts = payload.get("max_attempts", 2)
-
-    try:
-        initial_state: RAGState = {
-            "query": query_text.strip(),
-            "original_query": query_text.strip(),
-            "subject_list": raw_subject_list,
-            "history": history,
-            "match_count": match_count,
-            "rerank": rerank,
-            "dense_weight": dense_weight,
-            "sparse_weight": sparse_weight,
-            "document_ids": document_ids,
-            "attempt_count": 0,
-            "max_attempts": max_attempts,
-        }
-
-        result = query_graph.invoke(initial_state)
-
-        return jsonify({
-            "query": result.get("query"),
-            "original_query": result.get("original_query"),
-            "route": result.get("route"),
-            "answer": result.get("answer"),
-            "documents": result.get("documents", []),
-            "sources": result.get("sources", []),
-            "evaluation": result.get("evaluation"),
-            "sufficient": result.get("sufficient"),
-            "attempt_count": result.get("attempt_count", 0),
-        }), 200
-
-    except Exception as e:
-        logger.exception("Error executing orchestrated query:")
-        return jsonify({"detail": f"Query orchestration failed: {e}"}), 500
-
 @ingest.route("/chat", methods=["POST"])
+@require_auth
 def chat():
 
     payload = request.get_json(silent=True) or {}
